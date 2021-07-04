@@ -1,12 +1,19 @@
 <template>
-    <TroisCanvas> </TroisCanvas>
+    <TroisCanvas>
+        <mesh>
+            <sphereBufferGeometry />
+            <meshStandardMaterial color="red" />
+        </mesh>
+    </TroisCanvas>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { components } from './renderer/components'
 
 export default defineComponent({
     name: 'App',
+    components,
 })
 </script>
 

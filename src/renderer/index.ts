@@ -4,8 +4,6 @@ import { RendererElement, RendererOptions } from '@vue/runtime-core'
 
 import { canvas } from './canvas'
 
-const doc = document || {}
-
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
         console.log('insert', { el, parent, anchor })
@@ -27,7 +25,7 @@ const nodeOps: RendererOptions = {
         }
 
         console.log('createElement', { type, isSvg, isCustomizedBuiltin, vnodeProps })
-        const target = (THREE as any)[type]
+        const target = (THREE as any)[name]
         return new target(vnodeProps)
     },
 
