@@ -2,7 +2,7 @@
     <TroisCanvas>
         <mesh>
             <sphereBufferGeometry />
-            <meshStandardMaterial color="red" />
+            <meshBasicMaterial color="blue" />
         </mesh>
     </TroisCanvas>
 </template>

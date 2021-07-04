@@ -4,17 +4,33 @@ import { RendererElement, RendererOptions } from '@vue/runtime-core'
 
 import { canvas } from './canvas'
 
+// TODO: replace placeholder
+const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
+const scene = new THREE.Scene()
+
+const renderer = new THREE.WebGLRenderer()
+renderer.setSize(window.innerWidth, window.innerHeight)
+
+const update = () => {
+    requestAnimationFrame(update)
+    renderer.render(scene, camera)
+}
+update()
+
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
-        const name = `${el.type[0].toUpperCase()}${el.type.slice(1)}`
+        let name = ''
+        if (el.type) {
+            name = `${el.type[0].toUpperCase()}${el.type.slice(1)}`
+        }
 
         console.log('insert', { name: el.type, el, parent, anchor })
 
         // mount root instance
         if (typeof parent === 'string') {
             parent = document.querySelector(parent) as any
-            // TODO: create scene, renderer, camera
-            (parent as HTMLElement).appendChild(el as HTMLElement)
+            document.body.appendChild(renderer.domElement)
+
             return
         }
 
@@ -24,10 +40,15 @@ const nodeOps: RendererOptions = {
         if (name.endsWith('Mesh')) {
             args.push(el.vnodeProps.geometry, el.vnodeProps.material)
         }
+        if (name.endsWith('Material')) {
+            args.push({ color: el.vnodeProps.color })
+        }
 
         // create target
         const target = (THREE as any)[name]
         const result = new target(...args)
+
+        // TODO: handle props and config options
 
         // handle attachments to parents
         if (el.vnodeProps.attach) {
@@ -37,7 +58,11 @@ const nodeOps: RendererOptions = {
             }
         }
 
-        console.log(result)
+        if (result.isObject3D) {
+            // TODO: replace placeholder
+            result.position.z = -4
+            scene.add(result)
+        }
 
 
     },
