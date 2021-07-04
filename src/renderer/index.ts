@@ -4,9 +4,16 @@ import { RendererElement, RendererOptions } from '@vue/runtime-core'
 
 import { canvas } from './canvas'
 
+const doc = document || {}
+
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
         console.log('insert', { el, parent, anchor })
+
+        if (typeof parent === 'string') {
+            parent = document.querySelector(parent) as any
+            (parent as HTMLElement).appendChild(el as HTMLElement)
+        }
     },
 
     remove: (el) => {
