@@ -6,12 +6,40 @@ import { canvas } from './canvas'
 
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
-        console.log('insert', { el, parent, anchor })
+        const name = `${el.type[0].toUpperCase()}${el.type.slice(1)}`
 
+        console.log('insert', { name: el.type, el, parent, anchor })
+
+        // mount root instance
         if (typeof parent === 'string') {
             parent = document.querySelector(parent) as any
+            // TODO: create scene, renderer, camera
             (parent as HTMLElement).appendChild(el as HTMLElement)
+            return
         }
+
+        const args = []
+
+        // create mesh
+        if (name.endsWith('Mesh')) {
+            args.push(el.vnodeProps.geometry, el.vnodeProps.material)
+        }
+
+        // create target
+        const target = (THREE as any)[name]
+        const result = new target(...args)
+
+        // handle attachments to parents
+        if (el.vnodeProps.attach) {
+            parent.vnodeProps = {
+                ...(parent.vnodeProps || {}),
+                [el.vnodeProps.attach]: result
+            }
+        }
+
+        console.log(result)
+
+
     },
 
     remove: (el) => {
@@ -24,9 +52,19 @@ const nodeOps: RendererOptions = {
             return canvas()
         }
 
-        console.log('createElement', { type, isSvg, isCustomizedBuiltin, vnodeProps })
-        const target = (THREE as any)[name]
-        return new target(vnodeProps)
+        // console.log('createElement', { type, isSvg, isCustomizedBuiltin, vnodeProps })
+        // const target = (THREE as any)[name]
+        // return new target(vnodeProps)
+
+        // auto-attach geometries and materials
+        if (name.endsWith('Geometry')) {
+            vnodeProps = { attach: 'geometry', ...vnodeProps }
+        }
+        if (name.endsWith('Material')) {
+            vnodeProps = { attach: 'material', ...vnodeProps }
+        }
+
+        return { type, vnodeProps }
     },
 
     createText: (text) => {
