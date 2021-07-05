@@ -83,7 +83,7 @@ const nodeOps: RendererOptions = {
 
         if (result.isObject3D) {
             // TODO: replace placeholder
-            result.position.z = -4
+            result.position.z = -8
             scene.add(result)
         }
 
