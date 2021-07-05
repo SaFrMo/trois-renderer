@@ -1,8 +1,6 @@
 import * as THREE from 'three'
 import { createRenderer } from 'vue'
-import { RendererElement, RendererOptions } from '@vue/runtime-core'
-
-// import { canvas } from './canvas'
+import { RendererOptions } from '@vue/runtime-core'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -19,38 +17,43 @@ update()
 
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
+        // convert type to PascalCase
         let name = ''
         if (el.type) {
             name = `${el.type[0].toUpperCase()}${el.type.slice(1)}`
         }
 
+        // cancel if no valid name
+        if (!name) return
+
+        // debug
         console.log('insert', { name: el.type, el, parent, anchor })
 
         // mount container
         if (typeof parent === 'string') {
             // build container
-            const container = document.createElement('div')
+            const container = document.createElement(el.type)
             Object.keys(el.vnodeProps.style).forEach(key => {
                 (container.style as any)[key] = el.vnodeProps.style[key]
             })
+            // attach canvas child
             container.appendChild((el as any).canvas as HTMLElement)
 
-                ; (document.querySelector(parent) as any).appendChild(container)
+            // attach container to parent
+            const parentEl = document.querySelector(parent) as any as HTMLElement
+            parentEl.appendChild(container)
+
             return
         }
 
         // mount canvas
         if (el.type === 'canvas') {
-
             // build canvas
             parent.canvas = renderer.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
                 (renderer.domElement.style as any)[key] = el.vnodeProps.style[key]
             })
 
-            // parent = document.querySelector(parent) as any
-            // document.body.appendChild(renderer.domElement)
-            // document.body.appendChild(container)
             return renderer.domElement
         }
 
@@ -84,7 +87,6 @@ const nodeOps: RendererOptions = {
             scene.add(result)
         }
 
-
     },
 
     remove: (el) => {
@@ -93,13 +95,8 @@ const nodeOps: RendererOptions = {
 
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const name = `${type[0].toUpperCase()}${type.slice(1)}`
-        if (name === 'TroisCanvas') {
-            return canvas()
-        }
 
-        // console.log('createElement', { type, isSvg, isCustomizedBuiltin, vnodeProps })
-        // const target = (THREE as any)[name]
-        // return new target(vnodeProps)
+        console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {

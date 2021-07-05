@@ -1,6 +1,8 @@
 <template>
     <div class="container" :style="containerStyle">
-        <canvas :style="canvasStyle"></canvas>
+        <canvas :style="canvasStyle">
+            <slot />
+        </canvas>
     </div>
 </template>
 
