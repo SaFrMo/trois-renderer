@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { createRenderer } from 'vue'
 import { RendererElement, RendererOptions } from '@vue/runtime-core'
 
-import { canvas } from './canvas'
+// import { canvas } from './canvas'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -26,12 +26,32 @@ const nodeOps: RendererOptions = {
 
         console.log('insert', { name: el.type, el, parent, anchor })
 
-        // mount root instance
+        // mount container
         if (typeof parent === 'string') {
-            parent = document.querySelector(parent) as any
-            document.body.appendChild(renderer.domElement)
+            // build container
+            const container = document.createElement('div')
+            Object.keys(el.vnodeProps.style).forEach(key => {
+                (container.style as any)[key] = el.vnodeProps.style[key]
+            })
+            container.appendChild((el as any).canvas as HTMLElement)
 
+                ; (document.querySelector(parent) as any).appendChild(container)
             return
+        }
+
+        // mount canvas
+        if (el.type === 'canvas') {
+
+            // build canvas
+            parent.canvas = renderer.domElement
+            Object.keys(el.vnodeProps.style).forEach((key) => {
+                (renderer.domElement.style as any)[key] = el.vnodeProps.style[key]
+            })
+
+            // parent = document.querySelector(parent) as any
+            // document.body.appendChild(renderer.domElement)
+            // document.body.appendChild(container)
+            return renderer.domElement
         }
 
         const args = []
