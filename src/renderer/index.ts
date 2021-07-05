@@ -15,6 +15,12 @@ const update = () => {
 }
 update()
 
+const updateSize = ({ width, height }: { width: number, height: number }) => {
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+    renderer.setSize(width, height)
+}
+
 const nodeOps: RendererOptions = {
     insert: (el, parent, anchor) => {
         // convert type to PascalCase
@@ -42,6 +48,16 @@ const nodeOps: RendererOptions = {
             // attach container to parent
             const parentEl = document.querySelector(parent) as any as HTMLElement
             parentEl.appendChild(container)
+
+            // resize listener
+            const resizeObserver = new ResizeObserver(([container]) => {
+                updateSize(container.contentRect)
+            })
+            resizeObserver.observe(container)
+            updateSize({
+                width: container.offsetWidth,
+                height: container.offsetHeight
+            })
 
             return
         }
