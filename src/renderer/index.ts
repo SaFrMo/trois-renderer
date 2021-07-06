@@ -2,9 +2,9 @@ import * as THREE from 'three'
 import { createRenderer } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject } from './objects'
-import { isObject3D } from './lib'
+import { isObject3D, pascalCase, pathFromString } from './lib'
 import { TroisNode } from './types'
-import { pascalCase } from './lib'
+import { set } from 'lodash'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -164,8 +164,8 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        // ignore if el is DOM element or no ready target
-        if (el.vnodeProps.isDom || key.startsWith('$')) return
+        // ignore if el is DOM element OR no ready target OR if internal Trois property
+        if (el.vnodeProps.isDom || !el.vnodeProps.$target || key.startsWith('$')) return
 
         // update THREE property
         // TODO: more robust solution
@@ -175,7 +175,12 @@ const nodeOps: RendererOptions<TroisNode> = {
             'z': 'position.z',
         } as any
         const finalKey = shortcuts[key] || key
-        el.vnodeProps.$target[key] = typeof nextValue === 'string' ? new THREE.Color(nextValue) : nextValue
+        const finalValue = typeof nextValue === 'string' ? new THREE.Color(nextValue) : nextValue
+        // try {
+        set(el.vnodeProps.$target, finalKey, finalValue)
+        // } catch (err) {
+        // pathFromString(el.vnodeProps.$target, finalKey).set(finalValue)
+        // }
 
         console.log('patchProp', { el, key, prevValue, nextValue })
     }
