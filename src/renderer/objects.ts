@@ -12,31 +12,13 @@ export const createObject = ({ name, vnodeProps }: {
 
     // create mesh
     if (name.endsWith('Mesh')) {
-        console.log(vnodeProps)
-        // if (!vnodeProps.geometry )
-
         // use default geometry & material if needed
-        const geo = vnodeProps.attach?.geometry ?? new THREE.BoxGeometry()
-        const mat = vnodeProps.attach?.material ?? new THREE.MeshBasicMaterial()
+        const geo = vnodeProps.$attach?.geometry ?? new THREE.BoxGeometry()
+        const mat = vnodeProps.$attach?.material ?? new THREE.MeshBasicMaterial()
         args.push(geo, mat)
     }
 
     // create target
     const target = (THREE as any)[name]
-    if (!target) return null
-    const result = new target(...args)
-
-    // handle attachments to parents
-    // if (vnodeProps.attach) {
-    //     parent.vnodeProps = {
-    //         ...(parent.vnodeProps || {}),
-    //         [el.vnodeProps.attach]: result
-    //     }
-    // }
-
-    // save result
-    // el.vnodeProps.target = result
-
-    return result
-
+    return target ? new target(...args) : null
 }

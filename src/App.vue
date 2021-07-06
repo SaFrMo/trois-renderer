@@ -2,7 +2,7 @@
     <TroisCanvas>
         <mesh>
             <sphereBufferGeometry />
-            <meshBasicMaterial color="green" />
+            <meshBasicMaterial :color="color" />
         </mesh>
     </TroisCanvas>
 </template>
@@ -14,6 +14,22 @@ import { components } from './renderer/components'
 export default defineComponent({
     name: 'App',
     components: components as any,
+    data() {
+        return {
+            colors: ['Red', 'Green', 'Blue'],
+            colorIndex: 0,
+        }
+    },
+    mounted() {
+        setInterval(() => {
+            this.colorIndex++
+        }, 1000)
+    },
+    computed: {
+        color() {
+            return this.colors[this.colorIndex % this.colors.length]
+        },
+    },
 })
 </script>
 

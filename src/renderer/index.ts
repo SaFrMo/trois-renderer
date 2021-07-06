@@ -4,6 +4,7 @@ import { RendererOptions } from '@vue/runtime-core'
 import { createObject } from './objects'
 import { isObject3D } from './lib'
 import { TroisNode } from './types'
+import { pascalCase } from './lib'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -31,7 +32,7 @@ const nodeOps: RendererOptions<TroisNode> = {
         // convert type to PascalCase
         let name = ''
         if (el.type) {
-            name = `${el.type[0].toUpperCase()}${el.type.slice(1)}`
+            name = pascalCase(el.type)
         }
 
         // cancel if no valid name
@@ -41,7 +42,7 @@ const nodeOps: RendererOptions<TroisNode> = {
         if (!el.vnodeProps) return
 
         // debug
-        console.log('insert', { name: el.type, el, parent, anchor })
+        // console.log('insert', { name: el.type, el, parent, anchor })
 
         // mount container
         if (typeof parent === 'string') {
@@ -84,29 +85,28 @@ const nodeOps: RendererOptions<TroisNode> = {
         }
 
         // notify parent if needed
-        if (el.vnodeProps.attach) {
-            parent.vnodeProps.attach = {
-                [el.vnodeProps.attach]: el.vnodeProps.target,
-                ...(parent.vnodeProps.attach || {})
+        if (el.vnodeProps.$attach) {
+            parent.vnodeProps.$attach = {
+                [el.vnodeProps.$attach]: el.vnodeProps.$target,
+                ...(parent.vnodeProps.$attach || {})
             }
         }
 
-        // create three object
-        el.vnodeProps.target = el.vnodeProps.target || createObject({ name, vnodeProps: el.vnodeProps })
-        if (isObject3D(el.vnodeProps.target)) {
+        // create three object if needed
+        el.vnodeProps.$target = el.vnodeProps.$target || createObject({ name, vnodeProps: el.vnodeProps })
+        if (isObject3D(el.vnodeProps.$target)) {
             // TODO: replace placeholder
-            el.vnodeProps.target.position.z = -8
-            scene.add(el.vnodeProps.target)
+            el.vnodeProps.$target.position.z = -8
+            scene.add(el.vnodeProps.$target)
         }
-    }
-    ,
+    },
 
     remove: (el) => {
         console.log('remove', { el })
     },
 
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
-        const name = `${type[0].toUpperCase()}${type.slice(1)}`
+        const name = pascalCase(type)
 
         vnodeProps = vnodeProps || {}
 
@@ -118,18 +118,19 @@ const nodeOps: RendererOptions<TroisNode> = {
 
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {
-            vnodeProps.attach = 'geometry'
+            vnodeProps.$attach = 'geometry'
         }
         if (name.endsWith('Material')) {
-            vnodeProps.attach = 'material'
+            vnodeProps.$attach = 'material'
         }
         if (name.endsWith('Mesh')) {
-            console.log('leaving')
+            // wait for mesh till we have children
+            // TODO: replace with something reactive
             return { type, vnodeProps }
         }
 
         // create THREE object
-        vnodeProps.target = createObject({ name, vnodeProps })
+        vnodeProps.$target = createObject({ name, vnodeProps })
 
         return { type, vnodeProps }
     },
@@ -164,12 +165,19 @@ const nodeOps: RendererOptions<TroisNode> = {
 
     patchProp: (el, key, prevValue, nextValue) => {
         // ignore if el is DOM element or no ready target
-        if (el.vnodeProps.isDom) return
+        if (el.vnodeProps.isDom || key.startsWith('$')) return
 
         // update THREE property
-        // el.vnodeProps?.target[key]?.set(nextValue)
+        // TODO: more robust solution
+        const shortcuts = {
+            'x': 'position.x',
+            'y': 'position.y',
+            'z': 'position.z',
+        } as any
+        const finalKey = shortcuts[key] || key
+        el.vnodeProps.$target[key] = typeof nextValue === 'string' ? new THREE.Color(nextValue) : nextValue
 
-        // console.log('patchProp', { el, key, prevValue, nextValue })
+        console.log('patchProp', { el, key, prevValue, nextValue })
     }
 }
 

@@ -5,6 +5,6 @@ export type TroisNode = RendererNode & {
     vnodeProps?: (VNodeProps & {
         [key: string]: any;
     } | null | undefined) & {
-        target?: THREE.Object3D | null
+        $target?: THREE.Object3D | null
     }
 }
