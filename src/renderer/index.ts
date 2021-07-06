@@ -3,6 +3,7 @@ import { createRenderer } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject } from './objects'
 import { isObject3D } from './lib'
+import { TroisNode } from './types'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -23,7 +24,9 @@ const updateSize = ({ width, height }: { width: number, height: number }) => {
     renderer.setSize(width, height)
 }
 
-const nodeOps: RendererOptions = {
+
+
+const nodeOps: RendererOptions<TroisNode> = {
     insert: (el, parent, anchor) => {
         // convert type to PascalCase
         let name = ''
@@ -34,6 +37,9 @@ const nodeOps: RendererOptions = {
         // cancel if no valid name
         if (!name) return
 
+        // cancel if no props
+        if (!el.vnodeProps) return
+
         // debug
         console.log('insert', { name: el.type, el, parent, anchor })
 
@@ -42,6 +48,7 @@ const nodeOps: RendererOptions = {
             // build container
             const container = document.createElement(el.type)
             Object.keys(el.vnodeProps.style).forEach(key => {
+                if (!el.vnodeProps) return
                 (container.style as any)[key] = el.vnodeProps.style[key]
             })
             // attach canvas child
@@ -61,7 +68,7 @@ const nodeOps: RendererOptions = {
                 height: container.offsetHeight
             })
 
-            return
+            return container
         }
 
         // mount canvas
@@ -69,20 +76,30 @@ const nodeOps: RendererOptions = {
             // build canvas
             parent.canvas = renderer.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
+                if (!el.vnodeProps) return
                 (renderer.domElement.style as any)[key] = el.vnodeProps.style[key]
             })
 
             return renderer.domElement
         }
 
-        // create three object
-        const result = createObject({ el, name, parent })
-        if (isObject3D(result)) {
-            // TODO: replace placeholder
-            result.position.z = -8
-            scene.add(result)
+        // notify parent if needed
+        if (el.vnodeProps.attach) {
+            parent.vnodeProps.attach = {
+                [el.vnodeProps.attach]: el.vnodeProps.target,
+                ...(parent.vnodeProps.attach || {})
+            }
         }
-    },
+
+        // create three object
+        el.vnodeProps.target = el.vnodeProps.target || createObject({ name, vnodeProps: el.vnodeProps })
+        if (isObject3D(el.vnodeProps.target)) {
+            // TODO: replace placeholder
+            el.vnodeProps.target.position.z = -8
+            scene.add(el.vnodeProps.target)
+        }
+    }
+    ,
 
     remove: (el) => {
         console.log('remove', { el })
@@ -91,21 +108,34 @@ const nodeOps: RendererOptions = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const name = `${type[0].toUpperCase()}${type.slice(1)}`
 
-        console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
+        vnodeProps = vnodeProps || {}
+
+        // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
+
+        if (name === 'Canvas' || name === 'Div') {
+            vnodeProps.isDom = true
+        }
 
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {
-            vnodeProps = { attach: 'geometry', ...vnodeProps }
+            vnodeProps.attach = 'geometry'
         }
         if (name.endsWith('Material')) {
-            vnodeProps = { attach: 'material', ...vnodeProps }
+            vnodeProps.attach = 'material'
         }
+        if (name.endsWith('Mesh')) {
+            console.log('leaving')
+            return { type, vnodeProps }
+        }
+
+        // create THREE object
+        vnodeProps.target = createObject({ name, vnodeProps })
 
         return { type, vnodeProps }
     },
 
     createText: (text) => {
-        console.log('createText', { text })
+        // console.log('createText', { text })
         return {}
     },
 
@@ -129,11 +159,17 @@ const nodeOps: RendererOptions = {
 
     nextSibling: (node) => {
         console.log('nextSibling', { node })
-        return {}
+        return null
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        console.log('patchProp', { el, key, prevValue, nextValue })
+        // ignore if el is DOM element or no ready target
+        if (el.vnodeProps.isDom) return
+
+        // update THREE property
+        // el.vnodeProps?.target[key]?.set(nextValue)
+
+        // console.log('patchProp', { el, key, prevValue, nextValue })
     }
 }
 
