@@ -1,9 +1,11 @@
 <template>
     <TroisCanvas>
         <mesh
-            :position="[x, y, -8]"
+            :position="[x + (i - count * 0.5), y, -8]"
             :rotation="[0, rotationY, 0]"
-            :scale="scale"
+            :scale="(scale * i) / count"
+            v-for="i in count"
+            :key="i"
         >
             <sphereBufferGeometry />
             <meshBasicMaterial :color="color" />
@@ -25,6 +27,7 @@ export default defineComponent({
             x: 0,
             rotationY: 0,
             scale: 1,
+            count: 20,
         }
     },
     mounted() {
