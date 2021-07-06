@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { createRenderer } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
+import { createObject } from './objects'
+import { isObject3D } from './lib'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -73,36 +75,13 @@ const nodeOps: RendererOptions = {
             return renderer.domElement
         }
 
-        const args = []
-
-        // create mesh
-        if (name.endsWith('Mesh')) {
-            args.push(el.vnodeProps.geometry, el.vnodeProps.material)
-        }
-        if (name.endsWith('Material')) {
-            args.push({ color: el.vnodeProps.color })
-        }
-
-        // create target
-        const target = (THREE as any)[name]
-        const result = new target(...args)
-
-        // TODO: handle props and config options
-
-        // handle attachments to parents
-        if (el.vnodeProps.attach) {
-            parent.vnodeProps = {
-                ...(parent.vnodeProps || {}),
-                [el.vnodeProps.attach]: result
-            }
-        }
-
-        if (result.isObject3D) {
+        // create three object
+        const result = createObject({ el, name, parent })
+        if (isObject3D(result)) {
             // TODO: replace placeholder
             result.position.z = -8
             scene.add(result)
         }
-
     },
 
     remove: (el) => {

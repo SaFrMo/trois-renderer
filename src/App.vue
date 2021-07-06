@@ -13,7 +13,7 @@ import { components } from './renderer/components'
 
 export default defineComponent({
     name: 'App',
-    components,
+    components: components as any,
 })
 </script>
 
