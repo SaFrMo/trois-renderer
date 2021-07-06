@@ -4,7 +4,7 @@ import { RendererOptions } from '@vue/runtime-core'
 import { createObject } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
 import { TroisNode } from './types'
-import { set } from 'lodash'
+import { get, isNumber, set } from 'lodash'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -23,6 +23,12 @@ const updateSize = ({ width, height }: { width: number, height: number }) => {
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
+}
+
+const propertyShortcuts: { [key: string]: string } = {
+    'x': 'position.x',
+    'y': 'position.y',
+    'z': 'position.z',
 }
 
 
@@ -96,7 +102,6 @@ const nodeOps: RendererOptions<TroisNode> = {
         el.vnodeProps.$target = el.vnodeProps.$target || createObject({ name, vnodeProps: el.vnodeProps })
         if (isObject3D(el.vnodeProps.$target)) {
             // TODO: replace placeholder
-            el.vnodeProps.$target.position.z = -8
             scene.add(el.vnodeProps.$target)
         }
     },
@@ -154,35 +159,40 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     parentNode: (node) => {
-        console.log('parentNode', { node })
+        // console.log('parentNode', { node })
         return {}
     },
 
     nextSibling: (node) => {
-        console.log('nextSibling', { node })
+        // console.log('nextSibling', { node })
         return null
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
+        const target = el.vnodeProps.$target
+
         // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (el.vnodeProps.isDom || !el.vnodeProps.$target || key.startsWith('$')) return
+        if (el.vnodeProps.isDom || !target || key.startsWith('$')) return
 
         // update THREE property
-        // TODO: more robust solution
-        const shortcuts = {
-            'x': 'position.x',
-            'y': 'position.y',
-            'z': 'position.z',
-        } as any
-        const finalKey = shortcuts[key] || key
-        const finalValue = typeof nextValue === 'string' ? new THREE.Color(nextValue) : nextValue
-        // try {
-        set(el.vnodeProps.$target, finalKey, finalValue)
-        // } catch (err) {
-        // pathFromString(el.vnodeProps.$target, finalKey).set(finalValue)
-        // }
+        // get final key
+        const finalKey = propertyShortcuts[key] || key
 
-        console.log('patchProp', { el, key, prevValue, nextValue })
+        const liveProperty = get(target, finalKey)
+
+        if (liveProperty && isNumber(nextValue) && liveProperty.setScalar) {
+            // if value is a number and the property has a `setScalar` method, use that
+            liveProperty.setScalar(nextValue)
+        }
+        else if (liveProperty && liveProperty.set) {
+            // check if property type has `set` method (https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#shortcuts)
+            const nextValueAsArray = Array.isArray(nextValue) ? nextValue : [nextValue]
+            liveProperty.set(...nextValueAsArray)
+        } else {
+            set(target, finalKey, nextValue)
+        }
+
+        // console.log('patchProp', { el, key, prevValue, nextValue })
     }
 }
 

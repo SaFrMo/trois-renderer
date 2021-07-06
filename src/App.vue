@@ -1,6 +1,10 @@
 <template>
     <TroisCanvas>
-        <mesh :x="x" :y="y" :rotation="rotation">
+        <mesh
+            :position="[x, y, -8]"
+            :rotation="[0, rotationY, 0]"
+            :scale="scale"
+        >
             <sphereBufferGeometry />
             <meshBasicMaterial :color="color" />
         </mesh>
@@ -19,7 +23,8 @@ export default defineComponent({
             colors: ['Red', 'Green', 'Blue'],
             colorIndex: 0,
             x: 0,
-            rotation: { x: 0, y: 0, z: 0 },
+            rotationY: 0,
+            scale: 1,
         }
     },
     mounted() {
@@ -38,9 +43,10 @@ export default defineComponent({
         update() {
             requestAnimationFrame(this.update)
 
-            // this.rotation = { ...this.rotation, y: this.rotation.y + 0.04 }
+            this.rotationY += 0.02
             this.x = Math.sin(Date.now() * 0.001)
             this.y = Math.cos(Date.now() * 0.001)
+            this.scale = Math.sin(Date.now() * 0.001)
         },
     },
 })
