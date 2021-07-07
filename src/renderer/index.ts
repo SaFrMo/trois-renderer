@@ -1,36 +1,28 @@
 import * as THREE from 'three'
-import { createRenderer, Component } from 'vue'
+import { App, createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
-import { TroisNode } from './types'
+import { TroisNode, Instance } from './types'
 import { isNumber, pick } from 'lodash'
 import { components } from './components'
+import { initTrois, useTrois } from './useThree'
+import { PerspectiveCamera } from 'three'
 
-// TODO: replace placeholder
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer
-
-let sceneOptions: any = {}
-
-const update = () => {
-    requestAnimationFrame(update)
-    if (!renderer) return
-    renderer.render(scene, camera)
-}
-update()
 
 const updateSize = ({ width, height }: { width: number, height: number }) => {
-    if (!camera || !renderer) return
+    if (!useTrois) return
 
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
-    renderer.setSize(width, height)
+    const { camera, renderer } = useTrois()
+
+    const perspectiveCamera = camera.value as PerspectiveCamera
+
+    perspectiveCamera.aspect = width / height
+    perspectiveCamera.updateProjectionMatrix()
+    renderer.value.setSize(width, height)
+
+    useTrois().size.value = { width, height }
 }
-
-
-
 
 const nodeOps: RendererOptions<TroisNode> = {
     insert: (el, parent, anchor) => {
@@ -77,16 +69,18 @@ const nodeOps: RendererOptions<TroisNode> = {
             return container
         }
 
+        const { renderer, scene } = useTrois()
+
         // mount canvas
         if (el.type === 'canvas') {
             // build canvas
-            parent.canvas = renderer.domElement
+            parent.canvas = renderer.value.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
                 if (!el.vnodeProps) return
-                (renderer.domElement.style as any)[key] = el.vnodeProps.style[key]
+                (renderer.value.domElement.style as any)[key] = el.vnodeProps.style[key]
             })
 
-            return renderer.domElement
+            return renderer.value.domElement
         }
 
         // create three object if needed
@@ -105,7 +99,7 @@ const nodeOps: RendererOptions<TroisNode> = {
 
         if (el.$target && isObject3D(el.$target)) {
             // TODO: replace placeholder
-            scene.add(el.$target)
+            scene.value.add(el.$target)
         }
     },
 
@@ -124,29 +118,32 @@ const nodeOps: RendererOptions<TroisNode> = {
             vnodeProps.isDom = true
 
             // pick trois props from wrapper
-            sceneOptions = {
+            const sceneOptions = {
                 'camera-position': [0, 0, 0],
                 background: 'black',
                 ...vnodeProps
             }
+
+            // this is the root container, so let's start trois
+            initTrois(sceneOptions)
         }
 
-        if (name === 'Canvas') {
-            vnodeProps.isDom = true
-
-            // set up according to options
-            camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
-            camera.position.set.apply(camera.position, sceneOptions['camera-position'])
-            scene = new THREE.Scene()
-            if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
-                scene.background = scene.background ?? new THREE.Color()
-                    ; (scene.background as THREE.Color).set(sceneOptions.background)
-            }
+        // if (name === 'Canvas') {
+        //     vnodeProps.isDom = true
 
 
-            renderer = new THREE.WebGLRenderer()
-            renderer.setSize(window.innerWidth, window.innerHeight)
-        }
+
+        //     // set up according to options
+        //     // camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
+        //     // camera.position.set.apply(camera.position, sceneOptions['camera-position'])
+        //     // scene = new THREE.Scene()
+        //     // if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
+        //     //     scene.background = scene.background ?? new THREE.Color()
+        //     //         ; (scene.background as THREE.Color).set(sceneOptions.background)
+        //     // }
+
+
+        // }
 
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {
@@ -219,3 +216,6 @@ export const createApp = (root: Component) => {
     // done
     return app
 }
+
+export { extend } from './components'
+export { useTrois }

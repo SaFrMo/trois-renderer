@@ -1,10 +1,12 @@
 <template>
     <TroisCanvas :camera-position="[0, 0, 10]">
+        <OrbitControls />
+
         <spotLight color="white" :intensity="0.5" :position="[0, 150, 0]" />
         <spotLight color="red" :intensity="0.5" :position="[0, -150, 0]" />
 
         <instancedMesh :args="[null, null, count]" :scale="0.3" ref="mesh">
-            <torusKnotGeometry />
+            <sphereGeometry />
             <meshPhongMaterial />
         </instancedMesh>
     </TroisCanvas>
@@ -13,6 +15,7 @@
  <script lang="ts">
 import { defineComponent } from 'vue'
 import { Object3D, InstancedMesh, Vector3 } from 'three'
+import { useTrois } from '../renderer'
 
 const scratch = new Object3D()
 

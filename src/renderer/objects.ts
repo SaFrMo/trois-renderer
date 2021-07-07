@@ -2,14 +2,15 @@ import * as THREE from 'three'
 import { VNodeProps } from '@vue/runtime-core'
 import { get, isNumber, set, camelCase } from 'lodash'
 import { isObject3D } from './lib'
-import { TroisProps } from './types'
+import { Instance, TroisProps } from './types'
+import { catalogue } from './components'
 
 /** Create a ThreeJS object from given vnode params. */
 export const createObject = ({ name, vnodeProps }: {
     name: string, vnodeProps: (VNodeProps & {
         [key: string]: any;
     } | null | undefined)
-}): THREE.Object3D | null => {
+}): THREE.Object3D | Instance | null => {
     vnodeProps = vnodeProps || {}
     const args = vnodeProps.args ?? []
 
@@ -23,7 +24,7 @@ export const createObject = ({ name, vnodeProps }: {
     }
 
     // create target
-    const targetClass = (THREE as any)[name]
+    const targetClass = catalogue[name] || (THREE as any)[name]
     const target = targetClass ? new targetClass(...args) : null
     // if (!target || !isObject3D(target)) { return null }
 

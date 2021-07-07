@@ -1,5 +1,6 @@
-import { h, defineComponent } from 'vue'
+import { h, defineComponent, App } from 'vue'
 import TroisCanvas from './TroisCanvas.vue'
+import { Instance } from './types'
 
 const createComponent = (tag: string) =>
     defineComponent({
@@ -120,6 +121,19 @@ export const components = {
     TroisCanvas
 }
 
+export interface Catalogue {
+    [key: string]: {
+        new(...args: any): Instance
+    }
+}
+export const catalogue: Catalogue = {}
+
+export const extend = ({ app, ...targets }: { app: App, [key: string]: any }) => {
+    Object.keys(targets).forEach(key => {
+        app.component(key, createComponent(key))
+        catalogue[key] = targets[key]
+    })
+}
 /*
 // List copied from r3f
 // https://github.com/pmndrs/react-three-fiber/blob/master/packages/fiber/src/three-types.ts
