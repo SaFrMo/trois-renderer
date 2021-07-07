@@ -3,17 +3,20 @@ import { App, createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
-import { TroisNode, Instance } from './types'
 import { isNumber, pick } from 'lodash'
 import { components } from './components'
 import { initTrois, useTrois } from './useThree'
 import { PerspectiveCamera } from 'three'
+import { TroisNode } from './types'
 
 
 const updateSize = ({ width, height }: { width: number, height: number }) => {
-    if (!useTrois) return
+    const trois = useTrois()
+    if (!trois) return
 
-    const { camera, renderer } = useTrois()
+    const { camera, renderer } = trois
+
+    if (!renderer.value) return
 
     const perspectiveCamera = camera.value as PerspectiveCamera
 
@@ -21,7 +24,7 @@ const updateSize = ({ width, height }: { width: number, height: number }) => {
     perspectiveCamera.updateProjectionMatrix()
     renderer.value.setSize(width, height)
 
-    useTrois().size.value = { width, height }
+    trois.size.value = { width, height }
 }
 
 const nodeOps: RendererOptions<TroisNode> = {
@@ -69,7 +72,9 @@ const nodeOps: RendererOptions<TroisNode> = {
             return container
         }
 
-        const { renderer, scene } = useTrois()
+        const trois = useTrois()
+        if (!trois.initialized) return
+        const { renderer, scene } = trois
 
         // mount canvas
         if (el.type === 'canvas') {
@@ -77,7 +82,7 @@ const nodeOps: RendererOptions<TroisNode> = {
             parent.canvas = renderer.value.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
                 if (!el.vnodeProps) return
-                (renderer.value.domElement.style as any)[key] = el.vnodeProps.style[key]
+                    ; (renderer.value.domElement.style as any)[key] = el.vnodeProps.style[key]
             })
 
             return renderer.value.domElement

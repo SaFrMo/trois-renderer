@@ -29,9 +29,10 @@ export type Instance = BaseInstance & { [key: string]: any }
 
 // based on r3f useThree: https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#usethree
 export type TroisInternals = {
-  renderer: THREE.WebGLRenderer,
-  scene: THREE.Scene,
-  camera: THREE.Camera,
+  initialized: boolean,
+  renderer: THREE.WebGLRenderer | null,
+  scene: THREE.Scene | null,
+  camera: THREE.Camera | null,
   size: {
     width: number,
     height: number,

@@ -5,49 +5,61 @@ import { isNumber } from 'lodash'
 
 // TODO: type for scene options
 export const initTrois = (sceneOptions: any) => {
-    // already initialized, ignore
-    if (troisInternals) return
+    if (troisInternals.initialized) return
+
+    troisInternals.initialized = true
 
     // build camera
     // TODO: more robust
-    const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
-    camera.position.set.apply(camera.position, sceneOptions['camera-position'])
+    troisInternals.camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
+    troisInternals.camera.position.set.apply(troisInternals.camera.position, sceneOptions['camera-position'])
 
     // build scene
     // TODO: more robust
-    const scene = new THREE.Scene()
+    troisInternals.scene = new THREE.Scene()
     if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
-        scene.background = scene.background ?? new THREE.Color()
-            ; (scene.background as THREE.Color).set(sceneOptions.background)
+        troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
+            ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
     }
 
     // build renderer
     // TODO: more robust
-    const renderer = new THREE.WebGLRenderer()
-    renderer.setSize(window.innerWidth, window.innerHeight)
+    troisInternals.renderer = new THREE.WebGLRenderer()
+    troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // build update loop
     // TODO: more robust
     const update = () => {
         requestAnimationFrame(update)
-        if (!renderer) return
-        renderer.render(scene, camera)
+        const { renderer, scene, camera } = useTrois()
+        console.log(renderer, scene, camera)
+        renderer.value.render(scene.value, camera.value)
     }
     update()
 
     // save result
-    troisInternals = reactive<TroisInternals>({
-        renderer,
-        scene,
-        camera,
-        size: {
-            width: 0,
-            height: 0
-        }
-    })
+    // troisInternals.renderer = renderer
+    //  reactive<TroisInternals>({
+    //     renderer,
+    //     scene,
+    //     camera,
+    //     size: {
+    //         width: 0,
+    //         height: 0
+    //     }
+    // })
 }
 
-export let troisInternals: TroisInternals
+export const troisInternals = reactive<TroisInternals>({
+    initialized: false,
+    renderer: null,
+    scene: null,
+    camera: null,
+    size: {
+        width: 0,
+        height: 0,
+    },
+})
 
 export const useTrois = () => {
     return toRefs(troisInternals)

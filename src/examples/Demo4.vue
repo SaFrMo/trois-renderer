@@ -1,6 +1,6 @@
 <template>
     <TroisCanvas :camera-position="[0, 0, 10]">
-        <OrbitControls />
+        <OrbitControls v-if="orbitArgs" :args="orbitArgs" />
 
         <spotLight color="white" :intensity="0.5" :position="[0, 150, 0]" />
         <spotLight color="red" :intensity="0.5" :position="[0, -150, 0]" />
@@ -16,6 +16,7 @@
 import { defineComponent } from 'vue'
 import { Object3D, InstancedMesh, Vector3 } from 'three'
 import { useTrois } from '../renderer'
+const trois = useTrois()
 
 const scratch = new Object3D()
 
@@ -75,6 +76,14 @@ export default defineComponent({
             }
 
             $target.instanceMatrix.needsUpdate = true
+        },
+    },
+    computed: {
+        orbitArgs() {
+            if (!trois) return null
+            const { camera, renderer } = trois
+
+            return [camera.value, renderer.value.domElement]
         },
     },
 })
