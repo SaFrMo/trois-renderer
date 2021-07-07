@@ -4,21 +4,25 @@ import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
 import { TroisNode } from './types'
+import { isNumber, pick } from 'lodash'
 
 // TODO: replace placeholder
-const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
-const scene = new THREE.Scene()
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer
 
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
+let sceneOptions: any = {}
 
 const update = () => {
     requestAnimationFrame(update)
+    if (!renderer) return
     renderer.render(scene, camera)
 }
 update()
 
 const updateSize = ({ width, height }: { width: number, height: number }) => {
+    if (!camera || !renderer) return
+
     camera.aspect = width / height
     camera.updateProjectionMatrix()
     renderer.setSize(width, height)
@@ -116,8 +120,33 @@ const nodeOps: RendererOptions<TroisNode> = {
 
         // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
-        if (name === 'Canvas' || name === 'Div') {
+        if (name === 'Div') {
             vnodeProps.isDom = true
+
+            // pick trois props from wrapper
+            sceneOptions = {
+                'camera-position': [0, 0, 0],
+                background: 'blue',
+                ...vnodeProps
+            }
+        }
+
+        if (name === 'Canvas') {
+            vnodeProps.isDom = true
+            console.log(sceneOptions)
+
+            // set up according to options
+            camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
+            camera.position.set.apply(camera.position, sceneOptions['camera-position'])
+            scene = new THREE.Scene()
+            if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
+                scene.background = scene.background ?? new THREE.Color()
+                    ; (scene.background as THREE.Color).set(sceneOptions.background)
+            }
+
+
+            renderer = new THREE.WebGLRenderer()
+            renderer.setSize(window.innerWidth, window.innerHeight)
         }
 
         // auto-attach geometries and materials

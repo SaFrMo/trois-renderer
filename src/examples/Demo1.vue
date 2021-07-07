@@ -1,11 +1,11 @@
 <template>
-    <TroisCanvas>
+    <TroisCanvas background="white" :camera-position="[0, 0, 50]">
         <pointLight color="#0E09DC" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#1CD1E1" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#18C02C" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#ee3bcf" :intensity="0.85" :position="[0, 0, 50]" />
 
-        <mesh :position="[0, 0, -50]" :rotation="meshRotation">
+        <mesh :rotation="meshRotation">
             <torusGeometry :args="[8, 3, 8, 8]" />
             <meshStandardMaterial
                 color="white"
