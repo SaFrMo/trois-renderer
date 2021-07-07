@@ -7,7 +7,7 @@
             v-for="i in count"
             :key="i"
         >
-            <sphereBufferGeometry />
+            <torusKnotBufferGeometry />
             <meshBasicMaterial :color="color" />
         </mesh>
     </TroisCanvas>
