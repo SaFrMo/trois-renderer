@@ -18,7 +18,8 @@ export const createObject = ({ name, vnodeProps }: {
         // use default geometry & material if needed
         const geo = vnodeProps.$attach?.geometry ?? new THREE.BoxGeometry()
         const mat = vnodeProps.$attach?.material ?? new THREE.MeshBasicMaterial()
-        args.push(geo, mat)
+        args[0] = geo
+        args[1] = mat
     }
 
     // create target

@@ -90,23 +90,22 @@ const nodeOps: RendererOptions<TroisNode> = {
         }
 
         // create three object if needed
-        if (!el.vnodeProps.$target) {
-            el.vnodeProps.$target = createObject({ name, vnodeProps: el.vnodeProps })
-            updateAllObjectProps({ target: el.vnodeProps.$target, props: el.vnodeProps })
+        if (!el.$target) {
+            el.$target = createObject({ name, vnodeProps: el.vnodeProps })
+            updateAllObjectProps({ target: el.$target, props: el.vnodeProps })
         }
 
         // notify parent if needed
         if (el.vnodeProps.$attach) {
             parent.vnodeProps.$attach = {
-                [el.vnodeProps.$attach]: el.vnodeProps.$target,
+                [el.vnodeProps.$attach]: el.$target,
                 ...(parent.vnodeProps.$attach || {})
             }
         }
 
-
-        if (el.vnodeProps.$target && isObject3D(el.vnodeProps.$target)) {
+        if (el.$target && isObject3D(el.$target)) {
             // TODO: replace placeholder
-            scene.add(el.vnodeProps.$target)
+            scene.add(el.$target)
         }
     },
 
@@ -127,7 +126,7 @@ const nodeOps: RendererOptions<TroisNode> = {
             // pick trois props from wrapper
             sceneOptions = {
                 'camera-position': [0, 0, 0],
-                background: 'blue',
+                background: 'black',
                 ...vnodeProps
             }
         }
@@ -197,7 +196,7 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        const { $target } = (el.vnodeProps || {})
+        const { $target } = (el || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
         if (el.vnodeProps.isDom || !$target || key.startsWith('$')) return
