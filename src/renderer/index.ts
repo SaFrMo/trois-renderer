@@ -73,15 +73,15 @@ const nodeOps: RendererOptions<TroisNode> = {
         }
 
         const trois = useTrois()
-        if (!trois.initialized) return
         const { renderer, scene } = trois
+        if (!renderer.value || !scene.value) return
 
         // mount canvas
         if (el.type === 'canvas') {
             // build canvas
             parent.canvas = renderer.value.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
-                if (!el.vnodeProps) return
+                if (!el.vnodeProps || !renderer.value) return
                     ; (renderer.value.domElement.style as any)[key] = el.vnodeProps.style[key]
             })
 

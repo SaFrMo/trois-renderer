@@ -1,6 +1,12 @@
 <template>
-    <TroisCanvas :camera-position="[0, 0, 10]">
-        <OrbitControls v-if="orbitArgs" :args="orbitArgs" />
+    <TroisCanvas :camera-position="[0, 0, 5]">
+        <OrbitControls
+            ref="controls"
+            v-if="orbitArgs"
+            :args="orbitArgs"
+            :autoRotate="true"
+            :enableDamping="true"
+        />
 
         <spotLight color="white" :intensity="0.5" :position="[0, 150, 0]" />
         <spotLight color="red" :intensity="0.5" :position="[0, -150, 0]" />
@@ -34,7 +40,7 @@ export default defineComponent({
         for (let i = 0; i < this.count; i++) {
             const x = Math.random() * 20 - 10
             const y = Math.random() * 20 - 10
-            const z = Math.random() * 10 + 5
+            const z = Math.random() * 20 - 10
 
             const obj = {
                 position: [x, y, z],
@@ -76,12 +82,17 @@ export default defineComponent({
             }
 
             $target.instanceMatrix.needsUpdate = true
+
+            if ((this.$refs.controls as any)?.$el?.$target) {
+                ;(this.$refs.controls as any).$el.$target.update()
+            }
         },
     },
     computed: {
         orbitArgs() {
             if (!trois) return null
             const { camera, renderer } = trois
+            if (!renderer.value || !camera.value) return null
 
             return [camera.value, renderer.value.domElement]
         },
