@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { VNodeProps } from '@vue/runtime-core'
-import { get, isNumber, set } from 'lodash'
+import { get, isNumber, set, camelCase } from 'lodash'
 import { isObject3D } from './lib'
 import { TroisProps } from './types'
 
@@ -36,6 +36,11 @@ export const propertyShortcuts: { [key: string]: string } = {
     'z': 'position.z',
 }
 
+export const nestedPropertiesToCheck = [
+    '',
+    'parameters'
+]
+
 export const updateAllObjectProps = ({ target, props }: { target: THREE.Object3D | null, props: TroisProps }) => {
     if (!target) return target
 
@@ -68,11 +73,16 @@ export const updateObjectProp = (
 
     // update THREE property
     // get final key
-    const finalKey = propertyShortcuts[key] || key
+    const camelKey = camelCase(key)
+    let finalKey = propertyShortcuts[camelKey] || camelKey
 
-    const liveProperty = get(target, finalKey)
+    let liveProperty
 
-    console.log('updating prop', finalKey)
+    for (let i = 0; i < nestedPropertiesToCheck.length && !liveProperty; i++) {
+        const nestedProperty = nestedPropertiesToCheck[i]
+        const fullPath = [nestedProperty, finalKey].filter(Boolean).join('.')
+        liveProperty = liveProperty = get(target, fullPath)
+    }
 
     if (liveProperty && isNumber(value) && liveProperty.setScalar) {
         // if value is a number and the property has a `setScalar` method, use that

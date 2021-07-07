@@ -5,14 +5,14 @@
         <pointLight color="#18C02C" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#ee3bcf" :intensity="0.85" :position="[0, 0, 50]" />
 
-        <mesh :position="[0, 0, -8]">
-            <torusGeometry
-                :radius="8"
-                :tube="3"
-                :radial-segments="8"
-                :tubular-segments="6"
+        <mesh :position="[0, 0, -50]" :rotation="meshRotation">
+            <torusGeometry :args="[8, 3, 8, 8]" />
+            <meshStandardMaterial
+                color="white"
+                :metalness="1"
+                :roughness="0"
+                :flatShading="true"
             />
-            <meshStandardMaterial />
         </mesh>
 
         <!-- 
@@ -45,5 +45,20 @@ import { components } from '../renderer/components'
 export default defineComponent({
     name: 'App',
     components: components,
+    data() {
+        return {
+            meshRotation: [0, 0, 0],
+        }
+    },
+    mounted() {
+        this.update()
+    },
+    methods: {
+        update() {
+            requestAnimationFrame(this.update)
+            const [x, y, z] = this.meshRotation
+            this.meshRotation = [x + 0.02, y + 0.01, z]
+        },
+    },
 })
 </script>
