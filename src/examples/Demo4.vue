@@ -2,7 +2,7 @@
     <TroisCanvas :camera-position="[0, 0, 5]">
         <OrbitControls
             ref="controls"
-            v-if="orbitArgs"
+            v-if="orbitArgs.length"
             :args="orbitArgs"
             :autoRotate="true"
             :enableDamping="true"
@@ -90,11 +90,8 @@ export default defineComponent({
     },
     computed: {
         orbitArgs() {
-            if (!trois) return null
             const { camera, renderer } = trois
-            if (!renderer.value || !camera.value) return null
-
-            return [camera.value, renderer.value.domElement]
+            return [camera.value, renderer.value?.domElement].filter(Boolean)
         },
     },
 })
