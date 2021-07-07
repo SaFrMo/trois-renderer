@@ -5,15 +5,7 @@
         <pointLight color="#18C02C" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#ee3bcf" :intensity="0.85" :position="[0, 0, 50]" />
 
-        <mesh :rotation="meshRotation">
-            <torusGeometry :args="[8, 3, 8, 8]" />
-            <meshStandardMaterial
-                color="white"
-                :metalness="1"
-                :roughness="0"
-                :flatShading="true"
-            />
-        </mesh>
+        <RefractionMesh />
 
         <!-- 
              <NoisyPlane
@@ -40,25 +32,10 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { components } from '../renderer/components'
+import RefractionMesh from './RefractionMesh.vue'
 
 export default defineComponent({
     name: 'App',
-    components: components,
-    data() {
-        return {
-            meshRotation: [0, 0, 0],
-        }
-    },
-    mounted() {
-        this.update()
-    },
-    methods: {
-        update() {
-            requestAnimationFrame(this.update)
-            const [x, y, z] = this.meshRotation
-            this.meshRotation = [x + 0.02, y + 0.01, z]
-        },
-    },
+    components: { RefractionMesh },
 })
 </script>

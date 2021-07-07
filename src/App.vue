@@ -16,11 +16,9 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { components } from './renderer/components'
 
 export default defineComponent({
     name: 'App',
-    components: components,
     data() {
         return {
             colors: ['Red', 'Green', 'Blue'],

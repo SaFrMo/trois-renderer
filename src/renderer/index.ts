@@ -1,10 +1,11 @@
 import * as THREE from 'three'
-import { createRenderer } from 'vue'
+import { createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
 import { TroisNode } from './types'
 import { isNumber, pick } from 'lodash'
+import { components } from './components'
 
 // TODO: replace placeholder
 let camera: THREE.PerspectiveCamera,
@@ -133,7 +134,6 @@ const nodeOps: RendererOptions<TroisNode> = {
 
         if (name === 'Canvas') {
             vnodeProps.isDom = true
-            console.log(sceneOptions)
 
             // set up according to options
             camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -209,4 +209,14 @@ const nodeOps: RendererOptions<TroisNode> = {
     }
 }
 
-export const { createApp } = createRenderer(nodeOps)
+export const createApp = (root: Component) => {
+    const app = createRenderer(nodeOps).createApp(root)
+
+    // register all components
+    Object.keys(components).forEach(key => {
+        app.component(key, (components as any)[key])
+    })
+
+    // done
+    return app
+}
