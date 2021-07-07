@@ -1,10 +1,9 @@
 import * as THREE from 'three'
 import { createRenderer } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
-import { createObject } from './objects'
+import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase, pathFromString } from './lib'
 import { TroisNode } from './types'
-import { get, isNumber, set } from 'lodash'
 
 // TODO: replace placeholder
 const camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
@@ -25,11 +24,6 @@ const updateSize = ({ width, height }: { width: number, height: number }) => {
     renderer.setSize(width, height)
 }
 
-const propertyShortcuts: { [key: string]: string } = {
-    'x': 'position.x',
-    'y': 'position.y',
-    'z': 'position.z',
-}
 
 
 
@@ -90,6 +84,12 @@ const nodeOps: RendererOptions<TroisNode> = {
             return renderer.domElement
         }
 
+        // create three object if needed
+        if (!el.vnodeProps.$target) {
+            el.vnodeProps.$target = createObject({ name, vnodeProps: el.vnodeProps })
+            updateAllObjectProps({ target: el.vnodeProps.$target, props: el.vnodeProps })
+        }
+
         // notify parent if needed
         if (el.vnodeProps.$attach) {
             parent.vnodeProps.$attach = {
@@ -98,9 +98,8 @@ const nodeOps: RendererOptions<TroisNode> = {
             }
         }
 
-        // create three object if needed
-        el.vnodeProps.$target = el.vnodeProps.$target || createObject({ name, vnodeProps: el.vnodeProps })
-        if (isObject3D(el.vnodeProps.$target)) {
+
+        if (el.vnodeProps.$target && isObject3D(el.vnodeProps.$target)) {
             // TODO: replace placeholder
             scene.add(el.vnodeProps.$target)
         }
@@ -146,7 +145,7 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     createComment: (text) => {
-        console.log('createComment', { text })
+        // console.log('createComment', { text })
         return {}
     },
 
@@ -169,28 +168,13 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        const target = el.vnodeProps.$target
+        const { $target } = (el.vnodeProps || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (el.vnodeProps.isDom || !target || key.startsWith('$')) return
+        if (el.vnodeProps.isDom || !$target || key.startsWith('$')) return
 
-        // update THREE property
-        // get final key
-        const finalKey = propertyShortcuts[key] || key
-
-        const liveProperty = get(target, finalKey)
-
-        if (liveProperty && isNumber(nextValue) && liveProperty.setScalar) {
-            // if value is a number and the property has a `setScalar` method, use that
-            liveProperty.setScalar(nextValue)
-        }
-        else if (liveProperty && liveProperty.set) {
-            // check if property type has `set` method (https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#shortcuts)
-            const nextValueAsArray = Array.isArray(nextValue) ? nextValue : [nextValue]
-            liveProperty.set(...nextValueAsArray)
-        } else {
-            set(target, finalKey, nextValue)
-        }
+        // update props
+        updateObjectProp({ target: $target, key, value: nextValue })
 
         // console.log('patchProp', { el, key, prevValue, nextValue })
     }

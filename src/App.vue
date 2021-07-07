@@ -1,5 +1,6 @@
 <template>
     <TroisCanvas>
+        <pointLight color="#0E09DC" />
         <mesh
             :position="[x + (i - count * 0.5), y, -8]"
             :rotation="[0, rotationY, 0]"
@@ -8,7 +9,7 @@
             :key="i"
         >
             <torusKnotBufferGeometry />
-            <meshBasicMaterial :color="color" />
+            <meshStandardMaterial :color="color" />
         </mesh>
     </TroisCanvas>
 </template>
