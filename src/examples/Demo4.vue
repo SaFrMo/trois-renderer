@@ -1,5 +1,5 @@
 <template>
-    <TroisCanvas :camera-position="[0, 0, 5]">
+    <TroisCanvas :cameraPosition="[0, 0, 5]">
         <OrbitControls
             ref="controls"
             v-if="orbitArgs.length"

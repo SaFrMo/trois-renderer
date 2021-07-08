@@ -17,7 +17,7 @@ export type LocalState = {
 // could anything from scene objects, THREE.Objects, JSM, user-defined classes and non-scene objects.
 // What they all need to have in common is defined here ...
 export type BaseInstance = Omit<THREE.Object3D, 'parent' | 'children' | 'attach' | 'add' | 'remove' | 'raycast'> & {
-  __r3f: LocalState
+  __trois: LocalState
   parent: Instance | null
   children: Instance[]
   attach?: string
@@ -26,6 +26,11 @@ export type BaseInstance = Omit<THREE.Object3D, 'parent' | 'children' | 'attach'
   raycast?: (raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) => void
 }
 export type Instance = BaseInstance & { [key: string]: any }
+
+export type SceneOptions = {
+  background: string | number | THREE.Color
+  cameraPosition: [number, number, number] | THREE.Vector3
+}
 
 // based on r3f useThree: https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#usethree
 export type TroisInternals = {

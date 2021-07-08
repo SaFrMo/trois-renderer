@@ -1,10 +1,10 @@
 import { reactive, toRefs } from "@vue/reactivity"
-import { TroisInternals } from "./types"
+import { SceneOptions, TroisInternals } from "./types"
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 
 // TODO: type for scene options
-export const initTrois = (sceneOptions: any) => {
+export const initTrois = (sceneOptions: SceneOptions) => {
     if (troisInternals.initialized) return
 
     troisInternals.initialized = true
@@ -12,7 +12,9 @@ export const initTrois = (sceneOptions: any) => {
     // build camera
     // TODO: more robust
     const camera = troisInternals.camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
-    troisInternals.camera.position.set.apply(troisInternals.camera.position, sceneOptions['camera-position'])
+    const pos = sceneOptions.cameraPosition
+    const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
+    troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
 
     // build scene
     // TODO: more robust

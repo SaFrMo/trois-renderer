@@ -124,7 +124,7 @@ const nodeOps: RendererOptions<TroisNode> = {
 
             // pick trois props from wrapper
             const sceneOptions = {
-                'camera-position': [0, 0, 0],
+                cameraPosition: [0, 0, 0] as [number, number, number],
                 background: 'black',
                 ...vnodeProps
             }
