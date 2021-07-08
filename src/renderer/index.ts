@@ -8,20 +8,34 @@ import { components } from './components'
 import { initTrois, useTrois } from './useThree'
 import { PerspectiveCamera } from 'three'
 import { TroisNode } from './types-old'
-import { Trois } from './types'
 
 
-const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
+const updateSize = ({ width, height }: { width: number, height: number }) => {
+    const trois = useTrois()
+    if (!trois) return
+
+    const { camera, renderer } = trois
+
+    if (!renderer.value) return
+
+    const perspectiveCamera = camera.value as PerspectiveCamera
+
+    perspectiveCamera.aspect = width / height
+    perspectiveCamera.updateProjectionMatrix()
+    renderer.value.setSize(width, height)
+
+    trois.size.value = { width, height }
+}
+
+const nodeOps: RendererOptions<TroisNode> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const name = pascalCase(type)
 
         vnodeProps = vnodeProps || {}
 
-        // debug
         // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
-        // container node - this will be the first thing created
-        if (vnodeProps.hasOwnProperty('data-trois-container')) {
+        if (name === 'Div') {
             vnodeProps.isDom = true
 
             // pick trois props from wrapper
@@ -45,14 +59,19 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (name.endsWith('Mesh')) {
             // wait for mesh till we have children
             // TODO: replace with something reactive
-            // return { type, vnodeProps }
+            return { type, vnodeProps }
         }
 
-        // create trois element
-        return {
-            instance: createObject({ name, vnodeProps }),
-            props: vnodeProps
+        // create THREE object
+        try {
+            vnodeProps.target = createObject({ name, vnodeProps })
+        } catch (err) {
+            // console.log(err, vnodeProps)
         }
+
+        console.log(type, vnodeProps)
+
+        return { type, vnodeProps }
     },
 
     insert: (el, parent, anchor) => {
@@ -69,7 +88,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (!el.vnodeProps) return
 
         // debug
-        console.log('insert', el)
+        // console.log('insert', { name: el.type, el, parent, anchor })
 
         // mount container
         if (typeof parent === 'string') {
@@ -86,7 +105,15 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             const parentEl = document.querySelector(parent) as any as HTMLElement
             parentEl.appendChild(container)
 
-
+            // resize listener
+            const resizeObserver = new ResizeObserver(([container]) => {
+                updateSize(container.contentRect)
+            })
+            resizeObserver.observe(container)
+            updateSize({
+                width: container.offsetWidth,
+                height: container.offsetHeight
+            })
 
             return container
         }
@@ -108,10 +135,10 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         }
 
         // create three object if needed
-        // if (!el.target) {
-        //     el.target = createObject({ name, vnodeProps: el.vnodeProps })
-        //     updateAllObjectProps({ target: el.target, props: el.vnodeProps })
-        // }
+        if (!el.target) {
+            el.target = createObject({ name, vnodeProps: el.vnodeProps })
+            updateAllObjectProps({ target: el.target, props: el.vnodeProps })
+        }
 
         // console.log('adding to scene', el, parent)
 
@@ -166,7 +193,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        const { instance } = (el || {})
+        const { target } = (el || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
         if (el.vnodeProps.isDom || !target || key.startsWith('$')) return

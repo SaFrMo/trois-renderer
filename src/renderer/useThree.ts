@@ -37,7 +37,7 @@ export const initTrois = (sceneOptions: SceneOptions) => {
     update()
 }
 
-const troisInternals = reactive<TroisInternals>({
+export const troisInternals = reactive<TroisInternals>({
     initialized: false,
     renderer: null,
     scene: null,
