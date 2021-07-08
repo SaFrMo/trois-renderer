@@ -47,11 +47,6 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (name.endsWith('Material')) {
             vnodeProps.attach = vnodeProps.attach || 'material'
         }
-        if (name.endsWith('Mesh')) {
-            // wait for mesh till we have children
-            // TODO: replace with something reactive
-            // return { type, vnodeProps }
-        }
 
         let domElement = null
         if (vnodeProps.isDom) {
@@ -66,7 +61,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         // create trois element
         return {
             type,
-            instance: vnodeProps.isDom ? null : createObject({ name, vnodeProps }),
+            instance: null,
             domElement,
             props: vnodeProps
         }
@@ -77,26 +72,20 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         // console.log('insert', el, parent, anchor)
 
         // convert type to PascalCase
-        // let name = ''
-        // if (el.type) {
-        //     name = pascalCase(el.type)
-        // }
+        let name = ''
+        if (el.type) {
+            name = pascalCase(el.type)
+        }
 
         // cancel if no valid name
-        // if (!name) return
+        if (!name) return
 
-        // cancel if no props
-        // if (!el.vnodeProps) return
-
-
-        // mount container
+        // mount dom elements
         if (el.domElement) {
-            // build container
+            // apply styling
             Object.keys(el?.props?.style).forEach(key => {
                 (el.domElement?.style ?? {} as any)[key] = (el?.props?.style ?? {})[key]
             })
-            // attach canvas child
-            // el.domElement.appendChild((el as any).canvas as HTMLElement)
 
             // attach container to parent
             if (typeof parent === 'string') {
@@ -112,14 +101,9 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         const { renderer, scene } = trois
         if (!renderer.value || !scene.value) return
 
-        // create three object if needed
-        // if (!el.target) {
-        //     el.target = createObject({ name, vnodeProps: el.vnodeProps })
-        //     updateAllObjectProps({ target: el.target, props: el.vnodeProps })
-        // }
-
-        // console.log('adding to scene', el, parent)
-
+        // build object instance
+        el.instance = createObject({ name, vnodeProps: el.props })
+        updateAllObjectProps({ target: el.instance, props: el.props || {} })
 
         // notify parent if needed
         if (el.props?.attach && parent?.props) {
