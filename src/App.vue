@@ -22,8 +22,9 @@ export default defineComponent({
     data() {
         return {
             colors: ['Red', 'Green', 'Blue'],
-            colorIndex: 0,
+            colorIndex: 2,
             x: 0,
+            y: 0,
             rotationY: 0,
             scale: 1,
             count: 20,
@@ -38,7 +39,7 @@ export default defineComponent({
     },
     computed: {
         color() {
-            return this.colors[this.colorIndex % this.colors.length]
+            // return this.colors[this.colorIndex % this.colors.length]
         },
     },
     methods: {
@@ -46,8 +47,8 @@ export default defineComponent({
             requestAnimationFrame(this.update)
 
             this.rotationY += 0.02
-            this.x = Math.sin(Date.now() * 0.001)
-            this.y = Math.cos(Date.now() * 0.001)
+            // this.x = Math.sin(Date.now() * 0.001)
+            // this.y = Math.cos(Date.now() * 0.001)
             this.scale = Math.sin(Date.now() * 0.001)
         },
     },

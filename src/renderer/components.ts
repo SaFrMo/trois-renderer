@@ -1,6 +1,7 @@
 import { h, defineComponent, App } from 'vue'
 import TroisCanvas from './TroisCanvas.vue'
 import { Instance } from './types-old'
+import { Trois } from './types'
 
 const createComponent = (tag: string) =>
     defineComponent({
@@ -121,12 +122,8 @@ export const components = {
     TroisCanvas
 }
 
-export interface Catalogue {
-    [key: string]: {
-        new(...args: any): Instance
-    }
-}
-export const catalogue: Catalogue = {}
+
+export const catalogue: Trois.Catalogue = {}
 
 export const extend = ({ app, ...targets }: { app: App, [key: string]: any }) => {
     Object.keys(targets).forEach(key => {
