@@ -37,7 +37,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        const $target = (this.$refs.mesh as any).$el.$target as InstancedMesh
+        const target = (this.$refs.mesh as any).$el.target as InstancedMesh
 
         for (let i = 0; i < this.count; i++) {
             const x = Math.random() * 20 - 10
@@ -57,10 +57,10 @@ export default defineComponent({
 
             scratch.position.set(x, y, z)
             scratch.updateMatrix()
-            $target.setMatrixAt(i, scratch.matrix)
+            target.setMatrixAt(i, scratch.matrix)
         }
 
-        $target.instanceMatrix.needsUpdate = true
+        target.instanceMatrix.needsUpdate = true
 
         this.update()
     },
@@ -68,8 +68,7 @@ export default defineComponent({
         update() {
             requestAnimationFrame(this.update)
 
-            const $target = (this.$refs.mesh as any).$el
-                .$target as InstancedMesh
+            const target = (this.$refs.mesh as any).$el.target as InstancedMesh
 
             for (let i = 0; i < this.objects.length; i++) {
                 const obj = this.objects[i]
@@ -80,11 +79,11 @@ export default defineComponent({
                     obj.rotation.y + obj.rotationSpeed.y
                 scratch.scale.setScalar(obj.scale)
                 scratch.updateMatrix()
-                $target.setMatrixAt(i, scratch.matrix)
+                target.setMatrixAt(i, scratch.matrix)
             }
 
-            $target.instanceMatrix.needsUpdate = true
-            ;(this.$refs.controls as any)?.$el?.$target?.update()
+            target.instanceMatrix.needsUpdate = true
+            ;(this.$refs.controls as any)?.$el?.target?.update()
         },
     },
     computed: {

@@ -20,10 +20,10 @@ export type BaseInstance = Omit<THREE.Object3D, 'parent' | 'children' | 'attach'
   __trois: LocalState
   parent: Instance | null
   children: Instance[]
-  attach?: string
-  remove: (...object: Instance[]) => Instance
-  add: (...object: Instance[]) => Instance
-  raycast?: (raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) => void
+  // attach?: string
+  // remove: (...object: Instance[]) => Instance
+  // add: (...object: Instance[]) => Instance
+  // raycast?: (raycaster: THREE.Raycaster, intersects: THREE.Intersection[]) => void
 }
 export type Instance = BaseInstance & { [key: string]: any }
 
@@ -95,5 +95,5 @@ export type TroisNode = RendererNode & {
 export type TroisProps = (VNodeProps & {
   [key: string]: any;
 } | null | undefined) & {
-  $target?: THREE.Object3D | null
+  target?: THREE.Object3D | null
 }
