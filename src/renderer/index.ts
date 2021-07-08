@@ -1,16 +1,11 @@
-import * as THREE from 'three'
 import { App, createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
-import { isObject3D, pascalCase, pathFromString } from './lib'
-import { isNumber, pick } from 'lodash'
+import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
 import { initTrois, useTrois } from './useThree'
-import { PerspectiveCamera } from 'three'
-import { TroisNode } from './types-old'
 import { Trois } from './types'
 const trois = useTrois()
-
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
