@@ -1,5 +1,5 @@
 import { reactive, toRefs } from "@vue/reactivity"
-import { SceneOptions, TroisInternals } from "./types-old"
+import { SceneOptions, TroisInternals } from "./types"
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 

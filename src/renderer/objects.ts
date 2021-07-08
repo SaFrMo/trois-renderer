@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { VNodeProps } from '@vue/runtime-core'
 import { get, isNumber, set, camelCase } from 'lodash'
 import { isObject3D } from './lib'
-import { Instance, TroisProps } from './types-old'
+import { Instance, TroisProps } from './types'
 import { catalogue } from './components'
 
 /** Create a ThreeJS object from given vnode params. */

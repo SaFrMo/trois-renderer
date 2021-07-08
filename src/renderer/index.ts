@@ -7,7 +7,7 @@ import { isNumber, pick } from 'lodash'
 import { components } from './components'
 import { initTrois, useTrois } from './useThree'
 import { PerspectiveCamera } from 'three'
-import { TroisNode } from './types-old'
+import { TroisNode } from './types'
 
 
 const updateSize = ({ width, height }: { width: number, height: number }) => {

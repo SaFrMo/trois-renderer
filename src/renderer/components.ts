@@ -1,6 +1,6 @@
 import { h, defineComponent, App } from 'vue'
 import TroisCanvas from './TroisCanvas.vue'
-import { Instance } from './types-old'
+import { Instance } from './types'
 
 const createComponent = (tag: string) =>
     defineComponent({
