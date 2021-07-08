@@ -4,32 +4,29 @@ import { get, isNumber, set, camelCase } from 'lodash'
 import { isObject3D } from './lib'
 import { Instance, TroisProps } from './types-old'
 import { catalogue } from './components'
+import { Trois } from './types'
 
 /** Create a ThreeJS object from given vnode params. */
 export const createObject = ({ name, vnodeProps }: {
-    name: string, vnodeProps: (VNodeProps & {
-        [key: string]: any;
-    } | null | undefined)
-}): THREE.Object3D | Instance | null => {
-    vnodeProps = vnodeProps || {}
-    const args = vnodeProps.args ?? []
+    name: string, vnodeProps: Trois.VNodeProps
+}) => {
+    const args = vnodeProps?.args ?? []
 
     // create mesh
     if (name.endsWith('Mesh')) {
         // use default geometry & material if needed
-        const geo = vnodeProps.attach?.geometry ?? new THREE.BoxGeometry()
-        const mat = vnodeProps.attach?.material ?? new THREE.MeshBasicMaterial()
+        const geo = vnodeProps?.attach?.geometry ?? new THREE.BoxGeometry()
+        const mat = vnodeProps?.attach?.material ?? new THREE.MeshBasicMaterial()
         args[0] = geo
         args[1] = mat
     }
 
     // create target
     const targetClass = catalogue[name] || (THREE as any)[name]
-    const target = targetClass ? new targetClass(...args) : null
-    // if (!target || !isObject3D(target)) { return null }
+    if (!targetClass) throw `${name} is not part of the THREE namespace! Did you forget to extend? import {extend} from 'trois'; extend({app, YourComponent, ...})`
 
-    // done
-    return target
+    // return result
+    return new targetClass(...args)
 }
 
 export const propertyShortcuts: { [key: string]: string } = {
