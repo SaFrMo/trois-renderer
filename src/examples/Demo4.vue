@@ -6,6 +6,8 @@
             :args="orbitArgs"
             :autoRotate="true"
             :enableDamping="true"
+            :dampingFactor="0.1"
+            :autoRotateSpeed="0.4"
         />
 
         <spotLight color="white" :intensity="0.5" :position="[0, 150, 0]" />
@@ -82,10 +84,7 @@ export default defineComponent({
             }
 
             $target.instanceMatrix.needsUpdate = true
-
-            if ((this.$refs.controls as any)?.$el?.$target) {
-                ;(this.$refs.controls as any).$el.$target.update()
-            }
+            ;(this.$refs.controls as any)?.$el?.$target?.update()
         },
     },
     computed: {

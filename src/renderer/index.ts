@@ -50,7 +50,7 @@ const nodeOps: RendererOptions<TroisNode> = {
             const container = document.createElement(el.type)
             Object.keys(el.vnodeProps.style).forEach(key => {
                 if (!el.vnodeProps) return
-                (container.style as any)[key] = el.vnodeProps.style[key]
+                (container.style as any)[key] = (el.vnodeProps.style as any)[key]
             })
             // attach canvas child
             container.appendChild((el as any).canvas as HTMLElement)
@@ -82,7 +82,7 @@ const nodeOps: RendererOptions<TroisNode> = {
             parent.canvas = renderer.value.domElement
             Object.keys(el.vnodeProps.style).forEach((key) => {
                 if (!el.vnodeProps || !renderer.value) return
-                    ; (renderer.value.domElement.style as any)[key] = el.vnodeProps.style[key]
+                    ; (renderer.value.domElement.style as any)[key] = (el.vnodeProps.style as any)[key]
             })
 
             return renderer.value.domElement
