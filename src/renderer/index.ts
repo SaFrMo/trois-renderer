@@ -9,6 +9,7 @@ import { initTrois, useTrois } from './useThree'
 import { PerspectiveCamera } from 'three'
 import { TroisNode } from './types-old'
 import { Trois } from './types'
+const trois = useTrois()
 
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
@@ -35,6 +36,10 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             initTrois(sceneOptions)
         }
 
+        if (vnodeProps.hasOwnProperty('data-trois-canvas')) {
+            vnodeProps.isDom = true
+        }
+
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {
             vnodeProps.attach = vnodeProps.attach || 'geometry'
@@ -42,20 +47,30 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (name.endsWith('Material')) {
             vnodeProps.attach = vnodeProps.attach || 'material'
         }
-        if (name.endsWith('Mesh')) {
-            // wait for mesh till we have children
-            // TODO: replace with something reactive
-            // return { type, vnodeProps }
+
+        let domElement = null
+        if (vnodeProps.isDom) {
+            // canvas has already been created by initTrois
+            if (type === 'canvas') {
+                domElement = trois.renderer.value?.domElement
+            } else {
+                domElement = document.createElement(type)
+            }
         }
 
         // create trois element
         return {
-            instance: createObject({ name, vnodeProps }),
+            type,
+            instance: null,
+            domElement,
             props: vnodeProps
         }
     },
 
     insert: (el, parent, anchor) => {
+        // debug
+        // console.log('insert', el, parent, anchor)
+
         // convert type to PascalCase
         let name = ''
         if (el.type) {
@@ -65,68 +80,43 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         // cancel if no valid name
         if (!name) return
 
-        // cancel if no props
-        if (!el.vnodeProps) return
-
-        // debug
-        console.log('insert', el)
-
-        // mount container
-        if (typeof parent === 'string') {
-            // build container
-            const container = document.createElement(el.type)
-            Object.keys(el.vnodeProps.style).forEach(key => {
-                if (!el.vnodeProps) return
-                (container.style as any)[key] = (el.vnodeProps.style as any)[key]
+        // mount dom elements
+        if (el.domElement) {
+            // apply styling
+            Object.keys(el?.props?.style).forEach(key => {
+                (el.domElement?.style ?? {} as any)[key] = (el?.props?.style ?? {})[key]
             })
-            // attach canvas child
-            container.appendChild((el as any).canvas as HTMLElement)
 
             // attach container to parent
-            const parentEl = document.querySelector(parent) as any as HTMLElement
-            parentEl.appendChild(container)
+            if (typeof parent === 'string') {
+                const parentEl = document.querySelector(parent) as any as HTMLElement
+                parentEl.appendChild(el.domElement)
+            } else if (parent?.domElement) {
+                parent.domElement.appendChild(el.domElement)
+            }
 
-
-
-            return container
+            return el.domElement
         }
 
-        const trois = useTrois()
         const { renderer, scene } = trois
         if (!renderer.value || !scene.value) return
 
-        // mount canvas
-        if (el.type === 'canvas') {
-            // build canvas
-            parent.canvas = renderer.value.domElement
-            Object.keys(el.vnodeProps.style).forEach((key) => {
-                if (!el.vnodeProps || !renderer.value) return
-                    ; (renderer.value.domElement.style as any)[key] = (el.vnodeProps.style as any)[key]
-            })
-
-            return renderer.value.domElement
-        }
-
-        // create three object if needed
-        // if (!el.target) {
-        //     el.target = createObject({ name, vnodeProps: el.vnodeProps })
-        //     updateAllObjectProps({ target: el.target, props: el.vnodeProps })
-        // }
-
-        // console.log('adding to scene', el, parent)
-
+        // build object instance
+        el.instance = createObject({ name, vnodeProps: el.props })
+        updateAllObjectProps({ target: el.instance, props: el.props || {} })
 
         // notify parent if needed
-        if (el.vnodeProps.attach) {
-            parent.vnodeProps.attach = {
-                [el.vnodeProps.attach]: el.target,
-                ...(parent?.vnodeProps?.attach || {})
+        if (el.props?.attach && parent?.props) {
+            parent.props.attach = {
+                [el.props.attach]: el.instance,
+                ...(parent?.props?.attach || {})
             }
         }
 
-        if (el.target && isObject3D(el.target)) {
+        if (el.instance && isObject3D(el.instance)) {
+            // console.log('zzz', el, parent)
             if (parent.type === 'canvas') {
-                scene.value.add(el.target)
+                scene.value.add(el.instance)
             }
         }
     },
@@ -169,10 +159,10 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         const { instance } = (el || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (el.vnodeProps.isDom || !target || key.startsWith('$')) return
+        if (el?.props?.isDom || !instance || key.startsWith('$')) return
 
         // update props
-        updateObjectProp({ target: target, key, value: nextValue })
+        updateObjectProp({ target: instance, key, value: nextValue })
 
         // console.log('patchProp', { el, key, prevValue, nextValue })
     }

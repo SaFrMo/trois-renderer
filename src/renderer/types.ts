@@ -32,14 +32,17 @@ export declare namespace Trois {
     }
 
     type Element = Node & {
-        props: VNodeProps
     }
 
     /** A TroisJS object. Can be any kind of ThreeJS object, JSM module, user-defined objects, etc. */
     type Instance = BaseInstance & { [key: string]: any }
 
     type Node = {
-        instance: Instance | null
+        instance?: Instance | null
+        props?: VNodeProps
+        domElement?: HTMLElement | null
+        type?: string
+
     }
 
     type VNodeProps = (vueVNodeProps & {
