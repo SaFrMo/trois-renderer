@@ -28,52 +28,6 @@ const updateSize = ({ width, height }: { width: number, height: number }) => {
 }
 
 const nodeOps: RendererOptions<TroisNode> = {
-    createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
-        const name = pascalCase(type)
-
-        vnodeProps = vnodeProps || {}
-
-        // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
-
-        if (name === 'Div') {
-            vnodeProps.isDom = true
-
-            // pick trois props from wrapper
-            const sceneOptions = {
-                cameraPosition: [0, 0, 0] as [number, number, number],
-                background: 'black',
-                ...vnodeProps
-            }
-
-            // this is the root container, so let's start trois
-            initTrois(sceneOptions)
-        }
-
-        // auto-attach geometries and materials
-        if (name.endsWith('Geometry')) {
-            vnodeProps.attach = vnodeProps.attach || 'geometry'
-        }
-        if (name.endsWith('Material')) {
-            vnodeProps.attach = vnodeProps.attach || 'material'
-        }
-        if (name.endsWith('Mesh')) {
-            // wait for mesh till we have children
-            // TODO: replace with something reactive
-            return { type, vnodeProps }
-        }
-
-        // create THREE object
-        try {
-            vnodeProps.target = createObject({ name, vnodeProps })
-        } catch (err) {
-            // console.log(err, vnodeProps)
-        }
-
-        console.log(type, vnodeProps)
-
-        return { type, vnodeProps }
-    },
-
     insert: (el, parent, anchor) => {
         // convert type to PascalCase
         let name = ''
@@ -135,26 +89,22 @@ const nodeOps: RendererOptions<TroisNode> = {
         }
 
         // create three object if needed
-        if (!el.target) {
-            el.target = createObject({ name, vnodeProps: el.vnodeProps })
-            updateAllObjectProps({ target: el.target, props: el.vnodeProps })
+        if (!el.$target) {
+            el.$target = createObject({ name, vnodeProps: el.vnodeProps })
+            updateAllObjectProps({ target: el.$target, props: el.vnodeProps })
         }
-
-        // console.log('adding to scene', el, parent)
-
 
         // notify parent if needed
-        if (el.vnodeProps.attach) {
-            parent.vnodeProps.attach = {
-                [el.vnodeProps.attach]: el.target,
-                ...(parent?.vnodeProps?.attach || {})
+        if (el.vnodeProps.$attach) {
+            parent.vnodeProps.$attach = {
+                [el.vnodeProps.$attach]: el.$target,
+                ...(parent.vnodeProps.$attach || {})
             }
         }
 
-        if (el.target && isObject3D(el.target)) {
-            if (parent.type === 'canvas') {
-                scene.value.add(el.target)
-            }
+        if (el.$target && isObject3D(el.$target)) {
+            // TODO: replace placeholder
+            scene.value.add(el.$target)
         }
     },
 
@@ -162,7 +112,62 @@ const nodeOps: RendererOptions<TroisNode> = {
         console.log('remove', { el })
     },
 
+    createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
+        const name = pascalCase(type)
 
+        vnodeProps = vnodeProps || {}
+
+        // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
+
+        if (name === 'Div') {
+            vnodeProps.isDom = true
+
+            // pick trois props from wrapper
+            const sceneOptions = {
+                cameraPosition: [0, 0, 0] as [number, number, number],
+                background: 'black',
+                ...vnodeProps
+            }
+
+            // this is the root container, so let's start trois
+            initTrois(sceneOptions)
+        }
+
+        // if (name === 'Canvas') {
+        //     vnodeProps.isDom = true
+
+
+
+        //     // set up according to options
+        //     // camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
+        //     // camera.position.set.apply(camera.position, sceneOptions['camera-position'])
+        //     // scene = new THREE.Scene()
+        //     // if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
+        //     //     scene.background = scene.background ?? new THREE.Color()
+        //     //         ; (scene.background as THREE.Color).set(sceneOptions.background)
+        //     // }
+
+
+        // }
+
+        // auto-attach geometries and materials
+        if (name.endsWith('Geometry')) {
+            vnodeProps.$attach = 'geometry'
+        }
+        if (name.endsWith('Material')) {
+            vnodeProps.$attach = 'material'
+        }
+        if (name.endsWith('Mesh')) {
+            // wait for mesh till we have children
+            // TODO: replace with something reactive
+            return { type, vnodeProps }
+        }
+
+        // create THREE object
+        vnodeProps.$target = createObject({ name, vnodeProps })
+
+        return { type, vnodeProps }
+    },
 
     createText: (text) => {
         // console.log('createText', { text })
@@ -193,13 +198,13 @@ const nodeOps: RendererOptions<TroisNode> = {
     },
 
     patchProp: (el, key, prevValue, nextValue) => {
-        const { target } = (el || {})
+        const { $target } = (el || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (el.vnodeProps.isDom || !target || key.startsWith('$')) return
+        if (el.vnodeProps.isDom || !$target || key.startsWith('$')) return
 
         // update props
-        updateObjectProp({ target: target, key, value: nextValue })
+        updateObjectProp({ target: $target, key, value: nextValue })
 
         // console.log('patchProp', { el, key, prevValue, nextValue })
     }

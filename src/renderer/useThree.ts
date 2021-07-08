@@ -3,6 +3,7 @@ import { SceneOptions, TroisInternals } from "./types"
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 
+// TODO: type for scene options
 export const initTrois = (sceneOptions: SceneOptions) => {
     if (troisInternals.initialized) return
 
