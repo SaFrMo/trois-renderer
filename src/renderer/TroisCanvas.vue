@@ -1,6 +1,6 @@
 <template>
     <div class="container" data-trois-container :style="containerStyle">
-        <canvas :style="canvasStyle">
+        <canvas data-trois-canvas :style="canvasStyle">
             <slot />
         </canvas>
     </div>
@@ -40,10 +40,10 @@ export default defineComponent({
         const resizeObserver = new ResizeObserver(([container]) => {
             this.updateSize(container.contentRect)
         })
-        resizeObserver.observe(this.$el.canvas.parentNode)
+        resizeObserver.observe(this.$el.domElement)
         this.updateSize({
-            width: this.$el.canvas.parentNode.offsetWidth,
-            height: this.$el.canvas.parentNode.offsetHeight,
+            width: this.$el.domElement.offsetWidth,
+            height: this.$el.domElement.offsetHeight,
         })
     },
     methods: {

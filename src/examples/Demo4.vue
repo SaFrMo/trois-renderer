@@ -37,7 +37,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        const target = (this.$refs.mesh as any).$el.target as InstancedMesh
+        const target = (this.$refs.mesh as any).$el.instance as InstancedMesh
 
         for (let i = 0; i < this.count; i++) {
             const x = Math.random() * 20 - 10
@@ -68,7 +68,8 @@ export default defineComponent({
         update() {
             requestAnimationFrame(this.update)
 
-            const target = (this.$refs.mesh as any).$el.target as InstancedMesh
+            const target = (this.$refs.mesh as any).$el
+                .instance as InstancedMesh
 
             for (let i = 0; i < this.objects.length; i++) {
                 const obj = this.objects[i]
@@ -83,7 +84,7 @@ export default defineComponent({
             }
 
             target.instanceMatrix.needsUpdate = true
-            ;(this.$refs.controls as any)?.$el?.target?.update()
+            ;(this.$refs.controls as any)?.$el?.instance?.update()
         },
     },
     computed: {

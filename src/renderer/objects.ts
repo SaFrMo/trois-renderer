@@ -40,7 +40,7 @@ export const nestedPropertiesToCheck = [
     'parameters'
 ]
 
-export const updateAllObjectProps = ({ target, props }: { target: THREE.Object3D | null, props: TroisProps }) => {
+export const updateAllObjectProps = ({ target, props }: { target: Trois.Instance | null, props: TroisProps }) => {
     if (!target) return target
 
     // set props
@@ -62,7 +62,7 @@ export const updateAllObjectProps = ({ target, props }: { target: THREE.Object3D
 export const updateObjectProp = (
     { target, key, value }:
         {
-            target: THREE.Object3D | null,
+            target: Trois.Instance,
             key: string,
             value: any
         }) => {
