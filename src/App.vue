@@ -2,7 +2,8 @@
     <TroisCanvas>
         <pointLight color="#0E09DC" />
         <mesh
-            :position="[x + (i - count * 0.5), y, -8]"
+            :position-x="x + (i - count * 0.5)"
+            :position-z="-8"
             :rotation="[0, rotationY, 0]"
             :scale="(scale * i) / count"
             v-for="i in count"
@@ -24,7 +25,6 @@ export default defineComponent({
             colors: ['Red', 'Green', 'Blue'],
             colorIndex: 2,
             x: 0,
-            y: 0,
             rotationY: 0,
             scale: 1,
             count: 20,
@@ -47,7 +47,6 @@ export default defineComponent({
             requestAnimationFrame(this.update)
 
             this.rotationY += 0.02
-            // this.x = Math.sin(Date.now() * 0.001)
             // this.y = Math.cos(Date.now() * 0.001)
             this.scale = Math.sin(Date.now() * 0.001)
         },
