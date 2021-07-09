@@ -171,20 +171,12 @@ export const createApp = ((root: Component) => {
         app.component(key, (components as any)[key])
     })
 
+    // update mount function to match Trois.Node
     const { mount } = app
-    app.mount = (...args) => {
-        const [root] = args
+    app.mount = (root, ...args) => {
         const domElement = typeof root === 'string' ? document.querySelector(root) : root
-        return mount({ domElement })
+        return mount({ domElement }, ...args)
     }
-    // app.mount = (containerOrSelector: Element | string): any => {
-    //     const container = typeof containerOrSelector === 'string' ? document.querySelector(containerOrSelector) : containerOrSelector
-    //     if (!container) return
-    //     console.log('container', container)
-    //     const proxy = mount.apply(app, [container])
-    //     console.log('proxy', proxy)
-    //     return proxy
-    // }
 
     // done
     return app
