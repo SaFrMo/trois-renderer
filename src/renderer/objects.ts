@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { get, isNumber, set, camelCase } from 'lodash'
+import { get, isNumber, set } from 'lodash'
 import { isObject3D } from './lib'
 import { TroisProps } from './types-old'
 import { catalogue } from './components'
@@ -92,8 +92,10 @@ export const updateObjectProp = (
             // console.log(finalKey)
             ; (target as any)[finalKey].set(...nextValueAsArray)
         // console.log('setting', target)
-    } else {
+    } else if (get(target, finalKey, undefined) !== undefined) {
         set(target, finalKey, value)
+    } else {
+        // console.log(`No property ${finalKey} found on`, target)
     }
 
     return target

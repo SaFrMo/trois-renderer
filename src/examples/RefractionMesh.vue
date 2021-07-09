@@ -7,13 +7,13 @@
             :roughness="0"
             :flatShading="true"
         />
-
-        <cubeCamera
-            attach="cubeCamera"
-            v-if="$refs.rt"
-            :args="[0.1, 2000, $refs.rt.$el.instance]"
-        />
     </mesh>
+
+    <cubeCamera
+        attach="cubeCamera"
+        v-if="$refs.rt"
+        :args="[0.1, 2000, $refs.rt.$el.instance]"
+    />
 
     <!-- cube info -->
     <webGLCubeRenderTarget

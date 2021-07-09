@@ -1,12 +1,13 @@
-import { createRenderer, Component } from 'vue'
+import { createRenderer, Component, watchEffect } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
 import { initTrois, useTrois } from './useThree'
+import { Trois } from './types'
 const trois = useTrois()
 
-const nodeOps: RendererOptions = {
+const nodeOps: RendererOptions<Trois.Node> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const name = pascalCase(type)
 
@@ -63,7 +64,8 @@ const nodeOps: RendererOptions = {
 
     insert: (el, parent, anchor) => {
         // debug
-        // console.log('insert', el, parent, anchor)
+        console.log('insert', el, parent, anchor)
+        // console.log('subtree', (trois.app.value?.$))
 
         // convert type to PascalCase
         let name = ''
@@ -175,7 +177,10 @@ export const createApp = ((root: Component) => {
     const { mount } = app
     app.mount = (root, ...args) => {
         const domElement = typeof root === 'string' ? document.querySelector(root) : root
-        return mount({ domElement }, ...args)
+        const mounted = mount({ domElement }, ...args)
+        // trois.subTree.value = mounted.$.subTree
+        // trois.app.value = mounted
+        return mounted
     }
 
     // done

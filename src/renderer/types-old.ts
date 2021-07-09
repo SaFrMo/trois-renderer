@@ -1,4 +1,4 @@
-import { RendererNode, VNodeProps } from '@vue/runtime-core'
+import { ComponentPublicInstance, RendererNode, VNodeProps } from '@vue/runtime-core'
 import * as THREE from 'three'
 
 // WIP: r3f-style type setup
@@ -42,6 +42,10 @@ export type TroisInternals = {
     width: number,
     height: number,
   },
+  // app: null | ComponentPublicInstance
+  // subTree: {
+  //   [key: string]: any
+  // } | null
 
   // not yet implemented (copied from r3f):
   /*

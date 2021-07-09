@@ -46,6 +46,7 @@ const troisInternals = reactive<TroisInternals>({
         width: 0,
         height: 0,
     },
+    // app: null,
 })
 
 export const useTrois = () => {
