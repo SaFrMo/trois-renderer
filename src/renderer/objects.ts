@@ -73,7 +73,6 @@ export const updateObjectProp = (
     // get final key
     const camelKey = key.replace(/-/g, '.')
     let finalKey = propertyShortcuts[camelKey] || camelKey
-    console.log(finalKey)
     let liveProperty
 
     for (let i = 0; i < nestedPropertiesToCheck.length && !liveProperty; i++) {

@@ -1,5 +1,5 @@
 <template>
-    <mesh :rotation="meshRotation">
+    <mesh :rotation="meshRotation" ref="mesh">
         <torusGeometry :args="[8, 3, 8, 8]" />
         <meshStandardMaterial
             color="white"
@@ -11,7 +11,7 @@
         <cubeCamera
             attach="cubeCamera"
             v-if="$refs.rt"
-            :args="[0.1, 2000, $refs.rt.$el.target]"
+            :args="[0.1, 2000, $refs.rt.$el.instance]"
         />
     </mesh>
 
@@ -48,7 +48,8 @@ export default defineComponent({
         }
     },
     mounted() {
-        console.log('zzzzzz', this.$refs)
+        console.log('zzzzzz', this.$refs.rt)
+        console.log(this.$refs.mesh)
         this.update()
     },
     methods: {

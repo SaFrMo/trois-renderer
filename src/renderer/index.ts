@@ -1,13 +1,12 @@
-import { App, createRenderer, Component } from 'vue'
+import { createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
 import { initTrois, useTrois } from './useThree'
-import { Trois } from './types'
 const trois = useTrois()
 
-const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
+const nodeOps: RendererOptions = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const name = pascalCase(type)
 
@@ -101,7 +100,9 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         updateAllObjectProps({ target: el.instance, props: el.props || {} })
 
         // notify parent if needed
+        // console.log(el, 'checking attach')
         if (el.props?.attach && parent?.props) {
+            console.log('attach', el.props.attach)
             parent.props.attach = {
                 [el.props.attach]: el.instance,
                 ...(parent?.props?.attach || {})
@@ -109,7 +110,6 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         }
 
         if (el.instance && isObject3D(el.instance)) {
-            // console.log('zzz', el, parent)
             if (parent.type === 'canvas') {
                 scene.value.add(el.instance)
             }
@@ -117,7 +117,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     },
 
     remove: (el) => {
-        console.log('remove', { el })
+        console.log('remove', el)
     },
 
 
@@ -163,7 +163,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     }
 }
 
-export const createApp = (root: Component) => {
+export const createApp = ((root: Component) => {
     const app = createRenderer(nodeOps).createApp(root)
 
     // register all components
@@ -171,9 +171,24 @@ export const createApp = (root: Component) => {
         app.component(key, (components as any)[key])
     })
 
+    const { mount } = app
+    app.mount = (...args) => {
+        const [root] = args
+        const domElement = typeof root === 'string' ? document.querySelector(root) : root
+        return mount({ domElement })
+    }
+    // app.mount = (containerOrSelector: Element | string): any => {
+    //     const container = typeof containerOrSelector === 'string' ? document.querySelector(containerOrSelector) : containerOrSelector
+    //     if (!container) return
+    //     console.log('container', container)
+    //     const proxy = mount.apply(app, [container])
+    //     console.log('proxy', proxy)
+    //     return proxy
+    // }
+
     // done
     return app
-}
+})
 
 export { extend } from './components'
 export { useTrois }
