@@ -31,19 +31,21 @@ export declare namespace Trois {
         }
     }
 
-    type Element = Node & {
+    type Element = {
+        children?: Array<Node>
+        domElement?: HTMLElement | null
+        eventListeners?: Record<string, Function | Function[]> | null
+        id?: number
+        instance?: Instance | null
+        parentNode?: Node | null
+        props?: VNodeProps
+        type?: string
     }
 
     /** A TroisJS object. Can be any kind of ThreeJS object, JSM module, user-defined objects, etc. */
     type Instance = BaseInstance & { [key: string]: any }
 
-    type Node = {
-        instance?: Instance | null
-        props?: VNodeProps
-        domElement?: HTMLElement | null
-        type?: string
-        id?: number
-    }
+    type Node = Element
 
     type VNodeProps = (vueVNodeProps & {
         [key: string]: any;

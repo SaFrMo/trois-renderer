@@ -15,7 +15,10 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             type,
             instance: null,
             domElement: null,
-            props: vnodeProps || {}
+            props: vnodeProps || {},
+            children: [],
+            parentNode: null,
+            eventListeners: null
         }
 
         const name = pascalCase(type)
