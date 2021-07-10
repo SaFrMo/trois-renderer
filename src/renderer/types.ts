@@ -42,7 +42,7 @@ export declare namespace Trois {
         props?: VNodeProps
         domElement?: HTMLElement | null
         type?: string
-
+        id?: number
     }
 
     type VNodeProps = (vueVNodeProps & {

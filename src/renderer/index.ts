@@ -6,19 +6,26 @@ import { components } from './components'
 import { initTrois, useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
+let nodeId = 0
 
-const nodeOps: RendererOptions<Trois.Node> = {
+const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
-        const name = pascalCase(type)
+        const node: Trois.Element = {
+            id: nodeId++,
+            type,
+            instance: null,
+            domElement: null,
+            props: vnodeProps || {}
+        }
 
-        vnodeProps = vnodeProps || {}
+        const name = pascalCase(type)
 
         // debug
         // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
         // container node - this will be the first thing created
-        if (vnodeProps.hasOwnProperty('data-trois-container')) {
-            vnodeProps.isDom = true
+        if (node.props?.hasOwnProperty('data-trois-container')) {
+            node.props.isDom = true
 
             // pick trois props from wrapper
             const sceneOptions = {
@@ -31,35 +38,29 @@ const nodeOps: RendererOptions<Trois.Node> = {
             initTrois(sceneOptions)
         }
 
-        if (vnodeProps.hasOwnProperty('data-trois-canvas')) {
-            vnodeProps.isDom = true
+        if (node.props?.hasOwnProperty('data-trois-canvas')) {
+            node.props.isDom = true
         }
 
         // auto-attach geometries and materials
         if (name.endsWith('Geometry')) {
-            vnodeProps.attach = vnodeProps.attach || 'geometry'
+            node.props = { attach: 'geometry', ...node.props }
         }
         if (name.endsWith('Material')) {
-            vnodeProps.attach = vnodeProps.attach || 'material'
+            node.props = { attach: 'material', ...node.props }
         }
 
-        let domElement = null
-        if (vnodeProps.isDom) {
+        if (node.props?.isDom) {
             // canvas has already been created by initTrois
             if (type === 'canvas') {
-                domElement = trois.renderer.value?.domElement
+                node.domElement = trois.renderer.value?.domElement
             } else {
-                domElement = document.createElement(type)
+                node.domElement = document.createElement(type)
             }
         }
 
         // create trois element
-        return {
-            type,
-            instance: null,
-            domElement,
-            props: vnodeProps
-        }
+        return node
     },
 
     insert: (el, parent, anchor) => {
@@ -176,7 +177,7 @@ export const createApp = ((root: Component) => {
     // update mount function to match Trois.Node
     const { mount } = app
     app.mount = (root, ...args) => {
-        const domElement = typeof root === 'string' ? document.querySelector(root) : root
+        const domElement = (typeof root === 'string' ? document.querySelector(root) : root) as HTMLElement
         const mounted = mount({ domElement }, ...args)
         // trois.subTree.value = mounted.$.subTree
         // trois.app.value = mounted
