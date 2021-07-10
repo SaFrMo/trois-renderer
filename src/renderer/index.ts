@@ -8,6 +8,10 @@ import { Trois } from './types'
 const trois = useTrois()
 let nodeId = 0
 
+const remove = (el: Trois.Element) => {
+    // console.log('remove', el)
+}
+
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
         const node: Trois.Element = {
@@ -24,7 +28,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         const name = pascalCase(type)
 
         // debug
-        // console.log('createElement', { name, type, isSvg, isCustomizedBuiltin, vnodeProps })
+        console.log('createElement', { name, node, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
         // container node - this will be the first thing created
         if (node.props?.hasOwnProperty('data-trois-container')) {
@@ -66,65 +70,79 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         return node
     },
 
-    insert: (el, parent, anchor) => {
+    insert: (child, parent, ref?: Trois.Element | null) => {
         // debug
-        console.log('insert', el, parent, anchor)
-        // console.log('subtree', (trois.app.value?.$))
+        // console.log('insert', el, parent, anchor)
+
+        // calculate the ref index because the child's removal may have affected it
+        parent.children = parent.children || []
+        const refIndex = ref ? parent.children.indexOf(ref) : -1
+        if (refIndex === -1) {
+            console.log(child)
+            // child not present in scene yet (v-if, for example)
+            parent.children?.push(child)
+            child.parentNode = parent
+        } else {
+            parent.children?.splice(refIndex, 0, child)
+            child.parentNode = parent
+        }
 
         // convert type to PascalCase
         let name = ''
-        if (el.type) {
-            name = pascalCase(el.type)
+        if (child.type) {
+            name = pascalCase(child.type)
         }
+
+        // console.log(child)
 
         // cancel if no valid name
         if (!name) return
 
         // mount dom elements
-        if (el.domElement) {
+        if (child.domElement) {
             // apply styling
-            Object.keys(el?.props?.style).forEach(key => {
-                (el.domElement?.style ?? {} as any)[key] = (el?.props?.style ?? {})[key]
+            Object.keys(child?.props?.style).forEach(key => {
+                (child.domElement?.style ?? {} as any)[key] = (child?.props?.style ?? {})[key]
             })
 
             // attach container to parent
             if (typeof parent === 'string') {
                 const parentEl = document.querySelector(parent) as any as HTMLElement
-                parentEl.appendChild(el.domElement)
+                parentEl.appendChild(child.domElement)
             } else if (parent?.domElement) {
-                parent.domElement.appendChild(el.domElement)
+                parent.domElement.appendChild(child.domElement)
             }
 
-            return el.domElement
+            return child.domElement
         }
 
         const { renderer, scene } = trois
         if (!renderer.value || !scene.value) return
 
         // build object instance
-        el.instance = createObject({ name, vnodeProps: el.props })
-        updateAllObjectProps({ target: el.instance, props: el.props || {} })
+        child.instance = createObject({ name, vnodeProps: child.props })
+        updateAllObjectProps({ target: child.instance, props: child.props || {} })
+
+        console.log(child)
 
         // notify parent if needed
         // console.log(el, 'checking attach')
-        if (el.props?.attach && parent?.props) {
-            console.log('attach', el.props.attach)
+        if (child.props?.attach && parent?.props) {
+            // console.log('attach', child.props.attach)
             parent.props.attach = {
-                [el.props.attach]: el.instance,
+                [child.props.attach]: child.instance,
                 ...(parent?.props?.attach || {})
             }
         }
 
-        if (el.instance && isObject3D(el.instance)) {
+        if (child.instance && isObject3D(child.instance)) {
             if (parent.type === 'canvas') {
-                scene.value.add(el.instance)
+                scene.value.add(child.instance)
             }
         }
     },
 
-    remove: (el) => {
-        console.log('remove', el)
-    },
+    remove,
 
 
 
@@ -134,7 +152,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     },
 
     createComment: (text) => {
-        // console.log('createComment', { text })
+        console.log('createComment', { text })
         return {}
     },
 

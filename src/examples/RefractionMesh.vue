@@ -7,13 +7,13 @@
             :roughness="0"
             :flatShading="true"
         />
-    </mesh>
 
-    <cubeCamera
-        attach="cubeCamera"
-        v-if="$refs.rt"
-        :args="[0.1, 2000, $refs.rt.$el.instance]"
-    />
+        <cubeCamera
+            attach="cubeCamera"
+            v-if="$refs.rt"
+            :args="[0.1, 2000, $refs.rt.$el.instance]"
+        />
+    </mesh>
 
     <!-- cube info -->
     <webGLCubeRenderTarget
@@ -48,8 +48,8 @@ export default defineComponent({
         }
     },
     mounted() {
-        console.log('zzzzzz', this.$refs.rt)
-        console.log(this.$refs.mesh)
+        // console.log('zzzzzz', this.$refs.rt)
+        // console.log(this.$refs.mesh)
         this.update()
     },
     methods: {
