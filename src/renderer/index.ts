@@ -1,4 +1,4 @@
-import { createRenderer, Component, watchEffect } from 'vue'
+import { createRenderer, Component, watch, ref, reactive } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase } from './lib'
@@ -72,16 +72,15 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
 
     insert: (child, parent, ref?: Trois.Element | null) => {
         // debug
-        // console.log('insert', el, parent, anchor)
+        console.log('insert', { child, parent, ref })
 
         // calculate the ref index because the child's removal may have affected it
-        parent.children = parent.children || []
-        const refIndex = ref ? parent.children.indexOf(ref) : -1
+        // parent.children = parent.children || []
+        const refIndex = (ref ? parent?.children?.indexOf(ref) : -1) ?? -1
         if (refIndex === -1) {
-            console.log(child)
             // child not present in scene yet (v-if, for example)
-            parent.children?.push(child)
-            child.parentNode = parent
+            // parent.children?.push(child)
+            // child.parentNode = parent
         } else {
             parent.children?.splice(refIndex, 0, child)
             child.parentNode = parent
@@ -123,8 +122,6 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         child.instance = createObject({ name, vnodeProps: child.props })
         updateAllObjectProps({ target: child.instance, props: child.props || {} })
 
-        console.log(child)
-
         // notify parent if needed
         // console.log(el, 'checking attach')
         if (child.props?.attach && parent?.props) {
@@ -138,6 +135,14 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (child.instance && isObject3D(child.instance)) {
             if (parent.type === 'canvas') {
                 scene.value.add(child.instance)
+            } else if (child.parentNode?.instance && child.parentNode?.instance.add) {
+                // console.log('adddddd')
+                child.parentNode.instance.add(child.instance)
+            } else {
+                // const t = reactive(child.parentNode)
+                // watch(t, () => {
+                //     console.log('here')
+                // }, { deep: true })
             }
         }
     },
