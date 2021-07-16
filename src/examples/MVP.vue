@@ -1,6 +1,6 @@
 <template>
     <TroisCanvas background="white" :cameraPosition="[0, 0, 10]">
-        <group :x="x">
+        <group ref="group">
             <mesh :y="-1">
                 <sphereGeometry />
                 <meshBasicMaterial color="blue" />
@@ -15,12 +15,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { Trois } from '../renderer/types'
 
 export default defineComponent({
     data() {
         return {
             active: false,
-            x: 0,
         }
     },
     mounted() {
@@ -31,7 +31,9 @@ export default defineComponent({
         update() {
             requestAnimationFrame(this.update)
 
-            this.x = Math.sin(Date.now() * 0.001) * 4
+            const { instance } = (this.$refs.group as any).$el as Trois.Element
+            if (!instance) return
+            instance.position.x = Math.sin(Date.now() * 0.001) * 4
         },
     },
 })
