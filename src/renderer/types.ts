@@ -42,7 +42,10 @@ export declare namespace Trois {
         type?: string
     }
 
-    /** A TroisJS object. Can be any kind of ThreeJS object, JSM module, user-defined objects, etc. */
+    /** 
+     * A TroisJS object. Can be any kind of ThreeJS object, JSM module, user-defined objects, etc.
+     * For most scene-level work. a Trois.Instance and a THREE.Object3D are the same thing.
+     */
     type Instance = BaseInstance & { [key: string]: any }
 
     type Node = Element

@@ -136,13 +136,22 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             child.parentNode = parentNode
 
             if (parent.type === 'canvas') {
+                // we're a scene-level component, so let's go ahead and add ourselves to the scene
                 scene.value.add(child.instance)
-                child.children?.forEach(c => {
+
+                // we'll also need to add any children who have added themselves to our creation queue
+                child.children?.filter(Boolean).forEach(c => {
                     (child.instance as any as Object3D).add(c.instance as any as Object3D)
                 })
+
+                // reset children array
+                child.children = []
             } else if (parentInstance) {
+                // if we're a child of an existing TroisInstance, add ourselves to that instance
                 parentInstance.add(child.instance)
             } else {
+                // if we're a child of a nonexistant TroisInstance, tell the node we'll need to
+                // be created when that instance is created
                 parentNode.children.push(child)
             }
         }
