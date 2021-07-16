@@ -1,3 +1,4 @@
+import { Object3D } from 'three'
 import { createRenderer, Component, watch, ref, reactive } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
@@ -8,9 +9,9 @@ import { Trois } from './types'
 const trois = useTrois()
 let nodeId = 0
 
-const remove = (el: Trois.Element) => {
-    // console.log('remove', el)
-}
+/*
+    Elements are `create`d from the outside in, then `insert`ed from the inside out.
+*/
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
@@ -58,7 +59,8 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         }
 
         if (node.props?.isDom) {
-            // canvas has already been created by initTrois
+            // canvas has already been created by initTrois,
+            // so let's attach it here
             if (type === 'canvas') {
                 node.domElement = trois.renderer.value?.domElement
             } else {
@@ -92,8 +94,6 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             name = pascalCase(child.type)
         }
 
-        // console.log(child)
-
         // cancel if no valid name
         if (!name) return
 
@@ -123,33 +123,38 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         updateAllObjectProps({ target: child.instance, props: child.props || {} })
 
         // notify parent if needed
-        // console.log(el, 'checking attach')
         if (child.props?.attach && parent?.props) {
-            // console.log('attach', child.props.attach)
             parent.props.attach = {
                 [child.props.attach]: child.instance,
                 ...(parent?.props?.attach || {})
             }
         }
 
-        if (child.instance && isObject3D(child.instance)) {
+        if (child && child.instance && isObject3D(child.instance)) {
+            const parentNode = (child as any).__vueParentComponent?.vnode?.el ?? parent
+            const parentInstance = parentNode?.instance
+            child.parentNode = parentNode
+
             if (parent.type === 'canvas') {
                 scene.value.add(child.instance)
-            } else if (child.parentNode?.instance && child.parentNode?.instance.add) {
-                // console.log('adddddd')
-                child.parentNode.instance.add(child.instance)
+                child.children?.forEach(c => {
+                    (child.instance as any as Object3D).add(c.instance as any as Object3D)
+                })
+            } else if (parentInstance) {
+                parentInstance.add(child.instance)
             } else {
-                // const t = reactive(child.parentNode)
-                // watch(t, () => {
-                //     console.log('here')
-                // }, { deep: true })
+                parentNode.children.push(child)
             }
         }
     },
 
-    remove,
-
-
+    remove: (el) => {
+        const instance = el?.instance
+        if (instance) {
+            const parent = el?.parentNode?.instance ?? trois.scene.value
+            parent?.remove(instance as any)
+        }
+    },
 
     createText: (text) => {
         // console.log('createText', { text })
