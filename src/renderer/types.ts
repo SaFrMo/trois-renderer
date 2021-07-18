@@ -40,6 +40,7 @@ export declare namespace Trois {
         parentNode?: Node | null
         props?: VNodeProps
         type?: string
+        vueId?: number
     }
 
     /** 

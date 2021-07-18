@@ -8,6 +8,7 @@ import { initTrois, useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
 let nodeId = 0
+const created: { [key: number]: Trois.Element } = {}
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
@@ -23,7 +24,8 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             props: vnodeProps || {},
             children: [],
             parentNode: null,
-            eventListeners: null
+            eventListeners: null,
+            vueId: -1
         }
 
         const name = pascalCase(type)
@@ -130,8 +132,19 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             }
         }
 
+        // save vue ID
+        child.vueId = (child as any)?.__vueParentComponent?.uid
+        if (child.vueId === null || child.vueId === undefined) {
+            return
+        }
+        created[child.vueId] = child
+
         if (child && child.instance && isObject3D(child.instance)) {
-            const parentNode = (child as any).__vueParentComponent?.vnode?.el ?? parent
+            let parentNode = (child as any).__vueParentComponent?.vnode?.el
+                ?? parent
+            if (!Object.keys(parentNode).length) {
+                parentNode = created[(child as any).__vueParentComponent?.parent?.uid ?? -1]
+            }
             const parentInstance = parentNode?.instance
             child.parentNode = parentNode
 
@@ -149,7 +162,8 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             } else if (parentInstance) {
                 // if we're a child of an existing TroisInstance, add ourselves to that instance
                 parentInstance.add(child.instance)
-            } else {
+            } else if (parentNode) {
+                console.log((child as any))
                 // if we're a child of a nonexistant TroisInstance, tell the node we'll need to
                 // be created when that instance is created
                 parentNode.children.push(child)
@@ -160,6 +174,10 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     remove: (el) => {
         const instance = el?.instance
         if (instance) {
+            const uid = el.vueId ?? -1
+            if (uid !== -1) {
+                delete created[uid]
+            }
             const parent = el?.parentNode?.instance ?? trois.scene.value
             parent?.remove(instance as any)
         }
