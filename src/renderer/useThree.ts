@@ -3,6 +3,9 @@ import { SceneOptions, TroisInternals } from "./types-old"
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 
+export let scene: THREE.Scene = new THREE.Scene()
+export let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
+
 export const initTrois = (sceneOptions: SceneOptions) => {
     if (troisInternals.initialized) return
 
@@ -17,7 +20,7 @@ export const initTrois = (sceneOptions: SceneOptions) => {
 
     // build scene
     // TODO: more robust
-    const scene = troisInternals.scene = new THREE.Scene()
+    scene = troisInternals.scene = new THREE.Scene()
     if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
         troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
             ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
@@ -25,7 +28,7 @@ export const initTrois = (sceneOptions: SceneOptions) => {
 
     // build renderer
     // TODO: more robust
-    const renderer = troisInternals.renderer = new THREE.WebGLRenderer()
+    renderer = troisInternals.renderer = new THREE.WebGLRenderer()
     troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // build update loop
@@ -52,3 +55,4 @@ const troisInternals = reactive<TroisInternals>({
 export const useTrois = () => {
     return toRefs(troisInternals)
 }
+

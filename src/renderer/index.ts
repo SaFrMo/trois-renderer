@@ -4,7 +4,7 @@ import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
-import { initTrois, useTrois } from './useThree'
+import { initTrois, useTrois, scene as mainScene, renderer as mainRenderer } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
 let nodeId = 0
@@ -248,3 +248,4 @@ export const createApp = ((root: Component) => {
 
 export { extend } from './components'
 export { useTrois }
+export { scene, renderer } from './useThree'
