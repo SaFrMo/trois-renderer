@@ -18,6 +18,7 @@
     <webGLCubeRenderTarget
         :args="[
             256,
+            256,
             {
                 mapping: CubeRefractionMapping,
                 format: RGBFormat,
