@@ -21,7 +21,7 @@
         key="normal-map"
         :args="[
             {
-                uniforms: normUniforms,
+                uniforms: { dispMap: { value: null }, delta },
                 vertexShader: normVert,
                 fragmentShader: normFrag,
             },
@@ -30,7 +30,7 @@
     />
 
     <mesh ref="mesh" :rotation-x="Math.PI * -0.5" :y="-10">
-        <planeBufferGeometry :args="[50, 50, 50, 50]" />
+        <planeBufferGeometry :args="[50, 50, 300, 300]" />
 
         <!-- create plane material consisting of:
             - displacement (dispRT.texture) 
@@ -79,16 +79,8 @@ import { defineComponent } from 'vue'
 import { vertex as dispVert, fragment as dispFrag } from './shaders/dispMap'
 import { vertex as normVert, fragment as normFrag } from './shaders/normalMap'
 import { useTrois } from '../../renderer'
-import { Trois } from '../../renderer/types'
 const trois = useTrois()
-import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass'
-import {
-    ObjectSpaceNormalMap,
-    ShaderMaterial,
-    Texture,
-    Vector2,
-    WebGLRenderTarget,
-} from 'three'
+import { ObjectSpaceNormalMap, Texture, Vector2 } from 'three'
 
 export default defineComponent({
     data() {
@@ -99,11 +91,8 @@ export default defineComponent({
             dispFrag,
             normVert,
             normFrag,
-            normUniforms: {
-                delta: { value: new Vector2(1 / 512, 1 / 512) },
-                dispMap: { value: new Texture() },
-            },
-            dispTexture: null,
+            delta: { value: new Vector2(1 / 512, 1 / 512) },
+            dispTexture: new Texture(),
             ObjectSpaceNormalMap,
         }
     },
@@ -148,18 +137,13 @@ export default defineComponent({
 
             // render displacement
             fsQuad.material = dispMat
-            console.log(dispMat.uniforms.uTime.value)
             renderer.setRenderTarget(dispRT)
             fsQuad.render(renderer)
-            this.dispTexture = dispRT.texture
 
             // render normals
             fsQuad.material = normMat
+            normMat.uniforms.dispMap.value = dispRT.texture
             renderer.setRenderTarget(normRT)
-            this.normUniforms = {
-                ...this.normUniforms,
-                dispMap: { value: dispRT.texture },
-            }
             fsQuad.render(renderer)
 
             // return to original renderer
