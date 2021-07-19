@@ -53,10 +53,11 @@ export const updateAllObjectProps = ({ element, props }: { element: Trois.Elemen
         }
     })
 
-    // set $attach props
-    Object.keys(props).filter(key => typeof props[key] === 'string' && props[key].startsWith('$attach')).forEach(key => {
-        const attachedName = props[key].replace('$attach.', '')
+    // set $attached props
+    Object.keys(props).filter(key => typeof props[key] === 'string' && props[key].startsWith('$attached')).forEach(key => {
+        const attachedName = props[key].replace('$attached.', '')
         const value = get(element.props?.attach, attachedName, null)
+        console.log('VALUE:', value)
 
         // look for the relevant attachment
         const updated = updateObjectProp({ target, key, value })

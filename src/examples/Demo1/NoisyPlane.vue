@@ -2,6 +2,18 @@
     <!-- create FullScreenQuad pass -->
     <fullScreenQuad ref="fsQuad" />
 
+    <!-- create displacement map ShaderMaterial -->
+    <shaderMaterial
+        :args="[
+            {
+                uniforms: { uTime, uNoiseCoef },
+                vertexShader: dispVert,
+                fragmentShader: dispFrag,
+            },
+        ]"
+        ref="dispMat"
+    />
+
     <mesh :scale-x="50" :scale-y="50" :rotation-x="Math.PI * -0.5" :y="-10">
         <planeBufferGeometry />
 
@@ -11,23 +23,12 @@
         -->
         <meshStandardMaterial
             ref="mat"
-            displacementMap="$attach.dispRT.texture"
+            map="$attached.dispRT.texture"
             :displacementScale="5"
+            color="green"
         >
-            <!-- create displacement map ShaderMaterial -->
-            <shaderMaterial
-                :args="[
-                    {
-                        uniforms: { uTime, uNoiseCoef },
-                        vertexShader: dispVert,
-                        fragmentShader: dispFrag,
-                    },
-                ]"
-                ref="dispMat"
-                attach="dispMat"
-            />
-
             <!-- create displacement RT -->
+
             <webGLRenderTarget
                 :args="[
                     512,
@@ -93,6 +94,8 @@ export default defineComponent({
             renderer.setRenderTarget(dispRT)
             fsQuad.render(renderer)
             renderer.setRenderTarget(oldTarget)
+
+            console.log(this.$refs.mat)
         },
     },
 })

@@ -32,6 +32,7 @@ export declare namespace Trois {
     }
 
     type Element = {
+        // TODO: add childCreationQueue and differentiate between that and Children
         children?: Array<Node>
         domElement?: HTMLElement | null
         eventListeners?: Record<string, Function | Function[]> | null
@@ -40,7 +41,8 @@ export declare namespace Trois {
         parentNode?: Node | null
         props?: VNodeProps
         type?: string
-        vueId?: number
+        vueId?: number,
+        attached?: { [key: string]: any }
     }
 
     /** 
