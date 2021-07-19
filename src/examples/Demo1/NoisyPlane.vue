@@ -7,7 +7,7 @@
         key="disp-map"
         :args="[
             {
-                uniforms: dispUniforms,
+                uniforms: { uTime: { value: 0 }, uNoiseCoef },
                 vertexShader: dispVert,
                 fragmentShader: dispFrag,
             },
@@ -99,14 +99,6 @@ export default defineComponent({
     mounted() {
         this.update()
     },
-    computed: {
-        dispUniforms() {
-            return {
-                uTime: { value: (this as any).time },
-                uNoiseCoef: (this as any).uNoiseCoef,
-            }
-        },
-    },
     methods: {
         update() {
             requestAnimationFrame(this.update)
@@ -146,10 +138,11 @@ export default defineComponent({
             renderer.setRenderTarget(normRT)
             fsQuad.render(renderer)
 
-            // return to original renderer
+            // return to original target
             renderer.setRenderTarget(oldTarget)
 
-            this.time += 0.0016 * 3
+            // update time (.0003 == original demo coefficient, 16 === ms per frame in 60fps)
+            this.time += 16 * 0.0003
         },
     },
 })

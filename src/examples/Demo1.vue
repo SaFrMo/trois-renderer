@@ -27,7 +27,7 @@
             :position="[0, 0, 50]"
         />
 
-        <!-- <RefractionMesh /> -->
+        <RefractionMesh />
         <NoisyPlane />
     </TroisCanvas>
 </template>
