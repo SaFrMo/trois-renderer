@@ -119,7 +119,7 @@ export const updateObjectProp = (
     const targetType = target?.texture?.type || target?.type
     if (typeof targetType === 'string' && targetType.toLowerCase().includes('material')) {
         target.needsUpdate = true
-        console.log('updating', target)
+        // console.log('updating', target)
     }
 
     return target
