@@ -122,7 +122,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
 
         // build object instance
         child.instance = createObject({ name, vnodeProps: child.props })
-        updateAllObjectProps({ target: child.instance, props: child.props || {} })
+        updateAllObjectProps({ element: child, props: child.props || {} })
 
         // notify parent if needed
         if (child.props?.attach && parent?.props) {

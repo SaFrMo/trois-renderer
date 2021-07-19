@@ -6,12 +6,21 @@ import {
     // CubeRefractionMapping,
     // LinearMipmapLinearFilter,
     // RGBFormat,
+    WebGLRenderTarget,
     WebGLCubeRenderTarget,
 } from 'three'
+import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 
 const app = createApp(App)
 
-extend({ app, OrbitControls, CubeCamera, WebGLCubeRenderTarget })
+extend({
+    app,
+    OrbitControls,
+    CubeCamera,
+    WebGLRenderTarget,
+    WebGLCubeRenderTarget,
+    FullScreenQuad
+})
 
 
 app.mount('#app')

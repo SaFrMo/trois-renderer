@@ -5,7 +5,7 @@
         <pointLight color="#18C02C" :intensity="0.85" :position="[0, 0, 50]" />
         <pointLight color="#ee3bcf" :intensity="0.85" :position="[0, 0, 50]" />
 
-        <!-- <RefractionMesh /> -->
+        <RefractionMesh />
         <NoisyPlane />
     </TroisCanvas>
 </template>

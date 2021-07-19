@@ -39,14 +39,30 @@ export const nestedPropertiesToCheck = [
     'parameters'
 ]
 
-export const updateAllObjectProps = ({ target, props }: { target: Trois.Instance | null, props: TroisProps }) => {
-    if (!target) return target
+export const updateAllObjectProps = ({ element, props }: { element: Trois.Element, props: TroisProps }) => {
+    const target = element?.instance
+    if (!target || !element) return target
 
     // set props
     props = props || {}
     let output = target
     Object.keys(props).filter(key => !key.startsWith('$')).forEach(key => {
         const updated = updateObjectProp({ target, key, value: props[key] })
+        if (isObject3D(updated)) {
+            output = updated
+        }
+    })
+
+    // set $attach props
+    Object.keys(props).filter(key => typeof props[key] === 'string' && props[key].startsWith('$attach')).forEach(key => {
+        const attachedName = props[key].replace('$attach.', '')
+        console.log(element.props?.attach)
+        const value = get(element.props?.attach, attachedName, null)
+
+        // look for the relevant attachment
+        // const value = element?.props?.attach?.[props[key.replace('$attach.', '')]]
+        // console.log('$attach', key, props[key], value)
+        const updated = updateObjectProp({ target, key, value })
         if (isObject3D(updated)) {
             output = updated
         }
