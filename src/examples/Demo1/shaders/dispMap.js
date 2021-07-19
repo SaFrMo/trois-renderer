@@ -14,6 +14,6 @@ ${snoise3}
 void main() {
   vec2 p = vec2(vUv * uNoiseCoef);
   float noise = (snoise(vec3(p.x, p.y, uTime)) + 1.0) / 2.0;
-  gl_FragColor = vec4(noise, 0.0, 0.0, 1.0);
+  gl_FragColor = vec4(noise, noise, noise, 1.0);
 }
 `

@@ -12,7 +12,6 @@
         <meshStandardMaterial
             ref="mat"
             displacementMap="$attach.dispRT.texture"
-            color="red"
             :displacementScale="5"
         >
             <!-- create displacement map ShaderMaterial -->
@@ -94,8 +93,6 @@ export default defineComponent({
             renderer.setRenderTarget(dispRT)
             fsQuad.render(renderer)
             renderer.setRenderTarget(oldTarget)
-
-            console.log(this.$refs.mat)
         },
     },
 })
