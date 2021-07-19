@@ -1,14 +1,6 @@
 <template>
     <TroisCanvas :cameraPosition="[0, 0, 5]">
-        <OrbitControls
-            ref="controls"
-            v-if="orbitArgs.length"
-            :args="orbitArgs"
-            :autoRotate="true"
-            :enableDamping="true"
-            :dampingFactor="0.1"
-            :autoRotateSpeed="0.4"
-        />
+        <OrbitControlsWrapper />
 
         <spotLight color="white" :intensity="0.5" :position="[0, 150, 0]" />
         <spotLight color="red" :intensity="0.5" :position="[0, -150, 0]" />
@@ -23,12 +15,12 @@
  <script lang="ts">
 import { defineComponent } from 'vue'
 import { Object3D, InstancedMesh, Vector3 } from 'three'
-import { useTrois } from '../renderer'
-const trois = useTrois()
+import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
 
 const scratch = new Object3D()
 
 export default defineComponent({
+    components: { OrbitControlsWrapper },
     data() {
         return {
             count: 1000,
@@ -84,14 +76,13 @@ export default defineComponent({
             }
 
             target.instanceMatrix.needsUpdate = true
-            ;(this.$refs.controls as any)?.$el?.instance?.update()
         },
     },
-    computed: {
-        orbitArgs() {
-            const { camera, renderer } = trois
-            return [camera.value, renderer.value?.domElement].filter(Boolean)
-        },
-    },
+    // computed: {
+    //     orbitArgs() {
+    //         const { camera, renderer } = trois
+    //         return [camera.value, renderer.value?.domElement].filter(Boolean)
+    //     },
+    // },
 })
 </script>
