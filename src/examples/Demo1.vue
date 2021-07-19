@@ -6,15 +6,17 @@
         <pointLight color="#ee3bcf" :intensity="0.85" :position="[0, 0, 50]" />
 
         <RefractionMesh />
+        <NoisyPlane />
     </TroisCanvas>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-import RefractionMesh from './RefractionMesh.vue'
+import RefractionMesh from './Demo1/RefractionMesh.vue'
+import NoisyPlane from './Demo1/NoisyPlane.vue'
 
 export default defineComponent({
     name: 'App',
-    components: { RefractionMesh },
+    components: { NoisyPlane, RefractionMesh },
 })
 </script>

@@ -1,5 +1,5 @@
 import { createApp, extend } from './renderer'
-import App from './examples/Demo1.vue'
+import App from './examples/Demo4.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,
