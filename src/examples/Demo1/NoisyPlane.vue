@@ -1,4 +1,7 @@
 <template>
+    <!-- create FullScreenQuad pass -->
+    <fullScreenQuad ref="fsQuad" />
+
     <mesh :scale-x="50" :scale-y="50" :rotation-x="Math.PI * -0.5" :y="-10">
         <planeBufferGeometry />
 
@@ -7,26 +10,11 @@
             - normal (normRT.texture)
         -->
         <meshStandardMaterial
+            ref="mat"
             displacementMap="$attach.dispRT.texture"
             color="red"
-            ref="mat"
+            :displacementScale="5"
         >
-            <!-- create FullScreenQuad pass -->
-            <fullScreenQuad ref="fsQuad" />
-
-            <!-- create displacement RT -->
-            <webGLRenderTarget
-                :args="[
-                    512,
-                    {
-                        depthBuffer: false,
-                        stencilBuffer: false,
-                    },
-                ]"
-                ref="dispRT"
-            >
-            </webGLRenderTarget>
-
             <!-- create displacement map ShaderMaterial -->
             <shaderMaterial
                 :args="[
@@ -37,6 +25,21 @@
                     },
                 ]"
                 ref="dispMat"
+                attach="dispMat"
+            />
+
+            <!-- create displacement RT -->
+            <webGLRenderTarget
+                :args="[
+                    512,
+                    512,
+                    {
+                        depthBuffer: false,
+                        stencilBuffer: false,
+                    },
+                ]"
+                ref="dispRT"
+                attach="dispRT"
             />
 
             <!-- create normal RT -->
@@ -88,9 +91,11 @@ export default defineComponent({
 
             fsQuad.material = dispMat
             const oldTarget = renderer.getRenderTarget()
-            // renderer.setRenderTarget(dispRT)
+            renderer.setRenderTarget(dispRT)
             fsQuad.render(renderer)
-            // renderer.setRenderTarget(oldTarget)
+            renderer.setRenderTarget(oldTarget)
+
+            console.log(this.$refs.mat)
         },
     },
 })
