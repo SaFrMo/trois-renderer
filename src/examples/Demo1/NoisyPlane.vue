@@ -29,8 +29,8 @@
         ref="normMat"
     />
 
-    <mesh ref="mesh" :rotation-x="Math.PI * -0.5" :y="-10">
-        <planeBufferGeometry :args="[50, 50, 300, 300]" />
+    <mesh ref="mesh" :y="-10">
+        <planeBufferGeometry :args="[200, 200, 100, 100]" />
 
         <!-- create plane material consisting of:
             - displacement (dispRT.texture) 
@@ -39,7 +39,7 @@
         <meshStandardMaterial
             ref="mat"
             displacementMap="$attached.dispRT.texture"
-            :displacementScale="3"
+            :displacementScale="15"
             normalMap="$attached.normRT.texture"
             :normalMapType="ObjectSpaceNormalMap"
         >
@@ -149,7 +149,7 @@ export default defineComponent({
             // return to original renderer
             renderer.setRenderTarget(oldTarget)
 
-            this.time += 0.016 * 0.5
+            this.time += 0.0016 * 3
         },
     },
 })
