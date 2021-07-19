@@ -122,7 +122,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         if (!renderer.value || !scene.value) return
 
         // build object instance
-        child.instance = createObject({ name, vnodeProps: child.props })
+        child.instance = createObject({ name, element: child })
         updateAllObjectProps({ element: child, props: child.props || {} })
 
         // notify parent if needed
@@ -152,7 +152,6 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
             if (parent.type === 'canvas') {
                 // we're a scene-level component, so let's go ahead and add ourselves to the scene
                 scene.value.add(child.instance)
-                console.log('my', child, 'children', child.children)
 
                 // we'll also need to add any children who have added themselves to our creation queue
                 child.children?.filter(Boolean).forEach(c => {

@@ -6,16 +6,18 @@ import { catalogue } from './components'
 import { Trois } from './types'
 
 /** Create a ThreeJS object from given vnode params. */
-export const createObject = ({ name, vnodeProps }: {
-    name: string, vnodeProps: Trois.VNodeProps
+export const createObject = ({ name, element }: {
+    name: string, element: Trois.Element
 }) => {
+    const vnodeProps = element.props
     const args = vnodeProps?.args ?? []
+    console.log('creating obj', vnodeProps)
 
     // create mesh
-    if (name.endsWith('Mesh')) {
+    if (name.toLowerCase().endsWith('mesh')) {
         // use default geometry & material if needed
-        const geo = vnodeProps?.attach?.geometry ?? new THREE.BoxGeometry()
-        const mat = vnodeProps?.attach?.material ?? new THREE.MeshBasicMaterial()
+        const geo = element.attached?.geometry ?? new THREE.BoxGeometry()
+        const mat = element.attached?.material ?? new THREE.MeshBasicMaterial()
         args[0] = geo
         args[1] = mat
     }
@@ -56,8 +58,9 @@ export const updateAllObjectProps = ({ element, props }: { element: Trois.Elemen
     // set $attached props
     Object.keys(props).filter(key => typeof props[key] === 'string' && props[key].startsWith('$attached')).forEach(key => {
         const attachedName = props[key].replace('$attached.', '')
-        const value = get(element.props?.attach, attachedName, null)
-        console.log('VALUE:', value)
+        const value = get(element.attached, attachedName, null)
+
+        console.log('$attached', key, value)
 
         // look for the relevant attachment
         const updated = updateObjectProp({ target, key, value })

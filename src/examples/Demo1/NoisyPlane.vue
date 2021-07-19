@@ -14,8 +14,8 @@
         ref="dispMat"
     />
 
-    <mesh :scale-x="50" :scale-y="50" :rotation-x="Math.PI * -0.5" :y="-10">
-        <planeBufferGeometry />
+    <mesh ref="mesh" :rotation-x="Math.PI * -0.5" :y="-10">
+        <planeBufferGeometry :args="[50, 50, 50, 50]" />
 
         <!-- create plane material consisting of:
             - displacement (dispRT.texture) 
@@ -23,12 +23,10 @@
         -->
         <meshStandardMaterial
             ref="mat"
-            map="$attached.dispRT.texture"
-            :displacementScale="5"
-            color="green"
+            displacementMap="$attached.dispRT.texture"
+            :displacementScale="3"
         >
             <!-- create displacement RT -->
-
             <webGLRenderTarget
                 :args="[
                     512,
@@ -94,8 +92,6 @@ export default defineComponent({
             renderer.setRenderTarget(dispRT)
             fsQuad.render(renderer)
             renderer.setRenderTarget(oldTarget)
-
-            console.log(this.$refs.mat)
         },
     },
 })
