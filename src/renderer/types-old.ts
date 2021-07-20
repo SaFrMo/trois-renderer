@@ -27,10 +27,7 @@ export type BaseInstance = Omit<THREE.Object3D, 'parent' | 'children' | 'attach'
 }
 export type Instance = BaseInstance & { [key: string]: any }
 
-export type SceneOptions = {
-  background: string | number | THREE.Color
-  cameraPosition: [number, number, number] | THREE.Vector3
-}
+
 
 // based on r3f useThree: https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#usethree
 export type TroisInternals = {

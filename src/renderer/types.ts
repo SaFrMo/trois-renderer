@@ -58,6 +58,12 @@ export declare namespace Trois {
 
     type Node = Element
 
+    type SceneOptions = {
+        antialias: boolean,
+        background: string | number | THREE.Color
+        cameraPosition: [number, number, number] | THREE.Vector3
+    }
+
     type VNodeProps = (vueVNodeProps & {
         [key: string]: any;
     })

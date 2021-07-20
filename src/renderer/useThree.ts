@@ -1,12 +1,13 @@
 import { reactive, toRefs } from "@vue/reactivity"
-import { SceneOptions, TroisInternals } from "./types-old"
+import { TroisInternals } from "./types-old"
+import { Trois } from './types'
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 
 export let scene: THREE.Scene = new THREE.Scene()
 export let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
 
-export const initTrois = (sceneOptions: SceneOptions) => {
+export const initTrois = (sceneOptions: Trois.SceneOptions) => {
     if (troisInternals.initialized) return
 
     troisInternals.initialized = true
@@ -28,7 +29,9 @@ export const initTrois = (sceneOptions: SceneOptions) => {
 
     // build renderer
     // TODO: more robust
-    renderer = troisInternals.renderer = new THREE.WebGLRenderer()
+    renderer = troisInternals.renderer = new THREE.WebGLRenderer({
+        antialias: sceneOptions.antialias
+    })
     troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // build update loop

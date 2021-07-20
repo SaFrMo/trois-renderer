@@ -3,7 +3,6 @@ import { createElement as createTroisElement } from '../trois'
 import { initTrois, useTrois } from '../useThree'
 const trois = useTrois()
 
-
 export const createElement = (
     type: string,
     isSvg: boolean | undefined,
@@ -19,9 +18,10 @@ export const createElement = (
         element.props.isDom = true
 
         // build trois props from wrapper
-        const sceneOptions = {
-            cameraPosition: [0, 0, 0] as [number, number, number],
+        const sceneOptions: Trois.SceneOptions = {
+            antialias: true,
             background: 'black',
+            cameraPosition: [0, 0, 0] as [number, number, number],
             ...vnodeProps
         }
 
