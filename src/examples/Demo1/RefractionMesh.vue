@@ -23,14 +23,14 @@
                 attach="cubeRT"
             />
         </meshStandardMaterial>
-    </mesh>
-    <group v-if="active">
+
         <cubeCamera
+            v-if="active"
             :args="[0.1, 2000, $refs?.rt?.$el?.instance]"
             ref="cameraRef"
-            :position="[0, -20, 20]"
+            :position="[0, -20, -20]"
         />
-    </group>
+    </mesh>
 </template>
 
 <script lang="ts">

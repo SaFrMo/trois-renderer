@@ -1,11 +1,10 @@
 import { Trois } from '../types'
-import { isObject3D, pascalCase } from '../lib'
+import { isObject3D } from '../lib'
 import { createObject, updateAllObjectProps, } from '../objects'
 import { Object3D } from 'three'
 import { useTrois } from '../useThree'
 const trois = useTrois()
 import { created } from '..'
-
 
 export const insert = (
     element: Trois.Element,
@@ -15,51 +14,28 @@ export const insert = (
     // debug
     console.log('insert', { name: element.name, element, parent, ref })
 
-    // calculate the ref index because the child's removal may have affected it
-    // parent.children = parent.children || []
-    const refIndex = (ref ? parent?.children?.indexOf(ref) : -1) ?? -1
-    if (refIndex === -1) {
-        // child not present in scene yet (v-if, for example)
-        // parent.children?.push(child)
-        // child.parentNode = parent
-    } else {
-        parent.children?.splice(refIndex, 0, element)
-        element.parentNode = parent
-    }
-
     // cancel if no valid name
     if (!element.name) return
 
-    // mount dom elements
+    // handle dom elements
     if (element.domElement) {
-        // apply styling
-        Object.keys(element?.props?.style).forEach(key => {
-            (element.domElement?.style ?? {} as any)[key] = (element?.props?.style ?? {})[key]
-        })
-
-        // attach container to parent
-        if (typeof parent === 'string') {
-            const parentEl = document.querySelector(parent) as any as HTMLElement
-            parentEl.appendChild(element.domElement)
-        } else if (parent?.domElement) {
-            parent.domElement.appendChild(element.domElement)
-        }
-
-        return element.domElement
+        handleDomElement({ element, parent })
+        return
     }
 
+
+    // ensure trois is running
     const { renderer, scene } = trois
-    if (!renderer.value || !scene.value) return
+    if (!renderer.value || !scene.value) throw 'Trois renderer or scene not set up'
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
-    updateAllObjectProps({ element, props: element.props || {} })
 
-    // notify parent if needed
-    if (element.props?.attach) {
+    // attach to parent if needed
+    if (element.props.attach) {
         parent.attached = {
             [element.props.attach]: element.instance,
-            ...(parent?.attached || {})
+            ...(parent.attached || {})
         }
     }
 
@@ -70,6 +46,7 @@ export const insert = (
     }
     created[element.vueId] = element
 
+    // add any object3Ds to the scene
     if (element && element.instance && isObject3D(element.instance)) {
         let parentNode = (element as any).__vueParentComponent?.vnode?.el
             ?? parent
@@ -85,7 +62,10 @@ export const insert = (
 
             // we'll also need to add any children who have added themselves to our creation queue
             element.children?.filter(Boolean).forEach(c => {
-                (element.instance as any as Object3D).add(c.instance as any as Object3D)
+                if (element.instance && c.instance) {
+                    element.instance.add(c.instance)
+                    updateAllObjectProps({ element: c, props: c.props })
+                }
             })
 
             // reset children array
@@ -97,6 +77,26 @@ export const insert = (
             // if we're a child of a nonexistant TroisInstance, tell the node we'll need to
             // be created when that instance is created
             parentNode.children.push(element)
+
+            // TODO: add children to __vueParentComponent.parent.vnode.el.instance
         }
+    }
+
+    // update props after attaching to parent so we can handle positioning, etc
+    updateAllObjectProps({ element, props: element.props || {} })
+}
+
+const handleDomElement = ({ element, parent }: { element: Trois.Element, parent: Trois.Element | string }) => {
+    // apply styling
+    Object.keys(element?.props?.style).forEach(key => {
+        (element.domElement?.style ?? {} as any)[key] = (element?.props?.style ?? {})[key]
+    })
+
+    // attach container to parent
+    if (typeof parent === 'string') {
+        const parentEl = document.querySelector(parent) as any as HTMLElement
+        parentEl.appendChild(element.domElement as any)
+    } else if (parent?.domElement) {
+        parent.domElement.appendChild(element.domElement as any)
     }
 }
