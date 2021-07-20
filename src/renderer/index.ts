@@ -1,14 +1,12 @@
-import { Object3D } from 'three'
 import { createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { updateObjectProp } from './objects'
-// import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
 export const created: { [key: number]: Trois.Element } = {}
-import { createElement as createElementNodeOp, insert } from './nodeOps'
+import { createElement, insert } from './nodeOps'
 import { createElement as createTroisElement } from './trois'
 
 /*
@@ -16,7 +14,7 @@ import { createElement as createTroisElement } from './trois'
 */
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
-    createElement: createElementNodeOp,
+    createElement,
 
     insert,
 

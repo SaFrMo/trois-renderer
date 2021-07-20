@@ -13,7 +13,7 @@ export const insert = (
     ref?: Trois.Element | null
 ) => {
     // debug
-    console.log('insert', { child: element, parent, ref })
+    console.log('insert', { name: element.name, element, parent, ref })
 
     // calculate the ref index because the child's removal may have affected it
     // parent.children = parent.children || []
