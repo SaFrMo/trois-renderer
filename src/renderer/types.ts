@@ -36,15 +36,15 @@ export declare namespace Trois {
      * Also contains the actual created THREE object in `instance`.
      */
     type Element = {
-        // TODO: add childCreationQueue and differentiate between that and Children
         attached: { [key: string]: any }
-        children: Array<Node>
+        childCreationQueue: Array<Element>
+        children: Array<Element>
         domElement: HTMLElement | null
         eventListeners: Record<string, Function | Function[]> | null
         id: number
         instance: Instance | null
         name: string
-        parentNode: Node | null
+        parentNode: Element | null
         props: VNodeProps
         type: string
         vueId: number,

@@ -36,16 +36,16 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     },
 
     createComment: (text) => {
-        console.log('createComment', { text })
+        // console.log('createComment', { text })
         return createTroisElement('', {})
     },
 
     setText: (node, text) => {
-        console.log('setText', { node, text })
+        // console.log('setText', { node, text })
     },
 
     setElementText: (node, text) => {
-        console.log('setElementText', { node, text })
+        // console.log('setElementText', { node, text })
     },
 
     parentNode: (node) => {

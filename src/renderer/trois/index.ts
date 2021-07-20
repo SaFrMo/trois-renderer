@@ -11,6 +11,7 @@ let nodeId = 0
 export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
     return {
         attached: {},
+        childCreationQueue: [],
         children: [],
         domElement: null,
         eventListeners: null,

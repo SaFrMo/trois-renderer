@@ -1,36 +1,37 @@
 <template>
-    <mesh :rotation="meshRotation" ref="mesh" :position="[0, -20, 20]">
-        <torusGeometry :args="[8, 3, 8, 6]" />
-        <meshStandardMaterial
-            color="white"
-            :metalness="1"
-            :roughness="0"
-            :flatShading="true"
-            envMap="$attached.cubeRT.texture"
-            :refractionRatio="0.98"
-        >
-            <webGLCubeRenderTarget
-                :args="[
-                    256,
-                    {
-                        mapping: CubeRefractionMapping,
-                        format: RGBFormat,
-                        generateMipmaps: true,
-                        minFilter: LinearMipmapLinearFilter,
-                    },
-                ]"
-                ref="rt"
-                attach="cubeRT"
-            />
-        </meshStandardMaterial>
+    <group :position="[0, -20, 20]">
+        <mesh :rotation="meshRotation" ref="mesh">
+            <torusGeometry :args="[8, 3, 8, 6]" />
+            <meshStandardMaterial
+                color="white"
+                :metalness="1"
+                :roughness="0"
+                :flatShading="true"
+                envMap="$attached.cubeRT.texture"
+                :refractionRatio="0.98"
+            >
+                <webGLCubeRenderTarget
+                    :args="[
+                        256,
+                        {
+                            mapping: CubeRefractionMapping,
+                            format: RGBFormat,
+                            generateMipmaps: true,
+                            minFilter: LinearMipmapLinearFilter,
+                        },
+                    ]"
+                    ref="rt"
+                    attach="cubeRT"
+                />
+            </meshStandardMaterial>
+        </mesh>
 
         <cubeCamera
             v-if="active"
             :args="[0.1, 2000, $refs?.rt?.$el?.instance]"
             ref="cameraRef"
-            :position="[0, -20, -20]"
         />
-    </mesh>
+    </group>
 </template>
 
 <script lang="ts">

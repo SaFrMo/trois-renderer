@@ -12,7 +12,7 @@ export const insert = (
     ref?: Trois.Element | null
 ) => {
     // debug
-    console.log('insert', { name: element.name, element, parent, ref })
+    // console.log('insert', { name: element.name, element, parent, ref })
 
     // cancel if no valid name
     if (!element.name) return
@@ -22,7 +22,6 @@ export const insert = (
         handleDomElement({ element, parent })
         return
     }
-
 
     // ensure trois is running
     const { renderer, scene } = trois
@@ -47,38 +46,30 @@ export const insert = (
     created[element.vueId] = element
 
     // add any object3Ds to the scene
-    if (element && element.instance && isObject3D(element.instance)) {
-        let parentNode = (element as any).__vueParentComponent?.vnode?.el
-            ?? parent
-        if (!Object.keys(parentNode).length) {
-            parentNode = created[(element as any).__vueParentComponent?.parent?.uid ?? -1]
-        }
-        const parentInstance = parentNode?.instance
-        element.parentNode = parentNode
+    if (isObject3D(element?.instance)) {
+        let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
 
-        if (parent.type === 'canvas') {
+        if (parentElement.type === 'canvas') {
             // we're a scene-level component, so let's go ahead and add ourselves to the scene
             scene.value.add(element.instance)
 
-            // we'll also need to add any children who have added themselves to our creation queue
-            element.children?.filter(Boolean).forEach(c => {
-                if (element.instance && c.instance) {
-                    element.instance.add(c.instance)
-                    updateAllObjectProps({ element: c, props: c.props })
-                }
-            })
-
-            // reset children array
-            // child.children = []
-        } else if (parentInstance) {
-            // if we're a child of an existing TroisInstance, add ourselves to that instance
-            parentInstance.add(element.instance)
-        } else if (parentNode) {
-            // if we're a child of a nonexistant TroisInstance, tell the node we'll need to
-            // be created when that instance is created
-            parentNode.children.push(element)
-
-            // TODO: add children to __vueParentComponent.parent.vnode.el.instance
+            // add any children that need to be created
+            if (isObject3D(element.instance)) {
+                element.childCreationQueue.forEach(toCreate => {
+                    if (toCreate.instance && isObject3D(toCreate.instance)) {
+                        element?.instance?.add(toCreate.instance)
+                    }
+                })
+            }
+        } else if (parentElement?.instance) {
+            // parent instance already exists, so let's add directly to it
+            const parentInstance = parentElement?.instance
+            if (isObject3D(parentInstance)) {
+                parentInstance.add(element.instance)
+            }
+        } else {
+            // parent instance doesn't exist yet, so let's add to the parent's childCreationQueue
+            parentElement.childCreationQueue.push(element)
         }
     }
 
