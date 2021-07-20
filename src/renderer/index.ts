@@ -1,14 +1,14 @@
 import { Object3D } from 'three'
-import { createRenderer, Component, watch, ref, reactive } from 'vue'
+import { createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { createObject, updateAllObjectProps, updateObjectProp } from './objects'
 import { isObject3D, pascalCase } from './lib'
 import { components } from './components'
-import { initTrois, useTrois, scene as mainScene, renderer as mainRenderer } from './useThree'
+import { initTrois, useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
-let nodeId = 0
 const created: { [key: number]: Trois.Element } = {}
+import { createElement } from './trois'
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
@@ -16,29 +16,16 @@ const created: { [key: number]: Trois.Element } = {}
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
-        const node: Trois.Element = {
-            id: nodeId++,
-            type,
-            instance: null,
-            domElement: null,
-            props: vnodeProps || {},
-            children: [],
-            parentNode: null,
-            eventListeners: null,
-            vueId: -1,
-            attached: {}
-        }
-
-        const name = pascalCase(type)
+        const node = createElement(type, vnodeProps)
 
         // debug
-        console.log('createElement', { name, node, type, isSvg, isCustomizedBuiltin, vnodeProps })
+        console.log('createElement', { node, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
-        // container node - this will be the first thing created
+        // container node - this should be the first thing created
         if (node.props?.hasOwnProperty('data-trois-container')) {
             node.props.isDom = true
 
-            // pick trois props from wrapper
+            // build trois props from wrapper
             const sceneOptions = {
                 cameraPosition: [0, 0, 0] as [number, number, number],
                 background: 'black',
@@ -54,18 +41,22 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         }
 
         // auto-attach geometries and materials
-        if (name.endsWith('Geometry')) {
+        if (node.name.endsWith('Geometry')) {
             node.props = { attach: 'geometry', ...node.props }
         }
-        if (name.endsWith('Material')) {
+        if (node.name.endsWith('Material')) {
             node.props = { attach: 'material', ...node.props }
+        }
+
+        if (!trois.renderer.value) {
+            throw 'Renderer not initialized.'
         }
 
         if (node.props?.isDom) {
             // canvas has already been created by initTrois,
             // so let's attach it here
             if (type === 'canvas') {
-                node.domElement = trois.renderer.value?.domElement
+                node.domElement = trois.renderer.value.domElement
             } else {
                 node.domElement = document.createElement(type)
             }
@@ -185,12 +176,12 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
 
     createText: (text) => {
         // console.log('createText', { text })
-        return {}
+        return createElement('', {})
     },
 
     createComment: (text) => {
         console.log('createComment', { text })
-        return {}
+        return createElement('', {})
     },
 
     setText: (node, text) => {
@@ -203,7 +194,7 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
 
     parentNode: (node) => {
         // console.log('parentNode', { node })
-        return {}
+        return createElement('', {})
     },
 
     nextSibling: (node) => {
@@ -236,7 +227,7 @@ export const createApp = ((root: Component) => {
     const { mount } = app
     app.mount = (root, ...args) => {
         const domElement = (typeof root === 'string' ? document.querySelector(root) : root) as HTMLElement
-        const mounted = mount({ domElement }, ...args)
+        const mounted = mount({ domElement } as any, ...args)
         // trois.subTree.value = mounted.$.subTree
         // trois.app.value = mounted
         return mounted

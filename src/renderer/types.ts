@@ -31,18 +31,23 @@ export declare namespace Trois {
         }
     }
 
+    /**
+     * A Trois renderer element. Contains information about the Vue component.
+     * Also contains the actual created THREE object in `instance`.
+     */
     type Element = {
         // TODO: add childCreationQueue and differentiate between that and Children
-        children?: Array<Node>
-        domElement?: HTMLElement | null
-        eventListeners?: Record<string, Function | Function[]> | null
-        id?: number
-        instance?: Instance | null
-        parentNode?: Node | null
-        props?: VNodeProps
-        type?: string
-        vueId?: number,
-        attached?: { [key: string]: any }
+        attached: { [key: string]: any }
+        children: Array<Node>
+        domElement: HTMLElement | null
+        eventListeners: Record<string, Function | Function[]> | null
+        id: number
+        instance: Instance | null
+        name: string
+        parentNode: Node | null
+        props: VNodeProps
+        type: string
+        vueId: number,
     }
 
     /** 
