@@ -1,5 +1,5 @@
 <template>
-    <TroisCanvas :cameraPosition="[0, 0, 10]" @click="randomColors">
+    <TroisCanvas :cameraPosition="[0, 0, 5]" @click="randomColors">
         <!-- lights -->
         <pointLight
             :color="light1Color"

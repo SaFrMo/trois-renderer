@@ -1,5 +1,5 @@
 <template>
-    <group>
+    <group ref="group">
         <mesh v-for="(t, i) in tubes" :key="i">
             <tubeBufferGeometry
                 :args="[
@@ -18,8 +18,16 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Vector2, Vector3 } from 'three'
+import {
+    CatmullRomCurve3,
+    PerspectiveCamera,
+    TubeBufferGeometry,
+    Vector2,
+    Vector3,
+} from 'three'
 import SimplexNoise from 'simplex-noise'
+import { useTrois } from '../../renderer/useThree'
+const trois = useTrois()
 
 let _points: Array<Array<Vector3>> = []
 const NX = 40
@@ -39,16 +47,21 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.size = new Vector2(window.innerWidth, window.innerHeight)
+        const camera = trois.camera.value as PerspectiveCamera
+        const vFOV = (camera.fov * Math.PI) / 180
+        const h = 2 * Math.tan(vFOV / 2) * Math.abs(camera.position.z)
+        const w = h * camera.aspect
+        this.size = new Vector2(w, h)
         this.initTubes()
+        this.update()
     },
     methods: {
         initTubes() {
             _points = [] // point copy (not reactive)
             this.tubes.splice(0)
-            this.dx = this.size.x / (NX - 1)
+            this.dx = (this.size.x / (NX - 1)) * 4
             this.dy = this.size.y / (NY - 1)
-            this.x0 = -this.size.x / 2
+            this.x0 = -this.size.x * 2
             this.y0 = -this.size.y / 2
             for (let j = 0; j < NY; j++) {
                 const points = []
@@ -70,8 +83,6 @@ export default defineComponent({
                     radialSegments: 8,
                 })
             }
-
-            console.log(this.tubes)
         },
         update() {
             requestAnimationFrame(this.update)
@@ -97,8 +108,59 @@ export default defineComponent({
                     points[i].y = y + noisey
                     points[i].z = noisez
                 }
-                // TODO: implement
-                this.$refs[this.tubes[j].key].updatePoints(points)
+                this.updateTubeGeometryPoints(
+                    (this.$refs.group as any).$el.instance.children[j]
+                        ?.geometry as TubeBufferGeometry,
+                    points
+                )
+            }
+        },
+        updateTubeGeometryPoints(tube: TubeBufferGeometry, points: Vector3[]) {
+            if (!tube) return
+            const curve = new CatmullRomCurve3(points)
+            const { radialSegments, radius, tubularSegments, closed } =
+                tube.parameters
+            const frames = curve.computeFrenetFrames(tubularSegments, closed)
+            tube.tangents = frames.tangents
+            tube.normals = frames.normals
+            tube.binormals = frames.binormals
+            tube.parameters.path = curve
+
+            const pAttribute = tube.getAttribute('position')
+            const nAttribute = tube.getAttribute('normal')
+
+            const normal = new Vector3()
+            const P = new Vector3()
+
+            for (let i = 0; i < tubularSegments; i++) {
+                updateSegment(i)
+            }
+            updateSegment(tubularSegments)
+
+            tube.attributes.position.needsUpdate = true
+            tube.attributes.normal.needsUpdate = true
+
+            function updateSegment(i: number) {
+                curve.getPointAt(i / tubularSegments, P)
+                const N = frames.normals[i]
+                const B = frames.binormals[i]
+                for (let j = 0; j <= radialSegments; j++) {
+                    const v = (j / radialSegments) * Math.PI * 2
+                    const sin = Math.sin(v)
+                    const cos = -Math.cos(v)
+                    normal.x = cos * N.x + sin * B.x
+                    normal.y = cos * N.y + sin * B.y
+                    normal.z = cos * N.z + sin * B.z
+                    normal.normalize()
+                    const index = i * (radialSegments + 1) + j
+                    nAttribute.setXYZ(index, normal.x, normal.y, normal.z)
+                    pAttribute.setXYZ(
+                        index,
+                        P.x + radius * normal.x,
+                        P.y + radius * normal.y,
+                        P.z + radius * normal.z
+                    )
+                }
             }
         },
     },
