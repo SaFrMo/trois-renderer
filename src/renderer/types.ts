@@ -60,5 +60,5 @@ export declare namespace Trois {
 
     type VNodeProps = (vueVNodeProps & {
         [key: string]: any;
-    } | null | undefined)
+    })
 }

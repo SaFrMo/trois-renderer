@@ -8,63 +8,16 @@ import { initTrois, useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
 const created: { [key: number]: Trois.Element } = {}
+import { createElement as createElementNodeOp } from './nodeOps'
 import { createElement } from './trois'
+
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
 */
 
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
-    createElement: (type, isSvg, isCustomizedBuiltin, vnodeProps) => {
-        const node = createElement(type, vnodeProps)
-
-        // debug
-        console.log('createElement', { node, type, isSvg, isCustomizedBuiltin, vnodeProps })
-
-        // container node - this should be the first thing created
-        if (node.props?.hasOwnProperty('data-trois-container')) {
-            node.props.isDom = true
-
-            // build trois props from wrapper
-            const sceneOptions = {
-                cameraPosition: [0, 0, 0] as [number, number, number],
-                background: 'black',
-                ...vnodeProps
-            }
-
-            // this is the root container, so let's start trois
-            initTrois(sceneOptions)
-        }
-
-        if (node.props?.hasOwnProperty('data-trois-canvas')) {
-            node.props.isDom = true
-        }
-
-        // auto-attach geometries and materials
-        if (node.name.endsWith('Geometry')) {
-            node.props = { attach: 'geometry', ...node.props }
-        }
-        if (node.name.endsWith('Material')) {
-            node.props = { attach: 'material', ...node.props }
-        }
-
-        if (!trois.renderer.value) {
-            throw 'Renderer not initialized.'
-        }
-
-        if (node.props?.isDom) {
-            // canvas has already been created by initTrois,
-            // so let's attach it here
-            if (type === 'canvas') {
-                node.domElement = trois.renderer.value.domElement
-            } else {
-                node.domElement = document.createElement(type)
-            }
-        }
-
-        // create trois element
-        return node
-    },
+    createElement: createElementNodeOp,
 
     insert: (child, parent, ref?: Trois.Element | null) => {
         // debug
