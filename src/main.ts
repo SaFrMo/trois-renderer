@@ -1,5 +1,5 @@
 import { createApp, extend } from './renderer'
-import App from './examples/Hierarchy.vue'
+import App from './examples/Demo6.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,
@@ -19,7 +19,7 @@ extend({
     CubeCamera,
     WebGLRenderTarget,
     WebGLCubeRenderTarget,
-    FullScreenQuad
+    FullScreenQuad,
 })
 
 
