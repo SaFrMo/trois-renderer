@@ -1,7 +1,6 @@
 import { Trois } from '../types'
 import { isObject3D } from '../lib'
 import { createObject, updateAllObjectProps, } from '../objects'
-import { Object3D } from 'three'
 import { useTrois } from '../useThree'
 const trois = useTrois()
 import { created } from '..'
