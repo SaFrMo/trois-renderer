@@ -119,15 +119,8 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
         }
     })
 
-
-    // console.log({ entering, staying, leaveValues })
-
-    // fire events
-
-
     // new interactions
     entering.forEach(({ element, intersection }) => {
-        console.log(element)
         fireEventsFromIntersections({ element, eventKeys: ['onPointerEnter'], intersection })
     })
 
@@ -138,7 +131,6 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
     })
 
     // exited interactions
-    console.log(leaving)
     leaving.forEach(({ element, intersection }) => {
         const eventKeys: Array<Trois.EventKey> = ['onPointerLeave', 'onPointerOut']
         fireEventsFromIntersections({ element, eventKeys, intersection })
@@ -147,7 +139,7 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
     currentIntersections = intersections || []
 }
 
-// 
+// utility function for firing multiple callbacks and multiple events on a Trois.Element
 const fireEventsFromIntersections = ({ element, eventKeys, intersection }: { element: Trois.Element, eventKeys: Array<Trois.EventKey>, intersection: THREE.Intersection }) => {
     eventKeys.forEach(eventKey => {
         if (element.eventListeners[eventKey]) {
