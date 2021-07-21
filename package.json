@@ -17,6 +17,7 @@
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "chroma-js": "2.1.2",
+    "popmotion": "8.7.6",
     "simplex-noise": "2.4.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
