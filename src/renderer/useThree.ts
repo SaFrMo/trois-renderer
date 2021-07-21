@@ -82,12 +82,13 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
     const intersections = troisInternals.raycaster?.intersectObjects(interactables.map(v => v.instance as any as THREE.Object3D))
 
     // intersection arrays
-    const enterValues: Array<THREE.Intersection> = [], sameValues: Array<THREE.Intersection> = [], leaveValues: Array<THREE.Intersection> = currentIntersections
+    const enterValues: Array<THREE.Intersection> = [],
+        sameValues: Array<THREE.Intersection> = [],
+        leaveValues: Array<THREE.Intersection> = currentIntersections
 
     // element arrays
     const entering: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
     const staying: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
-    const leaving: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
     intersections?.forEach((intersection) => {
         const currentIdx = currentIntersections.findIndex(v => v.object === intersection.object)
         if (currentIdx === -1) {
@@ -111,34 +112,50 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
         leaveValues.shift()
     })
 
+    const leaving: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = leaveValues.map(intersection => {
+        return {
+            element: interactables.find(interactable => interactable.instance?.uuid === intersection.object.uuid) as any as Trois.Element,
+            intersection
+        }
+    })
+
+
     // console.log({ entering, staying, leaveValues })
 
     // fire events
+
+
+    // new interactions
     entering.forEach(({ element, intersection }) => {
         console.log(element)
-        if (element.eventListeners['onPointerEnter']) {
-            element.eventListeners['onPointerEnter'].forEach(cb => {
-                console.log('enter')
+        fireEventsFromIntersections({ element, eventKeys: ['onPointerEnter'], intersection })
+    })
+
+    // unchanged interactions
+    staying.forEach(({ element, intersection }) => {
+        const eventKeys: Array<Trois.EventKey> = ['onPointerOver', 'onPointerMove']
+        fireEventsFromIntersections({ element, eventKeys, intersection })
+    })
+
+    // exited interactions
+    console.log(leaving)
+    leaving.forEach(({ element, intersection }) => {
+        const eventKeys: Array<Trois.EventKey> = ['onPointerLeave', 'onPointerOut']
+        fireEventsFromIntersections({ element, eventKeys, intersection })
+    })
+
+    currentIntersections = intersections || []
+}
+
+// 
+const fireEventsFromIntersections = ({ element, eventKeys, intersection }: { element: Trois.Element, eventKeys: Array<Trois.EventKey>, intersection: THREE.Intersection }) => {
+    eventKeys.forEach(eventKey => {
+        if (element.eventListeners[eventKey]) {
+            element.eventListeners[eventKey].forEach(cb => {
                 cb({ intersection })
             })
         }
     })
-
-    staying.forEach(({ element, intersection }) => {
-        const events: Array<Trois.EventKey> = ['onPointerOver', 'onPointerMove']
-        events.forEach(evt => {
-            if (element.eventListeners[evt]) {
-                element.eventListeners[evt].forEach(cb => {
-                    console.log('over')
-                    cb({ intersection })
-                })
-            }
-        })
-    })
-
-    currentIntersections = intersections || []
-    // intersections?.filter(intersection => !currentIntersections.includes(intersection))
-    // const oldValues = intersections?.filter
 }
 
 export const interactables: Array<Trois.Element> = []

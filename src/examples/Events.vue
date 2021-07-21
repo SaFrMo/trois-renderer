@@ -1,9 +1,10 @@
 <template>
     <TroisCanvas :cameraPosition="[0, 0, 10]">
-        <!-- <OrbitControlsWrapper /> -->
+        <OrbitControlsWrapper />
         <pointLight :position="[0, 50, 50]" />
         <mesh
-            @pointer-enter="hovering = !hovering"
+            @pointer-enter="hovering = true"
+            @pointer-leave="hovering = false"
             :rotation="[0, Math.PI * 0.25, Math.PI * 0.25]"
         >
             <meshStandardMaterial :color="hovering ? 'red' : 'gray'" />
