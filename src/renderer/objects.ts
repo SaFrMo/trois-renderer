@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { get, isNumber, set } from 'lodash'
 import { isEventKey } from './lib'
-import { TroisProps } from './types-old'
 import { catalogue } from './components'
 import { Trois } from './types'
 import { addEventListener } from './eventListeners'
@@ -53,7 +52,7 @@ export const nestedPropertiesToCheck = [
     'parameters'
 ]
 
-export const updateAllObjectProps = ({ element, props }: { element: Trois.Element, props: TroisProps }) => {
+export const updateAllObjectProps = ({ element, props }: { element: Trois.Element, props: Trois.VNodeProps }) => {
     const target = element?.instance
     if (!target || !element) return element
 

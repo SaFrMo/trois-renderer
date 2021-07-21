@@ -9,12 +9,28 @@ export const addEventListener = (
         element.eventListeners[key] = []
     }
 
-    // TODO: add event listener if needed
+    // TODO: add event listener
     element.eventListeners[key].push(value)
 
-    console.log('creating event: ', key, value)
-
     // TODO: event handling implementation
+    // if we need it, let's get/create the main raycaster
+    if (interactionsRequiringRaycaster.includes(key)) {
+
+    }
 
     return element
 }
+
+const interactionsRequiringRaycaster = [
+    'onClick',
+    'onContextMenu',
+    'onDoubleClick',
+    'onPointerUp',
+    'onPointerDown',
+    'onPointerOver',
+    'onPointerOut',
+    'onPointerEnter',
+    'onPointerLeave',
+    'onPointerMove',
+    'onPointerMissed',
+]

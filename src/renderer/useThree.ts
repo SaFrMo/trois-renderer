@@ -1,5 +1,4 @@
 import { reactive, toRefs } from "@vue/reactivity"
-import { TroisInternals } from "./types-old"
 import { Trois } from './types'
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
@@ -43,7 +42,7 @@ export const initTrois = (sceneOptions: Trois.SceneOptions) => {
     update()
 }
 
-const troisInternals = reactive<TroisInternals>({
+const troisInternals = reactive<Trois.Internals>({
     initialized: false,
     renderer: null,
     scene: null,
@@ -53,6 +52,7 @@ const troisInternals = reactive<TroisInternals>({
         height: 0,
     },
     // app: null,
+    raycaster: null,
 })
 
 export const useTrois = () => {
