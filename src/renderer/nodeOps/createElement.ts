@@ -8,6 +8,8 @@ export const createElement = (
     isSvg: boolean | undefined,
     isCustomizedBuiltin: string | undefined,
     vnodeProps: Trois.VNodeProps) => {
+
+    // create trois element
     const element = createTroisElement(type, vnodeProps ?? {})
 
     // debug

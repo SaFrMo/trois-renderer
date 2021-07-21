@@ -1,5 +1,5 @@
 <template>
-    <TroisCanvas :cameraPosition="[0, 0, 5]" @click="randomColors">
+    <TroisCanvas :cameraPosition="[0, 0, 5]">
         <!-- lights -->
         <pointLight
             :color="light1Color"
@@ -41,6 +41,9 @@ export default defineComponent({
             light3Color: '#5737d0',
             light4Color: '#0d25bb',
         }
+    },
+    mounted() {
+        window.addEventListener('click', this.randomColors)
     },
     methods: {
         randomColors() {
