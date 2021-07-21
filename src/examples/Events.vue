@@ -3,10 +3,10 @@
         <!-- <OrbitControlsWrapper /> -->
         <pointLight :position="[0, 50, 50]" />
         <mesh
-            @pointer-down="click"
+            @pointer-enter="hovering = !hovering"
             :rotation="[0, Math.PI * 0.25, Math.PI * 0.25]"
         >
-            <meshStandardMaterial />
+            <meshStandardMaterial :color="hovering ? 'red' : 'gray'" />
         </mesh>
     </TroisCanvas>
 </template>
@@ -19,13 +19,13 @@ export default defineComponent({
     components: { OrbitControlsWrapper },
     data() {
         return {
-            active: false,
+            hovering: false,
         }
     },
-    methods: {
-        click() {
-            console.log('clicked')
-        },
-    },
+    // methods: {
+    //     click() {
+    //         console.log('clicked!!!!')
+    //     },
+    // },
 })
 </script>

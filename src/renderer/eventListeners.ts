@@ -1,8 +1,9 @@
 import { Trois } from './types'
+import { addInteractable, getOrCreateMainInteractionRaycaster } from './useThree'
 
 export const addEventListener = (
     { element, key, value }:
-        { element: Trois.Element, key: Trois.EventKey, value: Function }
+        { element: Trois.Element, key: Trois.EventKey, value: Trois.InteractionCallback }
 ) => {
     // create new record for this key if needed
     if (!element.eventListeners[key]) {
@@ -12,9 +13,13 @@ export const addEventListener = (
     // TODO: add event listener
     element.eventListeners[key].push(value)
 
-    // TODO: event handling implementation
     // if we need it, let's get/create the main raycaster
     if (interactionsRequiringRaycaster.includes(key)) {
+        getOrCreateMainInteractionRaycaster()
+
+        if (element.instance) {
+            addInteractable(element)
+        }
 
     }
 
