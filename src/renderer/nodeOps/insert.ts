@@ -73,7 +73,7 @@ export const insert = (
     }
 
     // update props after attaching to parent so we can handle positioning, etc
-    updateAllObjectProps({ element, props: element.props || {} })
+    updateAllObjectProps({ element, props: element.props })
 }
 
 const handleDomElement = ({ element, parent }: { element: Trois.Element, parent: Trois.Element | string }) => {

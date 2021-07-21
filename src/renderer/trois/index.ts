@@ -14,7 +14,7 @@ export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
         childCreationQueue: [],
         children: [],
         domElement: null,
-        eventListeners: null,
+        eventListeners: {},
         id: nodeId++,
         instance: null,
         name: pascalCase(type),

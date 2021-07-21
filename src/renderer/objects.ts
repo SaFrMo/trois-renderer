@@ -4,6 +4,7 @@ import { isObject3D } from './lib'
 import { TroisProps } from './types-old'
 import { catalogue } from './components'
 import { Trois } from './types'
+import { addEventListener } from './eventListeners'
 
 /** Create a ThreeJS object from given vnode params. */
 export const createObject = ({ name, element }: {
@@ -54,30 +55,13 @@ export const nestedPropertiesToCheck = [
 
 export const updateAllObjectProps = ({ element, props }: { element: Trois.Element, props: TroisProps }) => {
     const target = element?.instance
-    if (!target || !element) return target
+    if (!target || !element) return element
 
     // set props
     props = props || {}
-    let output = target
-    Object.keys(props).filter(key => !key.startsWith('$')).forEach(key => {
-        const updated = updateObjectProp({ target, key, value: props[key] })
-        if (isObject3D(updated)) {
-            output = updated
-        }
-    })
-
-    // set $attached props
-    Object.keys(props).filter(key => typeof props[key] === 'string' && props[key].startsWith('$attached')).forEach(key => {
-        const attachedName = props[key].replace('$attached.', '')
-        const value = get(element.attached, attachedName, null)
-
-        console.log('$attached', key, value)
-
-        // look for the relevant attachment
-        const updated = updateObjectProp({ target, key, value })
-        if (isObject3D(updated)) {
-            output = updated
-        }
+    let output = element
+    Object.keys(props).forEach(key => {
+        output = updateObjectProp({ element, key, value: props[key] })
     })
 
     return output
@@ -87,15 +71,33 @@ export const updateAllObjectProps = ({ element, props }: { element: Trois.Elemen
  * Update property on target THREE.Object3D.
  */
 export const updateObjectProp = (
-    { target, key, value }:
+    { element, key, value }:
         {
-            target: Trois.Instance,
+            element: Trois.Element,
             key: string,
             value: any
         }) => {
 
+    // handle and return early if prop is an event
+    // (event list from react-three-fiber)
+    if (/^on(Pointer|Click|DoubleClick|ContextMenu|Wheel)/.test(key)) {
+        return addEventListener({ element, key, value })
+    }
+
+    // handle and return early if prop is specific to Vue/Trois
+    if (internalTroisVueKeys.includes(key)) return element
+
+    // parse $attached values
+    if (typeof value === 'string' && value.startsWith('$attached')) {
+        const attachedName = value.replace('$attached.', '')
+        value = get(element.attached, attachedName, null)
+    }
+
+    // save instance
+    const target = element.instance
+
     // cancel if no target
-    if (!target) return null
+    if (!target) return element
 
     // update THREE property
     // get final key
@@ -116,22 +118,27 @@ export const updateObjectProp = (
     else if (liveProperty && liveProperty.set) {
         // check if property type has `set` method (https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#shortcuts)
         const nextValueAsArray = Array.isArray(value) ? value : [value]
-            // liveProperty.set(...nextValueAsArray)
-            // console.log(finalKey)
             ; (target as any)[finalKey].set(...nextValueAsArray)
-        // console.log('setting', target)
     } else if (get(target, finalKey, undefined) !== undefined) {
         set(target, finalKey, value)
     } else {
-        // console.log(`No property ${finalKey} found on`, target)
+        // if you see this error in production, you might need to add `finalKey`
+        // to `internalTroisVueKeys` below
+        console.log(`No property ${finalKey} found on ${target}`)
     }
 
     // mark that we need to update material if needed
     const targetType = target?.texture?.type || target?.type
     if (typeof targetType === 'string' && targetType.toLowerCase().includes('material')) {
         target.needsUpdate = true
-        // console.log('updating', target)
     }
 
-    return target
+    return element
 }
+
+const internalTroisVueKeys = [
+    'args',
+    'attach',
+    'key',
+    'ref',
+]

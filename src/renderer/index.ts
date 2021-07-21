@@ -58,14 +58,14 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
         return null
     },
 
-    patchProp: (el, key, prevValue, nextValue) => {
-        const { instance } = (el || {})
+    patchProp: (element, key, prevValue, nextValue) => {
+        const { instance } = (element || {})
 
         // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (el?.props?.isDom || !instance || key.startsWith('$')) return
+        if (element?.props?.isDom || !instance || key.startsWith('$')) return
 
         // update props
-        updateObjectProp({ target: instance, key, value: nextValue })
+        updateObjectProp({ element, key, value: nextValue })
 
         // console.log('patchProp', { el, key, prevValue, nextValue })
     }

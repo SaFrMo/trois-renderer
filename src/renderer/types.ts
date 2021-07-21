@@ -40,7 +40,7 @@ export declare namespace Trois {
         childCreationQueue: Array<Element>
         children: Array<Element>
         domElement: HTMLElement | null
-        eventListeners: Record<string, Function | Function[]> | null
+        eventListeners: Record<string, Function[]>
         id: number
         instance: Instance | null
         name: string
