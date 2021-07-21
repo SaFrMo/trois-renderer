@@ -12,6 +12,8 @@ export const addEventListener = (
     // TODO: add event listener if needed
     element.eventListeners[key].push(value)
 
+    console.log('creating event: ', key, value)
+
     // TODO: event handling implementation
 
     return element
