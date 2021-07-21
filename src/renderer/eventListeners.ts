@@ -1,5 +1,5 @@
 import { Trois } from './types'
-import { addInteractable, getOrCreateMainInteractionRaycaster } from './useThree'
+import { addInteractable, getOrCreateMainInteractionRaycaster, interactables } from './useThree'
 
 export const addEventListener = (
     { element, key, value }:
@@ -17,10 +17,9 @@ export const addEventListener = (
     if (interactionsRequiringRaycaster.includes(key)) {
         getOrCreateMainInteractionRaycaster()
 
-        if (element.instance) {
+        if (element.instance && !interactables.includes(element)) {
             addInteractable(element)
         }
-
     }
 
     return element
