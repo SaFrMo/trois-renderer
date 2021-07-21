@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { get, isNumber, set } from 'lodash'
-import { isObject3D } from './lib'
+import { isEventKey } from './lib'
 import { TroisProps } from './types-old'
 import { catalogue } from './components'
 import { Trois } from './types'
@@ -80,7 +80,7 @@ export const updateObjectProp = (
 
     // handle and return early if prop is an event
     // (event list from react-three-fiber)
-    if (/^on(Pointer|Click|DoubleClick|ContextMenu|Wheel)/.test(key)) {
+    if (isEventKey(key)) {
         return addEventListener({ element, key, value })
     }
 

@@ -1,5 +1,17 @@
 import { Object3D } from "three"
 import { startCase } from 'lodash'
+import { Trois } from './types'
+
+// MAKE SURE THESE MATCH VALUES IN types.EventKey
+export const isEventKey = (target: any): target is Trois.EventKey => {
+    return [
+        'onPointer',
+        'onClick',
+        'onDoubleClick',
+        'onContextMenu',
+        'onWheel',
+    ].includes(target)
+}
 
 export const isObject3D = (target: any): target is Object3D => {
     return target?.isObject3D

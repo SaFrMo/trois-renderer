@@ -2,8 +2,9 @@ import { Trois } from './types'
 
 export const addEventListener = (
     { element, key, value }:
-        { element: Trois.Element, key: string, value: Function }
+        { element: Trois.Element, key: Trois.EventKey, value: Function }
 ) => {
+    // create new record for this key if needed
     if (!element.eventListeners[key]) {
         element.eventListeners[key] = []
     }

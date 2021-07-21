@@ -40,7 +40,7 @@ export declare namespace Trois {
         childCreationQueue: Array<Element>
         children: Array<Element>
         domElement: HTMLElement | null
-        eventListeners: Record<string, Function[]>
+        eventListeners: Record<EventKey, Function[]>
         id: number
         instance: Instance | null
         name: string
@@ -49,6 +49,13 @@ export declare namespace Trois {
         type: string
         vueId: number,
     }
+
+    // MAKE SURE THESE MATCH VALUES IN lib.isEventKey
+    type EventKey = 'onPointer' |
+        'onClick' |
+        'onDoubleClick' |
+        'onContextMenu' |
+        'onWheel'
 
     /** 
      * A TroisJS object. Can be any kind of ThreeJS object, JSM module, user-defined objects, etc.
