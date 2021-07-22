@@ -14,7 +14,7 @@ const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
         antialias: true,
         background: 'black',
         camera: null,
-        cameraPosition: [0, 0, 0] as [number, number, number],
+        cameraPosition: null,
         ...props
     } as Trois.SceneOptions
 }
@@ -59,9 +59,11 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
 
     // use $attached camera or build a new one
     const camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
-    const pos = sceneOptions.cameraPosition
-    const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
-    troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
+    if (sceneOptions.cameraPosition) {
+        const pos = sceneOptions.cameraPosition
+        const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
+        troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
+    }
 
     // build update loop
     // TODO: more robust

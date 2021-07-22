@@ -1,7 +1,7 @@
 <template>
     <OrbitControls
         ref="controls"
-        v-if="orbitArgs.length"
+        v-if="orbitArgs.length === 2"
         :args="orbitArgs"
         :autoRotate="true"
         :enableDamping="true"

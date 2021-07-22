@@ -154,7 +154,7 @@ disconnect, // Dis-connect handlers, () => void
     antialias: boolean
     background: string | number | THREE.Color
     camera: THREE.Camera | null
-    cameraPosition: [number, number, number] | THREE.Vector3
+    cameraPosition: [number, number, number] | THREE.Vector3 | null
   }
 
   type VNodeProps = vueVNodeProps & {
