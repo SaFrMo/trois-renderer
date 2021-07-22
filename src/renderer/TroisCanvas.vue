@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { PerspectiveCamera } from 'three'
+import { OrthographicCamera, PerspectiveCamera } from 'three'
 import { useTrois } from './useThree'
 const trois = useTrois()
 
@@ -52,10 +52,22 @@ export default defineComponent({
 
             if (!renderer.value || !camera.value) return
 
-            const perspectiveCamera = camera.value as PerspectiveCamera
+            const aspect = width / height
 
-            perspectiveCamera.aspect = width / height
-            perspectiveCamera.updateProjectionMatrix()
+            if (camera.value.type === 'PerspectiveCamera') {
+                const perspectiveCamera = camera.value as PerspectiveCamera
+                perspectiveCamera.aspect = aspect
+                perspectiveCamera.updateProjectionMatrix()
+            } else if (camera.value.type === 'OrthographicCamera') {
+                // TODO: better ortho handling - this only scales by width
+                const orthoCamera = camera.value as OrthographicCamera
+                const orthoWidth = orthoCamera.right - orthoCamera.left
+                const newHeight = orthoWidth / aspect
+                orthoCamera.top = newHeight * 0.5
+                orthoCamera.bottom = newHeight * -0.5
+                orthoCamera.updateProjectionMatrix()
+            }
+
             renderer.value.setSize(width, height)
 
             trois.size.value = { width, height }

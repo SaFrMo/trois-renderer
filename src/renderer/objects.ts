@@ -130,10 +130,20 @@ export const updateObjectProp = (
     }
 
     // mark that we need to update material if needed
-    const targetType = target?.texture?.type || target?.type
-    if (typeof targetType === 'string' && targetType.toLowerCase().includes('material')) {
-        target.needsUpdate = true
+    const targetTypeRaw = target?.texture?.type || target?.type
+    if (typeof targetTypeRaw === 'string') {
+        const targetType = targetTypeRaw.toLowerCase()
+
+        switch (true) {
+            case targetType.includes('material'):
+                target.needsUpdate = true
+                break;
+            case targetType.includes('camera') && target.updateProjectionMatrix:
+                target.updateProjectionMatrix()
+                break;
+        }
     }
+
 
     return element
 }
