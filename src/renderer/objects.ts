@@ -27,18 +27,21 @@ export const createObject = ({ name, element }: {
     if (!targetClass) throw `${name} is not part of the THREE namespace! Did you forget to extend? import {extend} from 'trois'; extend({app, YourComponent, ...})`
 
     // look for $attached in args
-    const processedArgs = args.map((arg: any) => {
-        // return $attached value if needed
-        if (typeof arg === 'string' && arg.startsWith('$attached')) {
-            return element.attached[arg.replace('$attached.', '')]
-        }
-
-        // otherwise, return plain value
-        return arg
-    })
+    const processedArgs = args.map((arg: any) => processProp({ element, prop: arg }))
 
     // return result
     return new targetClass(...processedArgs)
+}
+
+/** Process props into either themselves or the $attached value */
+export const processProp = ({ element, prop }: { element: Trois.Element, prop: any }) => {
+    // return $attached value if needed
+    if (typeof prop === 'string' && prop.startsWith('$attached')) {
+        return element.attached[prop.replace('$attached.', '')]
+    }
+
+    // otherwise, return plain value
+    return prop
 }
 
 export const propertyShortcuts: { [key: string]: string } = {

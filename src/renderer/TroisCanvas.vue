@@ -50,7 +50,7 @@ export default defineComponent({
         updateSize({ width, height }: { width: number; height: number }) {
             const { camera, renderer } = trois
 
-            if (!renderer.value) return
+            if (!renderer.value || !camera.value) return
 
             const perspectiveCamera = camera.value as PerspectiveCamera
 

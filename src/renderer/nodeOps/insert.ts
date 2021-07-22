@@ -1,7 +1,7 @@
 import { Trois } from '../types'
 import { isObject3D } from '../lib'
 import { createObject, updateAllObjectProps, } from '../objects'
-import { useTrois } from '../useThree'
+import { completeTrois, useTrois } from '../useThree'
 const trois = useTrois()
 import { created } from '..'
 
@@ -81,6 +81,21 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
     Object.keys(element?.props?.style).forEach(key => {
         (element.domElement?.style ?? {} as any)[key] = (element?.props?.style ?? {})[key]
     })
+
+    // if this is the canvas, let's pass our $attached values up to the container,
+    // since the container needs them to finish initialization
+    if (element?.props?.hasOwnProperty('data-trois-canvas')) {
+        if (typeof parent !== 'string') {
+            Object.keys(element?.attached).forEach(key => {
+                parent.attached[key] = element.attached[key]
+            })
+        }
+    }
+
+    // if this is the wrapper, let's finish setup
+    if (element?.props?.hasOwnProperty('data-trois-container')) {
+        completeTrois({ element })
+    }
 
     // attach container to parent
     if (typeof parent === 'string') {

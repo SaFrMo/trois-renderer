@@ -2,24 +2,30 @@ import { reactive, toRefs } from "@vue/reactivity"
 import { Trois } from './types'
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
+import { processProp } from './objects'
 
 let mouseListener: (event: MouseEvent) => void
 
 export let scene: THREE.Scene = new THREE.Scene()
 export let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
 
+const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
+    return {
+        antialias: true,
+        background: 'black',
+        camera: null,
+        cameraPosition: [0, 0, 0] as [number, number, number],
+        ...props
+    } as Trois.SceneOptions
+}
+
 // Build Trois
-export const initTrois = (sceneOptions: Trois.SceneOptions) => {
+export const initTrois = (props: Trois.VNodeProps) => {
     if (troisInternals.initialized) return
 
     troisInternals.initialized = true
 
-    // build camera
-    // TODO: more robust
-    const camera = troisInternals.camera = new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)
-    const pos = sceneOptions.cameraPosition
-    const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
-    troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
+    const sceneOptions = transformPropsToSceneOptions(props)
 
     // build scene
     // TODO: more robust
@@ -46,6 +52,16 @@ export const initTrois = (sceneOptions: Trois.SceneOptions) => {
             troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
         }
     }
+}
+
+export const completeTrois = ({ element }: { element: Trois.Element }) => {
+    const sceneOptions = transformPropsToSceneOptions(element.props)
+
+    // use $attached camera or build a new one
+    const camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
+    const pos = sceneOptions.cameraPosition
+    const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
+    troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
 
     // build update loop
     // TODO: more robust

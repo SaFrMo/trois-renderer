@@ -19,16 +19,8 @@ export const createElement = (
     if (element.props?.hasOwnProperty('data-trois-container')) {
         element.props.isDom = true
 
-        // build trois props from wrapper
-        const sceneOptions: Trois.SceneOptions = {
-            antialias: true,
-            background: 'black',
-            cameraPosition: [0, 0, 0] as [number, number, number],
-            ...vnodeProps
-        }
-
         // this is the root container, so let's start trois
-        initTrois(sceneOptions)
+        initTrois(element.props)
     }
 
     // this is the canvas, so let's note that it's a dom element

@@ -153,6 +153,7 @@ disconnect, // Dis-connect handlers, () => void
   type SceneOptions = {
     antialias: boolean
     background: string | number | THREE.Color
+    camera: THREE.Camera | null
     cameraPosition: [number, number, number] | THREE.Vector3
   }
 
