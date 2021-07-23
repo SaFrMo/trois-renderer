@@ -11,7 +11,7 @@ export const createObject = ({ name, element }: {
 }) => {
     const vnodeProps = element.props
     const args = vnodeProps?.args ?? []
-    console.log('creating obj', vnodeProps)
+    // console.log('creating obj', vnodeProps)
 
     // create mesh
     if (name.toLowerCase().endsWith('mesh')) {
@@ -30,7 +30,8 @@ export const createObject = ({ name, element }: {
     const processedArgs = args.map((arg: any) => processProp({ element, prop: arg }))
 
     // return result
-    return new targetClass(...processedArgs)
+    const output = new targetClass(...processedArgs)
+    return output
 }
 
 /** Process props into either themselves or the $attached value */

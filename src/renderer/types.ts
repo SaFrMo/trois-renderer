@@ -1,6 +1,8 @@
 import { VNodeProps as vueVNodeProps } from 'vue'
 
 export declare namespace Trois {
+  type AutoAttach = string
+
   // based on r3f BaseInstance: https://github.com/pmndrs/react-three-fiber/blob/d3a149f9bdbc2176e77e7ac92e48686311917bde/packages/fiber/src/core/renderer.ts#L31-L40
   // these are the minimum requirements for any Trois object
   // (scene objects, user-defined objects, three/examples/jsm modules, etc)
@@ -78,6 +80,7 @@ export declare namespace Trois {
 
   // based on r3f useThree: https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#usethree
   type Internals = {
+    autoAttach: Array<AutoAttach>
     camera: THREE.Camera | null
     initialized: boolean
     mousePos: THREE.Vector2

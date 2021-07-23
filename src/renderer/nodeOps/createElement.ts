@@ -23,18 +23,12 @@ export const createElement = (
         initTrois(element.props)
     }
 
-    // this is the canvas, so let's note that it's a dom element
-    // if (element.props?.hasOwnProperty('data-trois-canvas')) {
-    //     element.props.isDom = true
-    // }
-
-    // auto-attach geometries and materials
-    if (element.name.endsWith('Geometry')) {
-        element.props = { attach: 'geometry', ...element.props }
-    }
-    if (element.name.endsWith('Material')) {
-        element.props = { attach: 'material', ...element.props }
-    }
+    // auto-attach relevant values
+    trois.autoAttach.value.forEach(key => {
+        if (element.name.toLowerCase().endsWith(key)) {
+            element.props = { attach: key, ...element.props }
+        }
+    })
 
     if (element.props?.isDom) {
         element.domElement = document.createElement(type)

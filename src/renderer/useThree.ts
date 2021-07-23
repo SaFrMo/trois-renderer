@@ -54,7 +54,12 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
     }
 
-    // build renderer using $attached value or new one
+    // prep renderer options
+    const rendererOptions = {
+        ...sceneOptions.rendererOptions
+    }
+
+    // use $attached renderer or build a new one
     renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer }))
         ?? new THREE.WebGLRenderer(sceneOptions.rendererOptions)
     // set renderer properties
@@ -65,6 +70,8 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     })
     // size renderer
     troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
+
+    // prep effect composer if we have one
 
     // build mouse listener for the renderer DOM element
     mouseListener = (event: MouseEvent) => {
@@ -203,6 +210,7 @@ export const addAfterRender = (cb: Trois.UpdateCallback) => {
 
 // Trois instance
 const troisInternals = reactive<Trois.Internals>({
+    autoAttach: ['geometry', 'material'],
     camera: null,
     initialized: false,
     mousePos: new THREE.Vector2(Infinity, Infinity),

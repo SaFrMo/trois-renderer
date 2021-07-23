@@ -1,7 +1,7 @@
 import { createRenderer, Component } from 'vue'
 import { RendererOptions } from '@vue/runtime-core'
 import { updateObjectProp } from './objects'
-import { components } from './components'
+import { components, extend } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
@@ -84,10 +84,9 @@ export const createApp = ((root: Component) => {
     app.mount = (root, ...args) => {
         const domElement = (typeof root === 'string' ? document.querySelector(root) : root) as HTMLElement
         const mounted = mount({ domElement } as any, ...args)
-        // trois.subTree.value = mounted.$.subTree
-        // trois.app.value = mounted
         return mounted
     }
+    // TODO: add `extend` function here rather than separate export?
 
     // done
     return app

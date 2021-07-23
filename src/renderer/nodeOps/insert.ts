@@ -44,6 +44,8 @@ export const insert = (
     }
     created[element.vueId] = element
 
+    console.log(element)
+
     // add any object3Ds to the scene
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
@@ -95,10 +97,10 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
         parent.domElement.appendChild(element.domElement as any)
     }
 
-    // if this is the wrapper, let's attach the renderer DOM element
     if (element.domElement &&
         element.props.hasOwnProperty('data-trois-container') &&
         trois.renderer.value) {
+        // if this is the wrapper, let's attach the renderer DOM element
         element.domElement.appendChild(trois.renderer.value.domElement)
     } else {
         throw 'Error setting up renderer'

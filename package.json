@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "lodash": "4.17.21",
+    "postprocessing": "6.22.2",
     "three": "0.130.0",
     "vue": "^3.0.5"
   },

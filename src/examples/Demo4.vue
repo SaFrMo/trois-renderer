@@ -10,10 +10,10 @@
             <meshPhongMaterial />
         </instancedMesh>
 
-        <!-- <effectComposer>
+        <effectComposer>
             <renderPass />
             <unrealBloomPass />
-        </effectComposer> -->
+        </effectComposer>
     </TroisCanvas>
 </template>
 
