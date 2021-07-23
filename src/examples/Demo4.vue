@@ -20,7 +20,7 @@
                     },
                 ]"
             />
-            <pixelationEffect v-if="active" :args="[5]" />
+            <pixelationEffect :args="[5]" />
         </effectComposer>
     </TroisCanvas>
 </template>
@@ -40,7 +40,6 @@ export default defineComponent({
             count: 1000,
             objects: [] as Array<any>,
             rotation: [0, 0, 0],
-            active: true,
         }
     },
     mounted() {
