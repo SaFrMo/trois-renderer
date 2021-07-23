@@ -2,29 +2,17 @@
     <TroisCanvas :cameraPosition="[0, 0, 10]">
         <OrbitControlsWrapper />
         <pointLight :position="[0, 50, 50]" />
-        <mesh
-            @pointer-enter="hovering = true"
-            @pointer-leave="hovering = false"
-            @click="scale = scale === 1 ? 2 : 1"
-            :scale="scale"
-            :rotation="[0, Math.PI * 0.25, Math.PI * 0.25]"
-        >
-            <meshStandardMaterial :color="hovering ? 'red' : 'gray'" />
-        </mesh>
+        <ClickMesh :x="-2" />
+        <ClickMesh :x="2" />
     </TroisCanvas>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import ClickMesh from './Events/ClickMesh.vue'
 
 export default defineComponent({
-    components: { OrbitControlsWrapper },
-    data() {
-        return {
-            hovering: false,
-            scale: 1,
-        }
-    },
+    components: { ClickMesh, OrbitControlsWrapper },
 })
 </script>
