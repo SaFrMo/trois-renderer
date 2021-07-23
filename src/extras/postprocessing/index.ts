@@ -28,6 +28,7 @@ export const usePostprocessing = ({ app, extend, trois }: PostprocessingInterfac
     // register our own effect composer
     app.component('EffectComposer', EffectComposer)
 
-    trois.autoAttach.value.push('composer', 'pass')
+    trois.autoAttach.value.push('composer')
+    trois.autoAttachArray.value.push('pass')
     trois.runDefaultRenderFunction.value = false
 }

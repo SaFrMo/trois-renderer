@@ -4,14 +4,15 @@ import { isEventKey } from './lib'
 import { catalogue } from './components'
 import { Trois } from './types'
 import { addEventListener } from './eventListeners'
+import { useTrois } from './useThree'
+const trois = useTrois()
 
 /** Create a ThreeJS object from given vnode params. */
 export const createObject = ({ name, element }: {
     name: string, element: Trois.Element
 }) => {
     const vnodeProps = element.props
-    const args = vnodeProps?.args ?? []
-    // console.log('creating obj', vnodeProps)
+    const args = transformArgs(vnodeProps?.args ?? [])
 
     // create mesh
     if (name.toLowerCase().endsWith('mesh')) {
@@ -32,6 +33,23 @@ export const createObject = ({ name, element }: {
     // return result
     const output = new targetClass(...processedArgs)
     return output
+}
+
+const transformArgs = (args: Array<any>) => {
+    return args.map(arg => {
+
+        // substitute values as needed
+        switch (arg) {
+            case '$camera':
+                return trois.camera.value
+            case '$renderer':
+                return trois.renderer.value
+            case '$scene':
+                return trois.scene.value
+            default:
+                return arg
+        }
+    })
 }
 
 /** Process props into either themselves or the $attached value */
@@ -152,6 +170,8 @@ export const updateObjectProp = (
 const internalTroisVueKeys = [
     'args',
     'attach',
+    'attachArray',
     'key',
+    'onReady',
     'ref',
 ]

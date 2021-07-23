@@ -208,6 +208,7 @@ export const addAfterRender = (cb: Trois.UpdateCallback) => {
 // Trois instance
 const troisInternals = reactive<Trois.Internals>({
     autoAttach: ['geometry', 'material'],
+    autoAttachArray: [],
     camera: null,
     initialized: false,
     mousePos: new THREE.Vector2(Infinity, Infinity),

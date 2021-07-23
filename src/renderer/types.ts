@@ -41,6 +41,7 @@ export declare namespace Trois {
    */
   type Element = {
     attached: { [key: string]: any }
+    attachedArray: { [key: string]: Array<any> }
     childCreationQueue: Array<Element>
     children: Array<Element>
     domElement: HTMLElement | null
@@ -81,6 +82,7 @@ export declare namespace Trois {
   // based on r3f useThree: https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#usethree
   type Internals = {
     autoAttach: Array<AutoAttach>
+    autoAttachArray: Array<AutoAttach>
     camera: THREE.Camera | null
     initialized: boolean
     mousePos: THREE.Vector2

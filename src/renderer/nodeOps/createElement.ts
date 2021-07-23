@@ -29,6 +29,11 @@ export const createElement = (
             element.props = { attach: key, ...element.props }
         }
     })
+    trois.autoAttachArray.value.forEach(key => {
+        if (element.name.toLowerCase().endsWith(key)) {
+            element.props = { attachArray: key, ...element.props }
+        }
+    })
 
     if (element.props?.isDom) {
         element.domElement = document.createElement(type)

@@ -37,6 +37,13 @@ export const insert = (
         }
     }
 
+    if (element.props.attachArray) {
+        if (!parent.attachedArray[element.props.attachArray]) {
+            parent.attachedArray[element.props.attachArray] = []
+        }
+        parent.attachedArray[element.props.attachArray].push(element.instance)
+    }
+
     // save vue ID
     element.vueId = (element as any)?.__vueParentComponent?.uid
     if (element.vueId === null || element.vueId === undefined) {

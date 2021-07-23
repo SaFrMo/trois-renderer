@@ -11,10 +11,11 @@ let nodeId = 0
 export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
     return {
         attached: {},
+        attachedArray: {},
         childCreationQueue: [],
         children: [],
         domElement: null,
-        eventListeners: {},
+        eventListeners: {} as Record<Trois.EventKey, Trois.InteractionCallback[]>,
         id: nodeId++,
         instance: null,
         name: pascalCase(type),

@@ -64,7 +64,7 @@ export default defineComponent({
     },
     methods: {
         log({ element }: { element: Trois.Element }) {
-            console.log(element)
+            // console.log(element)
         },
         update() {
             requestAnimationFrame(this.update)
