@@ -16,6 +16,12 @@ const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
         camera: null,
         cameraPosition: null,
         renderer: null,
+        rendererOptions: {
+            antialias: true
+        },
+        rendererProperties: {
+            // toneMapping: THREE.ACESFilmicToneMapping,
+        },
         ...props
     } as Trois.SceneOptions
 }
@@ -49,9 +55,15 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     }
 
     // build renderer using $attached value or new one
-    renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer })) ?? new THREE.WebGLRenderer({
-        antialias: sceneOptions.antialias
+    renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer }))
+        ?? new THREE.WebGLRenderer(sceneOptions.rendererOptions)
+    // set renderer properties
+    Object.keys(sceneOptions.rendererProperties).forEach(rendererProperty => {
+        if (renderer.hasOwnProperty(rendererProperty)) {
+            ; (renderer as any)[rendererProperty] = sceneOptions.rendererProperties[rendererProperty]
+        }
     })
+    // size renderer
     troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // build mouse listener for the renderer DOM element

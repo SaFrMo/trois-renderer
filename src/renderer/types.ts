@@ -156,6 +156,8 @@ disconnect, // Dis-connect handlers, () => void
     camera: THREE.Camera | null
     cameraPosition: [number, number, number] | THREE.Vector3 | null
     renderer: THREE.Renderer | null
+    rendererOptions: THREE.WebGLRendererParameters
+    rendererProperties: { [key: string]: any }
   }
 
   type VNodeProps = vueVNodeProps & {

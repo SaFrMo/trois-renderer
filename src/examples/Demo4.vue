@@ -9,6 +9,11 @@
             <sphereGeometry />
             <meshPhongMaterial />
         </instancedMesh>
+
+        <!-- <effectComposer>
+            <renderPass />
+            <unrealBloomPass />
+        </effectComposer> -->
     </TroisCanvas>
 </template>
 
