@@ -4,7 +4,7 @@ import { isEventKey } from './lib'
 import { catalogue } from './components'
 import { Trois } from './types'
 import { addEventListener } from './eventListeners'
-import { useTrois } from './useThree'
+import { useTrois, scene, renderer, camera } from './useThree'
 const trois = useTrois()
 
 /** Create a ThreeJS object from given vnode params. */
@@ -28,7 +28,13 @@ export const createObject = ({ name, element }: {
     if (!targetClass) throw `${name} is not part of the THREE namespace! Did you forget to extend? import {extend} from 'trois'; extend({app, YourComponent, ...})`
 
     // look for $attached in args
-    const processedArgs = args.map((arg: any) => processProp({ element, prop: arg }))
+    // we need to guarantee everything comes back as an array so we can spread $attachedArrays,
+    // so we'll use processPropAsArray
+    const argsWrappedInArrays = args.map((arg: any) => { return processPropAsArray({ element, prop: arg }) })
+    let processedArgs = [] as Array<any>
+    argsWrappedInArrays.forEach(arr => {
+        processedArgs = processedArgs.concat(arr)
+    })
 
     // return result
     const output = new targetClass(...processedArgs)
@@ -41,11 +47,11 @@ const transformArgs = (args: Array<any>) => {
         // substitute values as needed
         switch (arg) {
             case '$camera':
-                return trois.camera.value
+                return camera
             case '$renderer':
-                return trois.renderer.value
+                return renderer
             case '$scene':
-                return trois.scene.value
+                return scene
             default:
                 return arg
         }
@@ -54,6 +60,11 @@ const transformArgs = (args: Array<any>) => {
 
 /** Process props into either themselves or the $attached value */
 export function processProp<T>({ element, prop }: { element: Trois.Element, prop: any }) {
+    // return $attachedArray value if needed
+    if (typeof prop === 'string' && prop.startsWith('$attachedArray')) {
+        return element.attachedArray[prop.replace('$attachedArray.', '')] as any as T
+    }
+
     // return $attached value if needed
     if (typeof prop === 'string' && prop.startsWith('$attached')) {
         return element.attached[prop.replace('$attached.', '')] as T
@@ -61,6 +72,12 @@ export function processProp<T>({ element, prop }: { element: Trois.Element, prop
 
     // otherwise, return plain value
     return prop as T
+}
+
+function processPropAsArray<T>({ element, prop }: { element: Trois.Element, prop: any }) {
+    const isAttachedArray = typeof prop === 'string' && prop.startsWith('$attachedArray')
+    const output = processProp<T>({ element, prop })
+    return Array.isArray(output) && isAttachedArray ? output as Array<T> : [output]
 }
 
 export const propertyShortcuts: { [key: string]: string } = {

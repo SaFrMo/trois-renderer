@@ -88,7 +88,7 @@ export declare namespace Trois {
     mousePos: THREE.Vector2
     raycaster: THREE.Raycaster | null
     runDefaultRenderFunction: boolean
-    renderer: THREE.Renderer | null
+    renderer: THREE.WebGLRenderer | null
     scene: THREE.Scene | null
     size: {
       width: number

@@ -29,6 +29,6 @@ export const usePostprocessing = ({ app, extend, trois }: PostprocessingInterfac
     app.component('EffectComposer', EffectComposer)
 
     trois.autoAttach.value.push('composer')
-    trois.autoAttachArray.value.push('pass')
+    trois.autoAttachArray.value.push('effect', 'pass')
     trois.runDefaultRenderFunction.value = false
 }

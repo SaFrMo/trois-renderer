@@ -6,8 +6,9 @@ import { processProp } from './objects'
 
 let mouseListener: (event: MouseEvent) => void
 
-export let scene: THREE.Scene = new THREE.Scene()
-export let renderer: THREE.Renderer
+export let scene: THREE.Scene
+export let renderer: THREE.WebGLRenderer
+export let camera: THREE.Camera
 
 const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
     return {
@@ -47,7 +48,7 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     const sceneOptions = transformPropsToSceneOptions(element.props)
 
     // use $attached camera or build a new one
-    const camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
+    camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
     if (sceneOptions.cameraPosition) {
         const pos = sceneOptions.cameraPosition
         const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
@@ -55,7 +56,7 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     }
 
     // use $attached renderer or build a new one
-    renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer }))
+    renderer = troisInternals.renderer = (processProp<THREE.WebGLRenderer>({ element, prop: sceneOptions.renderer }))
         ?? new THREE.WebGLRenderer(sceneOptions.rendererOptions)
     // set renderer properties
     Object.keys(sceneOptions.rendererProperties).forEach(rendererProperty => {
@@ -206,7 +207,7 @@ export const addAfterRender = (cb: Trois.UpdateCallback) => {
 }
 
 // Trois instance
-const troisInternals = reactive<Trois.Internals>({
+export const troisInternals = reactive<Trois.Internals>({
     autoAttach: ['geometry', 'material'],
     autoAttachArray: [],
     camera: null,

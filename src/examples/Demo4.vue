@@ -10,9 +10,17 @@
             <meshPhongMaterial />
         </instancedMesh>
 
-        <effectComposer @ready="log">
-            <renderPass />
-            <unrealBloomPass />
+        <effectComposer>
+            <bloomEffect
+                :args="[
+                    {
+                        luminanceThreshold: 0.1,
+                        intensity: 2.0,
+                        resolutionScale: 0.3,
+                    },
+                ]"
+            />
+            <pixelationEffect v-if="active" :args="[5]" />
         </effectComposer>
     </TroisCanvas>
 </template>
@@ -32,6 +40,7 @@ export default defineComponent({
             count: 1000,
             objects: [] as Array<any>,
             rotation: [0, 0, 0],
+            active: true,
         }
     },
     mounted() {
