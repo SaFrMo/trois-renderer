@@ -22,6 +22,6 @@ extend({
     //     UnrealBloomPass,
 })
 
-usePostprocessing({ app, extend, trois: useTrois() })
+// usePostprocessing({ app, extend, trois: useTrois() })
 
 app.mount('#app')
