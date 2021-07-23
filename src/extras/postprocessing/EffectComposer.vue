@@ -6,10 +6,7 @@
     >
         <template v-if="!manualConfig">
             <renderPass :args="['$scene', '$camera']" />
-            <effectPass
-                @ready="log"
-                :args="['$camera', '$attachedArray.effect']"
-            >
+            <effectPass :args="['$camera', '$attachedArray.effect']">
                 <slot />
             </effectPass>
         </template>
@@ -38,9 +35,6 @@ export default defineComponent({
         },
     },
     methods: {
-        log(v: any) {
-            console.log(v)
-        },
         ready({ element }: { element: Trois.Element }) {
             // add all passes
             element.attachedArray.pass.forEach((pass) => {

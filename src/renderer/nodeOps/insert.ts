@@ -47,14 +47,14 @@ export const insert = (
     // save vue ID
     element.vueId = (element as any)?.__vueParentComponent?.uid
     if (element.vueId === null || element.vueId === undefined) {
-        return
+        // console.log('here!!')
+    } else {
+        created[element.vueId] = element
     }
-    created[element.vueId] = element
 
     // add any object3Ds to the scene
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
-
         if (parentElement.props?.hasOwnProperty('data-trois-container')) {
             // we're a scene-level component, so let's go ahead and add ourselves to the scene
             scene.value.add(element.instance)
