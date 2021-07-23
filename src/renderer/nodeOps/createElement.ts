@@ -24,9 +24,9 @@ export const createElement = (
     }
 
     // this is the canvas, so let's note that it's a dom element
-    if (element.props?.hasOwnProperty('data-trois-canvas')) {
-        element.props.isDom = true
-    }
+    // if (element.props?.hasOwnProperty('data-trois-canvas')) {
+    //     element.props.isDom = true
+    // }
 
     // auto-attach geometries and materials
     if (element.name.endsWith('Geometry')) {
@@ -36,20 +36,8 @@ export const createElement = (
         element.props = { attach: 'material', ...element.props }
     }
 
-    // check to make sure renderer is running
-    if (!trois.renderer.value) {
-        throw 'Renderer not initialized.'
-    }
-
     if (element.props?.isDom) {
-        // we know the canvas has already been created by initTrois,
-        // so let's attach it to the Trois.Element here
-        if (type === 'canvas') {
-            element.domElement = trois.renderer.value.domElement
-        } else {
-            // otherwise, create the relevant HTML element
-            element.domElement = document.createElement(type)
-        }
+        element.domElement = document.createElement(type)
     }
 
     // return created element

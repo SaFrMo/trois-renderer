@@ -34,6 +34,18 @@ export const initTrois = (props: Trois.VNodeProps) => {
         troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
             ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
     }
+}
+
+export const completeTrois = ({ element }: { element: Trois.Element }) => {
+    const sceneOptions = transformPropsToSceneOptions(element.props)
+
+    // use $attached camera or build a new one
+    const camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
+    if (sceneOptions.cameraPosition) {
+        const pos = sceneOptions.cameraPosition
+        const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
+        troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
+    }
 
     // build renderer
     // TODO: more robust, allow renderer overrides
@@ -51,18 +63,6 @@ export const initTrois = (props: Trois.VNodeProps) => {
             troisInternals.mousePos.x = (event.clientX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
             troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
         }
-    }
-}
-
-export const completeTrois = ({ element }: { element: Trois.Element }) => {
-    const sceneOptions = transformPropsToSceneOptions(element.props)
-
-    // use $attached camera or build a new one
-    const camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
-    if (sceneOptions.cameraPosition) {
-        const pos = sceneOptions.cameraPosition
-        const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
-        troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
     }
 
     // build update loop

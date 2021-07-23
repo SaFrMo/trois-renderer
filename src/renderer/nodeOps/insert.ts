@@ -23,8 +23,8 @@ export const insert = (
     }
 
     // ensure trois is running
-    const { renderer, scene } = trois
-    if (!renderer.value || !scene.value) throw 'Trois renderer or scene not set up'
+    const { scene } = trois
+    if (!scene.value) throw 'Trois scene not set up'
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
@@ -48,7 +48,7 @@ export const insert = (
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
 
-        if (parentElement.type === 'canvas') {
+        if (parentElement.props?.hasOwnProperty('data-trois-container')) {
             // we're a scene-level component, so let's go ahead and add ourselves to the scene
             scene.value.add(element.instance)
 
@@ -82,16 +82,6 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
         (element.domElement?.style ?? {} as any)[key] = (element?.props?.style ?? {})[key]
     })
 
-    // if this is the canvas, let's pass our $attached values up to the container,
-    // since the container needs them to finish initialization
-    if (element?.props?.hasOwnProperty('data-trois-canvas')) {
-        if (typeof parent !== 'string') {
-            Object.keys(element?.attached).forEach(key => {
-                parent.attached[key] = element.attached[key]
-            })
-        }
-    }
-
     // if this is the wrapper, let's finish setup
     if (element?.props?.hasOwnProperty('data-trois-container')) {
         completeTrois({ element })
@@ -103,5 +93,14 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
         parentEl.appendChild(element.domElement as any)
     } else if (parent?.domElement) {
         parent.domElement.appendChild(element.domElement as any)
+    }
+
+    // if this is the wrapper, let's attach the renderer DOM element
+    if (element.domElement &&
+        element.props.hasOwnProperty('data-trois-container') &&
+        trois.renderer.value) {
+        element.domElement.appendChild(trois.renderer.value.domElement)
+    } else {
+        throw 'Error setting up renderer'
     }
 }

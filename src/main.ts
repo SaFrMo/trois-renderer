@@ -1,11 +1,8 @@
 import { createApp, extend } from './renderer'
-import App from './examples/OrthoCamera.vue'
+import App from './examples/Demo4.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,
-    // CubeRefractionMapping,
-    // LinearMipmapLinearFilter,
-    // RGBFormat,
     WebGLRenderTarget,
     WebGLCubeRenderTarget,
 } from 'three'
