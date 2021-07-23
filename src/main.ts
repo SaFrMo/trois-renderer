@@ -1,5 +1,5 @@
 import { createApp, extend, useTrois } from './renderer'
-import App from './examples/Demo4.vue'
+import App from './examples/Events.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,
@@ -22,6 +22,6 @@ extend({
     UnrealBloomPass,
 })
 
-usePostprocessing({ app, extend, trois: useTrois() })
+// usePostprocessing({ app, extend, trois: useTrois() })
 
 app.mount('#app')

@@ -86,6 +86,7 @@ export declare namespace Trois {
     camera: THREE.Camera | null
     initialized: boolean
     mousePos: THREE.Vector2
+    mouseDown: boolean
     raycaster: THREE.Raycaster | null
     runDefaultRenderFunction: boolean
     renderer: THREE.WebGLRenderer | null

@@ -1,3 +1,4 @@
+import { watch } from 'vue'
 import { reactive, toRefs } from "@vue/reactivity"
 import { Trois } from './types'
 import * as THREE from 'three'
@@ -5,6 +6,8 @@ import { isNumber } from 'lodash'
 import { processProp } from './objects'
 
 let mouseListener: (event: MouseEvent) => void
+let mouseDownListener: (event: MouseEvent) => void
+let mouseUpListener: (event: MouseEvent) => void
 
 export let scene: THREE.Scene
 export let renderer: THREE.WebGLRenderer
@@ -76,6 +79,13 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         troisInternals.mousePos.x = (event.clientX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
         troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
     }
+    mouseDownListener = (event: MouseEvent) => {
+        troisInternals.mouseDown = true
+
+    }
+    mouseUpListener = (event: MouseEvent) => {
+        troisInternals.mouseDown = false
+    }
 
     // build update loop
     // TODO: more robust
@@ -99,7 +109,20 @@ export const getOrCreateMainInteractionRaycaster = () => {
         troisInternals.raycaster = raycaster = new THREE.Raycaster()
 
         // start mouse listener
-        troisInternals.renderer?.domElement.addEventListener('mousemove', mouseListener)
+        if (!troisInternals.renderer) {
+            // wait for renderer to be created
+            const stop = watch(() => troisInternals.renderer, (v) => {
+                if (v && v.domElement) {
+                    v.domElement.addEventListener('mousemove', mouseListener)
+                    v.domElement.addEventListener('mousedown', mouseDownListener)
+                    v.domElement.addEventListener('mouseup', mouseUpListener)
+                    stop()
+                }
+            })
+        } else {
+            troisInternals.renderer.domElement.addEventListener('mousemove', mouseListener)
+
+        }
         // attach to render loop
         addBeforeRender(mainInteractionRaycasterCallback)
     }
@@ -107,22 +130,24 @@ export const getOrCreateMainInteractionRaycaster = () => {
     return raycaster
 }
 
-let currentIntersections: Array<THREE.Intersection> = []
+export let currentIntersections: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
 
 const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
     troisInternals.raycaster?.setFromCamera(troisInternals.mousePos, camera)
     const intersections = troisInternals.raycaster?.intersectObjects(interactables.map(v => v.instance as any as THREE.Object3D))
 
-    // intersection arrays
-    const enterValues: Array<THREE.Intersection> = [],
+    let enterValues: Array<THREE.Intersection> = [],
         sameValues: Array<THREE.Intersection> = [],
-        leaveValues: Array<THREE.Intersection> = currentIntersections
+        leaveValues: Array<THREE.Intersection> = [],
+        entering: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = [],
+        staying: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
+
+    // intersection arrays
+    leaveValues = currentIntersections.map(v => v.intersection)
 
     // element arrays
-    const entering: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
-    const staying: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
     intersections?.forEach((intersection) => {
-        const currentIdx = currentIntersections.findIndex(v => v.object === intersection.object)
+        const currentIdx = currentIntersections.findIndex(v => v.intersection.object === intersection.object)
         if (currentIdx === -1) {
             // new intersection
             enterValues.push(intersection)
@@ -168,7 +193,7 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
         fireEventsFromIntersections({ element, eventKeys, intersection })
     })
 
-    currentIntersections = intersections || []
+    currentIntersections = ([] as any).concat(entering, staying)
 }
 
 // utility function for firing multiple callbacks and multiple events on a Trois.Element
@@ -212,6 +237,7 @@ export const troisInternals = reactive<Trois.Internals>({
     autoAttachArray: [],
     camera: null,
     initialized: false,
+    mouseDown: false,
     mousePos: new THREE.Vector2(Infinity, Infinity),
     raycaster: null,
     runDefaultRenderFunction: true,
