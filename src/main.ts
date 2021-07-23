@@ -1,5 +1,5 @@
 import { createApp, extend, useTrois } from './renderer'
-import App from './examples/Events.vue'
+import App from './examples/Demo1.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,

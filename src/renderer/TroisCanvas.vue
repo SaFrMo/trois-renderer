@@ -14,7 +14,7 @@ export default defineComponent({
     setup() {
         return {
             containerStyle: {
-                position: 'fixed',
+                position: 'fixed' as any,
                 top: 0,
                 right: 0,
                 bottom: 0,

@@ -26,11 +26,7 @@
             </meshStandardMaterial>
         </mesh>
 
-        <cubeCamera
-            v-if="active"
-            :args="[0.1, 2000, $refs?.rt?.$el?.instance]"
-            ref="cameraRef"
-        />
+        <cubeCamera v-if="active" :args="cubeCameraArgs" ref="cameraRef" />
     </group>
 </template>
 
@@ -58,6 +54,11 @@ export default defineComponent({
     },
     mounted() {
         this.update()
+    },
+    computed: {
+        cubeCameraArgs() {
+            return [0.1, 2000, (this.$refs?.rt as any)?.$el?.instance]
+        },
     },
     methods: {
         update() {
