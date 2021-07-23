@@ -10,7 +10,7 @@
             <meshPhongMaterial />
         </instancedMesh>
 
-        <effectComposer>
+        <effectComposer @ready="log">
             <renderPass />
             <unrealBloomPass />
         </effectComposer>
@@ -21,6 +21,7 @@
 import { defineComponent } from 'vue'
 import { Object3D, InstancedMesh, Vector3 } from 'three'
 import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import { Trois } from '../renderer/types'
 
 const scratch = new Object3D()
 
@@ -62,6 +63,9 @@ export default defineComponent({
         this.update()
     },
     methods: {
+        log({ element }: { element: Trois.Element }) {
+            console.log(element)
+        },
         update() {
             requestAnimationFrame(this.update)
 

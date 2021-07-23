@@ -54,11 +54,6 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
     }
 
-    // prep renderer options
-    const rendererOptions = {
-        ...sceneOptions.rendererOptions
-    }
-
     // use $attached renderer or build a new one
     renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer }))
         ?? new THREE.WebGLRenderer(sceneOptions.rendererOptions)
@@ -87,7 +82,9 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         requestAnimationFrame(update)
 
         onBeforeRender.forEach(callback => callback({ camera, renderer, scene, }))
-        renderer.render(scene, camera)
+        if (troisInternals.runDefaultRenderFunction) {
+            renderer.render(scene, camera)
+        }
         onAfterRender.forEach(callback => callback({ camera, renderer, scene, }))
     }
     update()
@@ -215,6 +212,7 @@ const troisInternals = reactive<Trois.Internals>({
     initialized: false,
     mousePos: new THREE.Vector2(Infinity, Infinity),
     raycaster: null,
+    runDefaultRenderFunction: true,
     renderer: null,
     scene: null,
     size: {

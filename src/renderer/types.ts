@@ -85,6 +85,7 @@ export declare namespace Trois {
     initialized: boolean
     mousePos: THREE.Vector2
     raycaster: THREE.Raycaster | null
+    runDefaultRenderFunction: boolean
     renderer: THREE.Renderer | null
     scene: THREE.Scene | null
     size: {

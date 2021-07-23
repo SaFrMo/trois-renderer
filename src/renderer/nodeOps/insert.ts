@@ -44,8 +44,6 @@ export const insert = (
     }
     created[element.vueId] = element
 
-    console.log(element)
-
     // add any object3Ds to the scene
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
@@ -76,6 +74,19 @@ export const insert = (
 
     // update props after attaching to parent so we can handle positioning, etc
     updateAllObjectProps({ element, props: element.props })
+
+    // ready callback
+    if (element.props.onReady) {
+        const arr = Array.isArray(element.props.onReady) ? element.props.onReady : [element.props.onReady]
+        arr.forEach(func => func({
+            element,
+            instance: element.instance,
+            trois,
+            scene: trois.scene,
+            camera: trois.camera,
+            renderer: trois.renderer
+        }))
+    }
 }
 
 const handleDomElement = ({ element, parent }: { element: Trois.Element, parent: Trois.Element | string }) => {
