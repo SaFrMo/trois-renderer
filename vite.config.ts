@@ -11,6 +11,7 @@ export default defineConfig({
         demo1: './demo1/index.html',
         demo4: './demo4/index.html',
         demo6: './demo6/index.html',
+        hierarchy: './hierarchy/index.html'
       }
     }
   }
