@@ -82,7 +82,7 @@ export declare namespace Trois {
     initialized: boolean
     mousePos: THREE.Vector2
     raycaster: THREE.Raycaster | null
-    renderer: THREE.WebGLRenderer | null
+    renderer: THREE.Renderer | null
     scene: THREE.Scene | null
     size: {
       width: number
@@ -155,6 +155,7 @@ disconnect, // Dis-connect handlers, () => void
     background: string | number | THREE.Color
     camera: THREE.Camera | null
     cameraPosition: [number, number, number] | THREE.Vector3 | null
+    renderer: THREE.Renderer | null
   }
 
   type VNodeProps = vueVNodeProps & {

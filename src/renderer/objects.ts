@@ -34,14 +34,14 @@ export const createObject = ({ name, element }: {
 }
 
 /** Process props into either themselves or the $attached value */
-export const processProp = ({ element, prop }: { element: Trois.Element, prop: any }) => {
+export function processProp<T>({ element, prop }: { element: Trois.Element, prop: any }) {
     // return $attached value if needed
     if (typeof prop === 'string' && prop.startsWith('$attached')) {
-        return element.attached[prop.replace('$attached.', '')]
+        return element.attached[prop.replace('$attached.', '')] as T
     }
 
     // otherwise, return plain value
-    return prop
+    return prop as T
 }
 
 export const propertyShortcuts: { [key: string]: string } = {

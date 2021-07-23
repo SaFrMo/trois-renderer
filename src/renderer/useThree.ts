@@ -7,7 +7,7 @@ import { processProp } from './objects'
 let mouseListener: (event: MouseEvent) => void
 
 export let scene: THREE.Scene = new THREE.Scene()
-export let renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
+export let renderer: THREE.Renderer
 
 const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
     return {
@@ -15,6 +15,7 @@ const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
         background: 'black',
         camera: null,
         cameraPosition: null,
+        renderer: null,
         ...props
     } as Trois.SceneOptions
 }
@@ -47,22 +48,18 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
     }
 
-    // build renderer
-    // TODO: more robust, allow renderer overrides
-    const useDefaultRenderer = true
-    if (useDefaultRenderer) {
-        renderer = troisInternals.renderer = new THREE.WebGLRenderer({
-            antialias: sceneOptions.antialias
-        })
-        troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
+    // build renderer using $attached value or new one
+    renderer = troisInternals.renderer = (processProp<THREE.Renderer>({ element, prop: sceneOptions.renderer })) ?? new THREE.WebGLRenderer({
+        antialias: sceneOptions.antialias
+    })
+    troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
-        // build mouse listener for the renderer DOM element
-        mouseListener = (event: MouseEvent) => {
-            // calculate mouse position in normalized device coordinates
-            // (-1 to +1) for both components
-            troisInternals.mousePos.x = (event.clientX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
-            troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
-        }
+    // build mouse listener for the renderer DOM element
+    mouseListener = (event: MouseEvent) => {
+        // calculate mouse position in normalized device coordinates
+        // (-1 to +1) for both components
+        troisInternals.mousePos.x = (event.clientX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
+        troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
     }
 
     // build update loop
