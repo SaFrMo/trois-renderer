@@ -8,6 +8,7 @@ const trois = useTrois()
 export const created: { [key: number]: Trois.Element } = {}
 import { createElement, insert } from './nodeOps'
 import { createElement as createTroisElement } from './trois'
+import Gltf from './Gltf.vue'
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
