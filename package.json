@@ -1,8 +1,13 @@
 {
+  "name": "trois-renderer",
+  "files": [
+    "dist"
+  ],
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:lib": "vue-tsc --noEmit && vite build -c vite-lib.config.ts",
     "serve": "vite preview"
   },
   "dependencies": {
@@ -23,5 +28,13 @@
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
     "vue-tsc": "^0.0.24"
+  },
+  "main": "./dist/trois-renderer.umd.js",
+  "module": "./dist/trois-renderer.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/trois-renderer.es.js",
+      "require": "./dist/trois-renderer.umd.js"
+    }
   }
 }
