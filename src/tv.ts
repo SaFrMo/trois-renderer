@@ -1,11 +1,11 @@
 import { createApp, extend, useTrois } from './renderer'
 import App from './examples/Tv.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-// import {
-//     CubeCamera,
-//     WebGLRenderTarget,
-//     WebGLCubeRenderTarget,
-// } from 'three'
+import {
+    //     CubeCamera,
+    WebGLRenderer,
+    //     WebGLCubeRenderTarget,
+} from 'three'
 // import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
 // import { usePostprocessing } from './extras/postprocessing'
 // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
@@ -16,7 +16,7 @@ extend({
     app,
     OrbitControls,
     // CubeCamera,
-    // WebGLRenderTarget,
+    WebGLRenderer,
     // WebGLCubeRenderTarget,
     // FullScreenQuad,
     //     UnrealBloomPass,
