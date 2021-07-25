@@ -12,7 +12,6 @@ export const setupEnvMap = ({ src, scene }: { src: string, scene: THREE.Scene })
     const trois = useTrois()
 
     watch(() => trois.renderer.value, async renderer => {
-        console.log('running')
         if (!renderer) return
 
         // create pmremGenerator if needed
