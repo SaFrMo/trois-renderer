@@ -4,7 +4,7 @@
         <pointLight :position="[0, 5, 5]" />
         <ambientLight :intensity="1.5" />
 
-        <gltf src="/tv/tv1k.glb" :scale="5" :position-y="-1" />
+        <gltf src="/tv1k.glb" :scale="5" :position-y="-1" />
     </TroisCanvas>
 </template>
 
