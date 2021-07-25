@@ -1,8 +1,8 @@
 <template>
-    <TroisCanvas :cameraPosition="[0, 0, 10]">
+    <TroisCanvas environment="/venice-sunset.hdr" :cameraPosition="[0, 0, 10]">
         <OrbitControlsWrapper />
         <pointLight :position="[0, 5, 5]" />
-        <ambientLight :intensity="1.5" />
+        <ambientLight :intensity="0.5" />
 
         <gltf src="/tv1k.glb" :scale="5" :position-y="-1" />
     </TroisCanvas>

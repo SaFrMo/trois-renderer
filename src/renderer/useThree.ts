@@ -4,6 +4,7 @@ import { Trois } from './types'
 import * as THREE from 'three'
 import { isNumber } from 'lodash'
 import { processProp } from './objects'
+import { setupEnvMap } from './lib'
 
 let mouseListener: (event: MouseEvent) => void
 let mouseDownListener: (event: MouseEvent) => void
@@ -19,6 +20,7 @@ const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
         background: 'black',
         camera: null,
         cameraPosition: null,
+        environment: null,
         renderer: null,
         rendererOptions: {
             antialias: true
@@ -41,9 +43,15 @@ export const initTrois = (props: Trois.VNodeProps) => {
     // build scene
     // TODO: more robust
     scene = troisInternals.scene = new THREE.Scene()
-    if (typeof sceneOptions.background === 'string' || isNumber(sceneOptions.background)) {
+    // setup scene according to options
+    // background color
+    if (sceneOptions !== null) {
         troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
             ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
+    }
+    // environment map
+    if (sceneOptions.environment !== null) {
+        setupEnvMap({ src: sceneOptions.environment, scene })
     }
 }
 
