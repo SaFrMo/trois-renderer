@@ -12,7 +12,8 @@ export default defineConfig({
         demo4: './demo4/index.html',
         demo6: './demo6/index.html',
         events: './events/index.html',
-        hierarchy: './hierarchy/index.html'
+        hierarchy: './hierarchy/index.html',
+        tv: './tv/index.html',
       }
     }
   }
