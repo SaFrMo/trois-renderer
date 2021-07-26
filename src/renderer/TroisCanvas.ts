@@ -57,8 +57,10 @@ export default defineComponent({
     },
     render() {
         return h('div', {
+            attrs: {
+                'data-trois-container': true,
+            },
             class: 'container',
-            'data-trois-container': true,
             style: this.containerStyle,
         }, this.$slots?.default?.() || [])
     }
