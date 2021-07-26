@@ -1,12 +1,12 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "build:lib": "vue-tsc --noEmit && vite build -c vite-lib.config.ts",
     "serve": "vite preview",
-    "postinstall": "npm i three && npm run build:lib"
+    "postinstall": "npm run build:lib"
   },
   "dependencies": {
     "lodash": "4.17.21",
