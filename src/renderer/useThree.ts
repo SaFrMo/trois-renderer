@@ -1,4 +1,4 @@
-import { watch } from 'vue'
+import { watch } from '@vue/runtime-core'
 import { reactive, toRefs } from "@vue/reactivity"
 import { Trois } from './types'
 import * as THREE from 'three'

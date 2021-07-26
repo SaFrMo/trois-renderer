@@ -1,6 +1,6 @@
 import { Trois } from './types'
 import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, useTrois } from './useThree'
-import { watch } from 'vue'
+import { watch } from '@vue/runtime-core'
 const trois = useTrois()
 
 export const addEventListener = (

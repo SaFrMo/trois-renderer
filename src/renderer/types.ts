@@ -1,4 +1,4 @@
-import { VNodeProps as vueVNodeProps } from 'vue'
+import { VNodeProps as vueVNodeProps } from '@vue/runtime-core'
 
 export declare namespace Trois {
   type AutoAttach = string

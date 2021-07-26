@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from '@vue/runtime-core'
 import { OrthographicCamera, PerspectiveCamera } from 'three'
 import { useTrois } from './useThree'
 const trois = useTrois()

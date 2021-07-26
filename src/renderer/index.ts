@@ -1,5 +1,4 @@
-import { createRenderer, Component } from 'vue'
-import { RendererOptions } from '@vue/runtime-core'
+import { createRenderer, Component, RendererOptions } from '@vue/runtime-core'
 import { updateObjectProp } from './objects'
 import { components, extend } from './components'
 import { useTrois } from './useThree'
