@@ -11,7 +11,7 @@ export const insert = (
     ref?: Trois.Element | null
 ) => {
     // debug
-    // console.log('insert', { name: element.name, element, parent, ref })
+    console.log('insert', { name: element.name, element, parent, ref })
 
     // cancel if no valid name
     if (!element.name) return
