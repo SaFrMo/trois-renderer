@@ -4,6 +4,7 @@ import { createObject, updateAllObjectProps, } from '../objects'
 import { completeTrois, useTrois } from '../useThree'
 const trois = useTrois()
 import { created } from '..'
+const { scene } = trois
 
 export const insert = (
     element: Trois.Element,
@@ -22,9 +23,6 @@ export const insert = (
         return
     }
 
-    // ensure trois is running
-    const { scene } = trois
-    if (!scene.value) throw 'Trois scene not set up'
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
@@ -56,6 +54,9 @@ export const insert = (
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
         if (parentElement.props?.hasOwnProperty('data-trois-container')) {
+            // ensure trois is running
+            if (!scene.value) throw 'Trois scene not set up'
+
             // we're a scene-level component, so let's go ahead and add ourselves to the scene
             scene.value.add(element.instance)
 
