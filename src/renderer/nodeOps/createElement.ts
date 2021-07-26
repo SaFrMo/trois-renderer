@@ -16,7 +16,7 @@ export const createElement = (
     console.log('createElement', { element, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
     // container node - this should be the first thing created
-    if (element.props?.hasOwnProperty('data-trois-container')) {
+    if (element.props?.hasOwnProperty('data-trois-container') || element.type === 'TroisCanvas') {
         element.props.isDom = true
 
         // this is the root container, so let's start trois
@@ -36,7 +36,8 @@ export const createElement = (
     })
 
     if (element.props?.isDom) {
-        element.domElement = document.createElement(type)
+        const elType = type === 'TroisCanvas' ? 'div' : type
+        element.domElement = document.createElement(elType)
     }
 
     // return created element
