@@ -3,12 +3,13 @@
   "files": [
     "dist"
   ],
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "build:lib": "vue-tsc --noEmit && vite build -c vite-lib.config.ts",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "postinstall": "npm run build:lib"
   },
   "dependencies": {
     "lodash": "4.17.21",
