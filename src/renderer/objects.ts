@@ -4,8 +4,7 @@ import { isEventKey } from './lib'
 import { catalogue } from './components'
 import { Trois } from './types'
 import { addEventListener } from './eventListeners'
-import { useTrois, scene, renderer, camera } from './useThree'
-const trois = useTrois()
+import { scene, renderer, camera } from './useThree'
 
 /** Create a ThreeJS object from given vnode params. */
 export const createObject = ({ name, element }: {

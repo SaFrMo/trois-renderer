@@ -13,7 +13,7 @@ export const createElement = (
     const element = createTroisElement(type, vnodeProps ?? {})
 
     // debug
-    // console.log('createElement', { node: element, type, isSvg, isCustomizedBuiltin, vnodeProps })
+    console.log('createElement', { node: element, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
     // container node - this should be the first thing created
     if (element.props?.hasOwnProperty('data-trois-container')) {
