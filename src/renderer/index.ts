@@ -74,6 +74,7 @@ export const createApp = ((root: Component) => {
     const app = createRenderer(nodeOps).createApp(root)
 
     // register all components
+    console.log(components)
     Object.keys(components).forEach(key => {
         console.log(key)
         app.component(key, (components as any)[key])
