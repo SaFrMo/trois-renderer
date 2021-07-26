@@ -1,5 +1,5 @@
 {
-  "name": "trois-renderer",
+  "name": "trois-renderer-proof-of-concept",
   "files": [
     "dist"
   ],
@@ -31,12 +31,12 @@
     "vite-plugin-dts": "0.5.3",
     "vue-tsc": "^0.0.24"
   },
-  "main": "./dist/trois-renderer.umd.js",
-  "module": "./dist/trois-renderer.es.js",
+  "main": "./dist/trois-renderer-proof-of-concept.umd.js",
+  "module": "./dist/trois-renderer-proof-of-concept.es.js",
   "exports": {
     ".": {
-      "import": "./dist/trois-renderer.es.js",
-      "require": "./dist/trois-renderer.umd.js"
+      "import": "./dist/trois-renderer-proof-of-concept.es.js",
+      "require": "./dist/trois-renderer-proof-of-concept.umd.js"
     }
   }
 }
