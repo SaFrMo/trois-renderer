@@ -6,8 +6,9 @@ import { Trois } from './types'
 const createComponent = (tag: string) =>
     defineComponent({
         inheritAttrs: false,
-        name: tag,
+        // name: tag,
         render() {
+            console.log('v2')
             return h(tag, this.$attrs, this.$slots?.default?.() || [])
         }
     })
