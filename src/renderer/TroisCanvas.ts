@@ -56,6 +56,7 @@ export default defineComponent({
         },
     },
     render() {
+        console.log('trois canvas', this)
         return h('div', {
             class: 'container',
             'data-trois-container': true,
