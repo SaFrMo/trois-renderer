@@ -56,11 +56,11 @@ export default defineComponent({
         },
     },
     render() {
-        console.log('trois canvas', this)
         return h('div', {
             class: 'container',
             'data-trois-container': true,
             style: this.containerStyle,
+            ...this.$attrs,
         }, this.$slots?.default?.() || [])
     }
 })
