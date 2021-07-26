@@ -99,12 +99,12 @@ export const insert = (
 
 const handleDomElement = ({ element, parent }: { element: Trois.Element, parent: Trois.Element | string }) => {
     // apply styling
-    Object.keys(element?.props?.style).forEach(key => {
+    Object.keys(element?.props?.style ?? {}).forEach(key => {
         (element.domElement?.style ?? {} as any)[key] = (element?.props?.style ?? {})[key]
     })
 
     // if this is the wrapper, let's finish setup
-    if (element?.props?.hasOwnProperty('data-trois-container')) {
+    if (element?.props?.isContainer) {
         completeTrois({ element })
     }
 
@@ -117,7 +117,7 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
     }
 
     if (element.domElement &&
-        element.props.hasOwnProperty('data-trois-container') &&
+        element.props.isContainer &&
         trois.renderer.value) {
         // if this is the wrapper, let's attach the renderer DOM element
         element.domElement.appendChild(trois.renderer.value.domElement)

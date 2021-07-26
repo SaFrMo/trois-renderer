@@ -1,6 +1,6 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.0.991",
+  "version": "0.0.992",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",

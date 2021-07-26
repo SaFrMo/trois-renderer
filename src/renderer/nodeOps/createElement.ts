@@ -18,6 +18,7 @@ export const createElement = (
     // container node - this should be the first thing created
     if (element.props?.hasOwnProperty('data-trois-container') || element.type === 'TroisCanvas') {
         element.props.isDom = true
+        element.props.isContainer = true
 
         // this is the root container, so let's start trois
         initTrois(element.props)
