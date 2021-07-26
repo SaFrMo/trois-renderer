@@ -1,8 +1,7 @@
-<script lang="ts">
 import { defineComponent, h } from '@vue/runtime-core'
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useTrois } from './useThree'
-const trois = useTrois()
+// import { useTrois } from './useThree'
+// const trois = useTrois()
 
 export default defineComponent({
     props: {
@@ -28,4 +27,3 @@ export default defineComponent({
         return h('group', this.$attrs, this.$slots?.default?.() || [])
     },
 })
-</script>

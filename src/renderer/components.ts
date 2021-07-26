@@ -1,6 +1,6 @@
 import { h, defineComponent, App } from '@vue/runtime-core'
-import TroisCanvas from './TroisCanvas.vue'
-import Gltf from './Gltf.vue'
+import TroisCanvas from './TroisCanvas'
+import Gltf from './Gltf'
 import { Trois } from './types'
 
 const createComponent = (tag: string) =>

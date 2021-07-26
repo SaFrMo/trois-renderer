@@ -1,11 +1,4 @@
-<template>
-    <div class="container" data-trois-container :style="containerStyle">
-        <slot />
-    </div>
-</template>
-
-<script lang="ts">
-import { defineComponent } from '@vue/runtime-core'
+import { h, defineComponent } from '@vue/runtime-core'
 import { OrthographicCamera, PerspectiveCamera } from 'three'
 import { useTrois } from './useThree'
 const trois = useTrois()
@@ -62,5 +55,11 @@ export default defineComponent({
             trois.size.value = { width, height }
         },
     },
+    render() {
+        return h('div', {
+            class: 'container',
+            'data-trois-container': true,
+            style: this.containerStyle,
+        }, this.$slots?.default?.() || [])
+    }
 })
-</script>

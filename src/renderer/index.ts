@@ -1,13 +1,12 @@
 import { createRenderer, Component, RendererOptions } from '@vue/runtime-core'
 import { updateObjectProp } from './objects'
-import { components, extend } from './components'
+import { components } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
 export const created: { [key: number]: Trois.Element } = {}
 import { createElement, insert } from './nodeOps'
 import { createElement as createTroisElement } from './trois'
-import Gltf from './Gltf.vue'
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
