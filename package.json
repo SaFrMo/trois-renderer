@@ -1,9 +1,9 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "dev": "vite",
-    "build:examples": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build",
     "build:lib": "vue-tsc --noEmit && vite build -c vite-lib.config.ts",
     "serve": "vite preview",
     "postinstall": "npm run build:lib"
