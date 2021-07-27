@@ -51,6 +51,7 @@ export const insert = (
     }
 
     // add any object3Ds to the scene
+    console.log('is object 3d', element, isObject3D(element?.instance))
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
         console.log(parentElement, 'will add elements: ', parentElement.props?.hasOwnProperty('data-trois-container'))
