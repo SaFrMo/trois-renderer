@@ -55,7 +55,7 @@ export const insert = (
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
         console.log(parentElement, 'will add elements: ', parentElement.props?.hasOwnProperty('data-trois-container'))
-        if (parentElement.props?.hasOwnProperty('data-trois-container')) {
+        if (parentElement.props?.hasOwnProperty('data-trois-container') || parentElement.props?.isContainer) {
             // ensure trois is running
             if (!scene.value) throw 'Trois scene not set up'
 
