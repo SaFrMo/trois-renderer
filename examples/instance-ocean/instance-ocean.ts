@@ -1,5 +1,5 @@
-import { createApp, extend, useTrois } from './renderer'
-import App from './examples/Table.vue'
+import { createApp, extend, useTrois } from '../../src/renderer'
+import App from '../../src/examples/InstanceOcean.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     //     CubeCamera,

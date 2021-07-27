@@ -1,5 +1,5 @@
-import { createApp, extend, useTrois } from './renderer'
-import App from './examples/Events.vue'
+import { createApp, extend, useTrois } from '../../src/renderer'
+import App from './Events.vue'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {
     CubeCamera,
@@ -7,7 +7,7 @@ import {
     WebGLCubeRenderTarget,
 } from 'three'
 import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js'
-import { usePostprocessing } from './extras/postprocessing'
+import { usePostprocessing } from '../../src/extras/postprocessing'
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 const app = createApp(App)
