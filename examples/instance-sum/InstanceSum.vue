@@ -19,9 +19,8 @@
  <script lang="ts">
 import { defineComponent, watch } from 'vue'
 import { Color, Object3D, InstancedMesh, Vector3 } from 'three'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
 import SimplexNoise from 'simplex-noise'
-import { useTrois } from '../renderer'
+import { useTrois } from '../../src/renderer'
 const trois = useTrois()
 
 const scratch = new Object3D()
@@ -30,7 +29,6 @@ const simplex = new SimplexNoise()
 const scratchColor = new Color('#ae3b4a')
 
 export default defineComponent({
-    components: { OrbitControlsWrapper },
     data() {
         return {
             count: 2000,

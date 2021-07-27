@@ -14,6 +14,7 @@ export default defineConfig({
         demo6: 'demo6/index.html',
         events: 'events/index.html',
         hierarchy: 'hierarchy/index.html',
+        'instance-sum': 'instance-sum/index.html',
         'instance-wires': 'instance-wires/index.html',
         tv: 'tv/index.html',
       }
