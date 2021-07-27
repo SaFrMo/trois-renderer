@@ -16,6 +16,7 @@ export default defineConfig({
         hierarchy: './examples/hierarchy/index.html',
         'instance-sum': './examples/instance-sum/index.html',
         'instance-wires': './examples/instance-wires/index.html',
+        points: './examples/points/index.html',
         table: './examples/table/index.html',
         'torus-walk': './examples/torus-walk/index.html',
         tv: './examples/tv/index.html',
