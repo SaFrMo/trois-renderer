@@ -28,8 +28,8 @@
  <script lang="ts">
 import { defineComponent } from 'vue'
 import { Object3D, InstancedMesh, Vector3 } from 'three'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
-import { Trois } from '../renderer/types'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
+import { Trois } from '../../src/renderer/types'
 
 const scratch = new Object3D()
 
