@@ -25,7 +25,7 @@
     "examples/tv/tv.ts",
     "examples/table/table.ts",
     "examples/instance-sum/instance-sum.ts",
-    "examples/instance-ocean/instance-ocean.ts",
+    "examples/instance-wires/instance-wires.ts",
     "examples/hierarchy/hierarchy.ts",
     "examples/events/events.ts"
   ]

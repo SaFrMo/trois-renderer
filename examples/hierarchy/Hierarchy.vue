@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { Mesh } from 'three'
 
 export default defineComponent({

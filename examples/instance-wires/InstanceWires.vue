@@ -15,7 +15,7 @@
  <script lang="ts">
 import { defineComponent } from 'vue'
 import { Color, Object3D, InstancedMesh, Vector3 } from 'three'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import SimplexNoise from 'simplex-noise'
 import { keyframes } from 'popmotion'
 
