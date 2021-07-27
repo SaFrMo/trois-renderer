@@ -20,6 +20,7 @@
     "src/**/*.vue",
     "shims-vue.d.ts",
     "examples/demo1/demo1.ts",
-    "examples/demo4/demo4.ts"
+    "examples/demo4/demo4.ts",
+    "examples/demo6/demo6.ts"
   ]
 }
