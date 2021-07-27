@@ -27,10 +27,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
-import { Trois } from '../renderer/types'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
+import { Trois } from '../../src/renderer/types'
 import { tween } from 'popmotion'
-import { useTrois } from '../renderer/useThree'
+import { useTrois } from '../../src/renderer/useThree'
 const trois = useTrois()
 
 export default defineComponent({
