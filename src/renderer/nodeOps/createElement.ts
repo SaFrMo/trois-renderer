@@ -39,6 +39,11 @@ export const createElement = (
     if (element.props?.isDom) {
         const elType = type === 'TroisCanvas' ? 'div' : type
         element.domElement = document.createElement(elType)
+        Object.keys(element.props?.containerStyle ?? {}).forEach((key: string) => {
+            if (element.domElement) {
+                element.domElement.style[key as any] = element.props.containerStyle[key]
+            }
+        })
     }
 
     // return created element

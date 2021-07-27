@@ -1,12 +1,11 @@
-<template>
+/*<template>
     <div class="container" data-trois-container :style="containerStyle">
         <slot />
     </div>
-</template>
+</template>*/
 
-<script lang="ts">
+//<script lang="ts">
 import { h, defineComponent } from '@vue/runtime-core'
-import { OrthographicCamera, PerspectiveCamera } from 'three'
 import { useTrois } from './useThree'
 const trois = useTrois()
 
@@ -25,6 +24,7 @@ export default defineComponent({
         }
     },
     mounted() {
+        console.log('mounted')
         // resize listener
         const resizeObserver = new ResizeObserver(([container]) => {
             this.updateSize(container.contentRect)
@@ -44,12 +44,13 @@ export default defineComponent({
             const aspect = width / height
 
             if (camera.value.type === 'PerspectiveCamera') {
-                const perspectiveCamera = camera.value as PerspectiveCamera
+                const perspectiveCamera =
+                    camera.value as THREE.PerspectiveCamera
                 perspectiveCamera.aspect = aspect
                 perspectiveCamera.updateProjectionMatrix()
             } else if (camera.value.type === 'OrthographicCamera') {
                 // TODO: better ortho handling - this only scales by width
-                const orthoCamera = camera.value as OrthographicCamera
+                const orthoCamera = camera.value as THREE.OrthographicCamera
                 const orthoWidth = orthoCamera.right - orthoCamera.left
                 const newHeight = orthoWidth / aspect
                 orthoCamera.top = newHeight * 0.5
@@ -62,5 +63,8 @@ export default defineComponent({
             trois.size.value = { width, height }
         },
     },
+    render(p: any) {
+        return h('div', { 'data-trois-container': true, containerStyle: p.containerStyle, updateSize: p.updateSize, ...p.$attrs }, p.$slots?.default?.() || [])
+    },
 })
-</script>
+//</script>
