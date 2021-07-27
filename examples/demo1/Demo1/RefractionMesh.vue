@@ -40,7 +40,7 @@ import {
     Mesh,
     Vector3,
 } from 'three'
-import { scene, renderer } from '../../renderer'
+import { scene, renderer } from '../../../src/renderer'
 
 export default defineComponent({
     data() {

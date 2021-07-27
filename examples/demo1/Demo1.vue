@@ -36,7 +36,7 @@
 import { defineComponent } from 'vue'
 import RefractionMesh from './Demo1/RefractionMesh.vue'
 import NoisyPlane from './Demo1/NoisyPlane.vue'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 
 export default defineComponent({
     name: 'App',

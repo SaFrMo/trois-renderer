@@ -122,7 +122,7 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
         element.props.isContainer &&
         trois.renderer.value) {
         // if this is the wrapper, let's attach the renderer DOM element
-        element.domElement.appendChild(trois.renderer.value.domElement)
+        element.domElement.appendChild(trois.renderer.value.domElement as any)
     } else {
         throw 'Error setting up renderer'
     }

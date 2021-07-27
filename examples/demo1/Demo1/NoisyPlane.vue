@@ -78,7 +78,7 @@
 import { defineComponent } from 'vue'
 import { vertex as dispVert, fragment as dispFrag } from './shaders/dispMap'
 import { vertex as normVert, fragment as normFrag } from './shaders/normalMap'
-import { useTrois } from '../../renderer'
+import { useTrois } from '../../../src/renderer'
 const trois = useTrois()
 import { ObjectSpaceNormalMap, Texture, Vector2 } from 'three'
 
