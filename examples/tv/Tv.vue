@@ -1,7 +1,7 @@
 <template>
     <TroisCanvas
         renderer="$attached.renderer"
-        environment="/venice-sunset.hdr"
+        environment="/tv/venice-sunset.hdr"
         :cameraPosition="[0, 0, 10]"
         background="lightblue"
     >
@@ -15,13 +15,13 @@
             :outputEncoding="sRGBEncoding"
         />
 
-        <gltf src="/tv1k.glb" :scale="5" :position-y="-1" />
+        <gltf src="/tv/tv1k.glb" :scale="5" :position-y="-1" />
     </TroisCanvas>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import OrbitControlsWrapper from './OrbitControlsWrapper.vue'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { sRGBEncoding } from 'three'
 
 export default defineComponent({
