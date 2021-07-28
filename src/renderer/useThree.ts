@@ -17,16 +17,18 @@ export let camera: THREE.Camera
 const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
     return {
         antialias: true,
-        background: 'black',
+        background: '',
         camera: null,
         cameraPosition: null,
         environment: null,
         renderer: null,
         rendererOptions: {
-            antialias: true
+            antialias: true,
+            ...props.rendererOptions ?? {}
         },
         rendererProperties: {
             // toneMapping: THREE.ACESFilmicToneMapping,
+            ...props.rendererProperties ?? {}
         },
         ...props
     } as Trois.SceneOptions
@@ -46,8 +48,10 @@ export const initTrois = (props: Trois.VNodeProps) => {
     // setup scene according to options
     // background color
     if (sceneOptions !== null) {
-        troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
-            ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
+        if (sceneOptions.background) {
+            troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
+                ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
+        }
     }
     // environment map
     if (sceneOptions.environment !== null) {
