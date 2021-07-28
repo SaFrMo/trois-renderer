@@ -1,29 +1,27 @@
 <template>
-    <TroisCanvas background="beige" :cameraPosition="[0, 0, 20]">
+    <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
         <OrbitControlsWrapper :autoRotate="false" />
 
         <!-- calendar -->
-        <group :position-x="-3.3" :position-y="2.2">
-            <!-- TODO: month name -->
-            <mesh v-if="loaded" :position-x="-0.275" :position-y="1.2">
+        <group :position-x="-3.3" :position-y="2.2" v-if="loaded">
+            <!-- month name -->
+            <mesh :position-x="-0.275" :position-y="1.2">
                 <textGeometry
                     :args="[month, { font, size: 0.5, height: 0.02 }]"
                 />
-                <meshBasicMaterial color="#1D1F20" />
+                <meshBasicMaterial :color="black" />
             </mesh>
 
             <!-- days -->
-            <!-- TODO: separate component for calendar days -->
-            <!-- day number and link to experiment, if present -->
-            <mesh
-                v-for="(pos, i) in positions"
+            <!-- TODO: allow slots for a preview of that day's work -->
+            <!-- TODO: zoom in on date, fade other dates on click -->
+            <DayMesh
+                v-for="(position, i) in positions"
                 :key="i"
-                :position-x="pos.x"
-                :position-y="pos.y"
-                :scale="0.5"
-            >
-                <meshBasicMaterial color="white" />
-            </mesh>
+                :position="position"
+                :font="font"
+                :black="black"
+            />
         </group>
     </TroisCanvas>
 </template>
@@ -33,16 +31,19 @@ import { defineComponent, reactive, ref } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
 import { FontLoader } from 'three'
+import DayMesh from './components/DayMesh.vue'
 
 export default defineComponent({
     components: {
         OrbitControlsWrapper,
+        DayMesh,
     },
     setup() {
         return {
             positions: reactive(getDayPositions()),
             loaded: ref(false),
             font: reactive({}),
+            black: '#1D1F20',
         }
     },
     data() {
