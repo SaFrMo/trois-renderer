@@ -1,49 +1,46 @@
 <template>
-    <TroisCanvas :cameraPosition="[2, 2, 5]">
+    <TroisCanvas :cameraPosition="[0, 0, 20]">
         <OrbitControlsWrapper :autoRotate="false" />
 
-        <mesh ref="parent">
-            <meshBasicMaterial :wireframe="true" />
+        <!-- calendar -->
+        <group>
+            <!-- TODO: month name -->
 
-            <mesh :scale="0.5" ref="child" :visible="childVisible">
-                <meshBasicMaterial color="red" :wireframe="true" />
-            </mesh>
-        </mesh>
+            <!-- days -->
+            <!-- TODO: separate component for calendar days -->
+            <!-- day number and link to experiment, if present -->
+            <mesh
+                v-for="(pos, i) in positions"
+                :key="i"
+                :position-x="pos.x"
+                :position-y="pos.y"
+            />
+        </group>
     </TroisCanvas>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import { Mesh } from 'three'
+import { defineComponent, reactive } from 'vue'
+import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
+import { days, getDayPositions } from './utils'
 
 export default defineComponent({
-    data() {
+    components: {
+        OrbitControlsWrapper,
+    },
+    setup() {
+        // const now = new Date()
+        // const date = reactive({
+        //     month: now.getMonth(),
+        //     date: now.getDate(),
+        //     day: now.getDay(),
+        //     dayName: days[now.getDay()],
+        // })
+
         return {
-            childVisible: false,
+            // date,
+            positions: getDayPositions(),
         }
-    },
-    mounted() {
-        console.log((this.$refs.parent as any).instance)
-
-        this.update()
-
-        setInterval(() => (this.childVisible = !this.childVisible), 800)
-    },
-    methods: {
-        update() {
-            requestAnimationFrame(this.update)
-
-            const newX = Math.sin(Date.now() * 0.001)
-
-            const instance: Mesh = (this.$refs.parent as any).instance
-            instance.position.x = newX
-
-            if (!this.$refs.child) return
-
-            const child: Mesh = (this.$refs.child as any).instance
-            child.position.x = newX
-            child.position.y = Math.cos(Date.now() * 0.001)
-        },
     },
 })
 </script>
