@@ -18,6 +18,7 @@ export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
         eventListeners: {} as Record<Trois.EventKey, Trois.InteractionCallback[]>,
         id: nodeId++,
         instance: null,
+        instanceUuid: Constants.UNKNOWN.toString(),
         name: pascalCase(type),
         parentNode: null,
         props,
