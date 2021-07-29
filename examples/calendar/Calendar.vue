@@ -2,6 +2,7 @@
     <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
         <OrbitControlsWrapper :autoRotate="false" />
 
+        <!-- lighting -->
         <directionalLight :intensity="2" />
 
         <!-- calendar -->
