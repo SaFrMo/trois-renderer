@@ -5,7 +5,7 @@
         <!-- calendar -->
         <group :position-x="-3.3" :position-y="2.2" v-if="loaded">
             <!-- month name -->
-            <mesh :position-x="-0.275" :position-y="1.2">
+            <mesh v-if="loaded" :position-x="-0.275" :position-y="1.2">
                 <textGeometry
                     :args="[month, { font, size: 0.5, height: 0.02 }]"
                 />
@@ -13,15 +13,18 @@
             </mesh>
 
             <!-- days -->
-            <!-- TODO: allow slots for a preview of that day's work -->
             <!-- TODO: zoom in on date, fade other dates on click -->
             <DayMesh
                 v-for="(position, i) in positions"
                 :key="i"
                 :position="position"
-                :font="font"
                 :black="black"
-            />
+            >
+                <!-- TODO: daily component in slot (<component :is="..."/> ?)-->
+                <mesh v-if="i === 15">
+                    <meshBasicMaterial color="blue" />
+                </mesh>
+            </DayMesh>
         </group>
     </TroisCanvas>
 </template>
@@ -57,6 +60,8 @@ export default defineComponent({
             this.loaded = true
             this.font = font
         })
+
+        console.log('refs', this.$refs)
     },
 })
 </script>

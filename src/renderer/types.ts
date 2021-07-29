@@ -48,6 +48,7 @@ export declare namespace Trois {
     eventListeners: Record<EventKey, InteractionCallback[]>
     id: number
     instance: Instance | null
+    instanceUuid: string
     name: string
     parentNode: Element | null
     props: VNodeProps

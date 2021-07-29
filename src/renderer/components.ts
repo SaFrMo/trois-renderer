@@ -8,7 +8,6 @@ const createComponent = (tag: string) =>
         inheritAttrs: false,
         name: tag,
         render() {
-            console.log('render')
             return h(tag, this.$attrs, this.$slots?.default?.() || [])
         }
     })

@@ -31,12 +31,10 @@ export const getDayPositions = ({ month, spacer, topXY, year }:
     const scratch = new Vector2()
     for (let i = 0; i < date.daysInMonth; i++) {
         const day = date.plus({ days: i })
-        console.log(day.weekdayLong)
 
         // increment current row if we're on a sunday and not the first date
         if (i !== 0 && day.weekdayLong === 'Sunday') {
             currentRow++
-            console.log(currentRow)
         }
 
         // get day index

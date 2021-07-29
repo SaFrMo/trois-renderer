@@ -1,12 +1,21 @@
 <template>
-    <!-- TODO: separate component for calendar days -->
-    <!-- day number and link to experiment, if present -->
-    <mesh :position-x="position.x" :position-y="position.y" :scale="0.5">
-    </mesh>
-    <!-- date -->
-    <mesh :position="[position.x, position.y, -0.5]" :scale="[1, 1, 0.2]">
-        <meshBasicMaterial color="#FF928B" />
-    </mesh>
+    <group :position-x="position.x" :position-y="position.y">
+        <!-- background -->
+        <mesh :scale="[0.8, 0.8, 0.1]">
+            <meshBasicMaterial color="#FF928B" />
+        </mesh>
+
+        <!-- TODO: day number -->
+
+        <!-- slot -->
+        <group :position-z="0.3" :scale="0.2">
+            <slot>
+                <mesh>
+                    <icosahedronGeometry :args="[1, 4]" />
+                </mesh>
+            </slot>
+        </group>
+    </group>
 </template>
 
 <script lang="ts">

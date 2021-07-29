@@ -4,9 +4,13 @@ import { components } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
-export const created: { [key: number]: Trois.Element } = {}
 import { createElement, insert } from './nodeOps'
 import { createElement as createTroisElement } from './trois'
+
+/* created elements, sorted under vue ID */
+export const created: { [key: number]: Trois.Element } = {}
+/* created elements, sorted under instance UUID */
+export const createdByUuid: { [key: string]: Trois.Element } = {}
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.

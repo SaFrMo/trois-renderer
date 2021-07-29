@@ -24,7 +24,6 @@ export default defineComponent({
         }
     },
     mounted() {
-        console.log('mounted')
         // resize listener
         const resizeObserver = new ResizeObserver(([container]) => {
             this.updateSize(container.contentRect)

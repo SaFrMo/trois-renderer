@@ -3,8 +3,21 @@ import { isObject3D } from '../lib'
 import { createObject, updateAllObjectProps, } from '../objects'
 import { completeTrois, useTrois } from '../useThree'
 const trois = useTrois()
-import { created } from '..'
+import { created, createdByUuid } from '..'
 const { scene } = trois
+
+const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
+    // insert host
+    if (host.instance) {
+        parent.add(host.instance as unknown as THREE.Object3D)
+    }
+
+    // figure out who will be the child's parent, the host or the ancestor
+    const childParent = host.instance ?? parent
+    for (let child of host.childCreationQueue) {
+        createChildrenRecursively(child, childParent as any)
+    }
+}
 
 export const insert = (
     element: Trois.Element,
@@ -12,7 +25,7 @@ export const insert = (
     ref?: Trois.Element | null
 ) => {
     // debug
-    console.log('insert', { name: element.name, element, parent, ref })
+    // console.log('insert', { name: element.name, element, parent, ref })
 
     // cancel if no valid name
     if (!element.name) return
@@ -26,6 +39,9 @@ export const insert = (
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
+    // save the instance's uuid to the element
+    element.instanceUuid = element.instance.uuid
+    createdByUuid[element.instanceUuid] = element
 
     // attach to parent if needed
     if (element.props.attach) {
@@ -51,25 +67,16 @@ export const insert = (
     }
 
     // add any object3Ds to the scene
-    console.log('is object 3d', element, isObject3D(element?.instance))
+    // console.log('is object 3d', element.instance.type, element, isObject3D(element?.instance))
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
-        console.log(parentElement, 'will add elements: ', parentElement.props?.hasOwnProperty('data-trois-container'))
+        // console.log(parentElement, 'will add elements: ', parentElement.props?.hasOwnProperty('data-trois-container'))
         if (parentElement.props?.hasOwnProperty('data-trois-container') || parentElement.props?.isContainer) {
             // ensure trois is running
             if (!scene.value) throw 'Trois scene not set up'
 
-            // we're a scene-level component, so let's go ahead and add ourselves to the scene
-            scene.value.add(element.instance)
-
             // add any children that need to be created
-            if (isObject3D(element.instance)) {
-                element.childCreationQueue.forEach(toCreate => {
-                    if (toCreate.instance && isObject3D(toCreate.instance)) {
-                        element?.instance?.add(toCreate.instance)
-                    }
-                })
-            }
+            createChildrenRecursively(element, scene.value)
         } else if (parentElement?.instance) {
             // parent instance already exists, so let's add directly to it
             const parentInstance = parentElement?.instance
