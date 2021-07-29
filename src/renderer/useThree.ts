@@ -1,8 +1,7 @@
 import { watch } from '@vue/runtime-core'
 import { reactive, toRefs } from "@vue/reactivity"
 import { Trois } from './types'
-import * as THREE from 'three'
-import { isNumber } from 'lodash'
+import { Camera, Color, Intersection, Object3D, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three'
 import { processProp } from './objects'
 import { setupEnvMap } from './lib'
 
@@ -10,9 +9,9 @@ let mouseListener: (event: MouseEvent) => void
 let mouseDownListener: (event: MouseEvent) => void
 let mouseUpListener: (event: MouseEvent) => void
 
-export let scene: THREE.Scene
-export let renderer: THREE.WebGLRenderer
-export let camera: THREE.Camera
+export let scene: Scene
+export let renderer: WebGLRenderer
+export let camera: Camera
 
 const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
     return {
@@ -44,13 +43,13 @@ export const initTrois = (props: Trois.VNodeProps) => {
 
     // build scene
     // TODO: more robust
-    scene = troisInternals.scene = new THREE.Scene()
+    scene = troisInternals.scene = new Scene()
     // setup scene according to options
     // background color
     if (sceneOptions !== null) {
         if (sceneOptions.background) {
-            troisInternals.scene.background = troisInternals.scene.background ?? new THREE.Color()
-                ; (troisInternals.scene.background as THREE.Color).set(sceneOptions.background)
+            troisInternals.scene.background = troisInternals.scene.background ?? new Color()
+                ; (troisInternals.scene.background as Color).set(sceneOptions.background)
         }
     }
     // environment map
@@ -63,7 +62,7 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     const sceneOptions = transformPropsToSceneOptions(element.props)
 
     // use $attached camera or build a new one
-    camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new THREE.PerspectiveCamera(45, 0.5625, 1, 1000)) as THREE.Camera
+    camera = troisInternals.camera = (processProp({ element, prop: sceneOptions.camera }) ?? new PerspectiveCamera(45, 0.5625, 1, 1000)) as Camera
     if (sceneOptions.cameraPosition) {
         const pos = sceneOptions.cameraPosition
         const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
@@ -71,8 +70,8 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     }
 
     // use $attached renderer or build a new one
-    renderer = troisInternals.renderer = (processProp<THREE.WebGLRenderer>({ element, prop: sceneOptions.renderer }))
-        ?? new THREE.WebGLRenderer(sceneOptions.rendererOptions)
+    renderer = troisInternals.renderer = (processProp<WebGLRenderer>({ element, prop: sceneOptions.renderer }))
+        ?? new WebGLRenderer(sceneOptions.rendererOptions)
     // set renderer properties
     Object.keys(sceneOptions.rendererProperties).forEach(rendererProperty => {
         if (renderer.hasOwnProperty(rendererProperty)) {
@@ -118,7 +117,7 @@ export const getOrCreateMainInteractionRaycaster = () => {
 
     // create raycaster if needed
     if (!raycaster) {
-        troisInternals.raycaster = raycaster = new THREE.Raycaster()
+        troisInternals.raycaster = raycaster = new Raycaster()
 
         // setup mouse listeners when we have a renderer
         let added = false
@@ -144,17 +143,17 @@ export const getOrCreateMainInteractionRaycaster = () => {
     return raycaster
 }
 
-export let currentIntersections: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
+export let currentIntersections: Array<{ element: Trois.Element, intersection: Intersection }> = []
 
 const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
     troisInternals.raycaster?.setFromCamera(troisInternals.mousePos, camera)
-    const intersections = troisInternals.raycaster?.intersectObjects(interactables.map(v => v.instance as any as THREE.Object3D))
+    const intersections = troisInternals.raycaster?.intersectObjects(interactables.map(v => v.instance as any as Object3D))
 
-    let enterValues: Array<THREE.Intersection> = [],
-        sameValues: Array<THREE.Intersection> = [],
-        leaveValues: Array<THREE.Intersection> = [],
-        entering: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = [],
-        staying: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = []
+    let enterValues: Array<Intersection> = [],
+        sameValues: Array<Intersection> = [],
+        leaveValues: Array<Intersection> = [],
+        entering: Array<{ element: Trois.Element, intersection: Intersection }> = [],
+        staying: Array<{ element: Trois.Element, intersection: Intersection }> = []
 
     // intersection arrays
     leaveValues = currentIntersections.map(v => v.intersection)
@@ -180,10 +179,13 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
             }
         }
         // this is a current intersection, so it won't be in our `leave` array
-        leaveValues.shift()
+        const leaveIdx = leaveValues.findIndex(v => v.object.uuid === intersection.object.uuid)
+        if (leaveIdx !== -1) {
+            leaveValues.splice(leaveIdx, 1)
+        }
     })
 
-    const leaving: Array<{ element: Trois.Element, intersection: THREE.Intersection }> = leaveValues.map(intersection => {
+    const leaving: Array<{ element: Trois.Element, intersection: Intersection }> = leaveValues.map(intersection => {
         return {
             element: interactables.find(interactable => interactable.instance?.uuid === intersection.object.uuid) as any as Trois.Element,
             intersection
@@ -211,7 +213,7 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
 }
 
 // utility function for firing multiple callbacks and multiple events on a Trois.Element
-const fireEventsFromIntersections = ({ element, eventKeys, intersection }: { element: Trois.Element, eventKeys: Array<Trois.EventKey>, intersection: THREE.Intersection }) => {
+const fireEventsFromIntersections = ({ element, eventKeys, intersection }: { element: Trois.Element, eventKeys: Array<Trois.EventKey>, intersection: Intersection }) => {
     eventKeys.forEach(eventKey => {
         if (element.eventListeners[eventKey]) {
             element.eventListeners[eventKey].forEach(cb => {
@@ -252,7 +254,7 @@ export const troisInternals = reactive<Trois.Internals>({
     camera: null,
     initialized: false,
     mouseDown: false,
-    mousePos: new THREE.Vector2(Infinity, Infinity),
+    mousePos: new Vector2(Infinity, Infinity),
     raycaster: null,
     runDefaultRenderFunction: true,
     renderer: null,

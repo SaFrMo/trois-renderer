@@ -1,7 +1,7 @@
 <template>
     <group>
-        <ClickMesh :position-x="-spread" />
-        <ClickMesh :position-x="spread" />
+        <ClickMesh :x="-spread" />
+        <ClickMesh :x="spread" />
     </group>
 </template>
 
