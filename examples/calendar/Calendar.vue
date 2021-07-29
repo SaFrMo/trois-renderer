@@ -2,6 +2,8 @@
     <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
         <OrbitControlsWrapper :autoRotate="false" />
 
+        <directionalLight />
+
         <!-- calendar -->
         <group :position-x="-3.3" :position-y="2.2" v-if="loaded">
             <!-- month name -->
@@ -21,9 +23,30 @@
                 :black="black"
             >
                 <!-- TODO: daily component in slot (<component :is="..."/> ?)-->
-                <mesh v-if="i === 15">
-                    <meshBasicMaterial color="blue" />
-                </mesh>
+                <template v-slot:default>
+                    <ExerciseComponent
+                        year="2021"
+                        :month="
+                            (new Date().getMonth() + 1)
+                                .toString()
+                                .padStart(2, '0')
+                        "
+                        :date="(i + 1).toString().padStart(2, '0')"
+                    />
+                </template>
+
+                <!-- date -->
+                <template v-slot:date>
+                    <mesh v-if="loaded" :position="[-0.35, -0.31, 0.05]">
+                        <textGeometry
+                            :args="[
+                                (i + 1).toString(),
+                                { font, size: 0.25, height: 0.02 },
+                            ]"
+                        />
+                        <meshBasicMaterial color="beige" />
+                    </mesh>
+                </template>
             </DayMesh>
         </group>
     </TroisCanvas>
@@ -35,11 +58,13 @@ import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
 import { FontLoader } from 'three'
 import DayMesh from './components/DayMesh.vue'
+import ExerciseComponent from './components/ExerciseComponent.vue'
 
 export default defineComponent({
     components: {
         OrbitControlsWrapper,
         DayMesh,
+        ExerciseComponent,
     },
     setup() {
         return {

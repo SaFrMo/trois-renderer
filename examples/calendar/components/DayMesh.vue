@@ -5,12 +5,13 @@
             <meshBasicMaterial color="#FF928B" />
         </mesh>
 
-        <!-- TODO: day number -->
+        <!-- date -->
+        <slot name="date" />
 
         <!-- slot -->
         <group :position-z="0.3" :scale="0.2">
             <slot>
-                <mesh>
+                <mesh :scale="0.5">
                     <icosahedronGeometry :args="[1, 4]" />
                 </mesh>
             </slot>

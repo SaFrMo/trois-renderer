@@ -13,53 +13,7 @@
         <!-- renderer fine-tuning -->
         <WebGLRenderer attach="renderer" :args="[{ antialias: true }]" />
 
-        <group :rotation-y="Math.PI * -0.15" :y="-0.5">
-            <!-- table -->
-            <!-- <gltf src="/table/table.glb" :scale="5" :position-y="-2.7" /> -->
-
-            <!-- scene -->
-            <gltf src="/table/building_cabin.glb" :rotation-y="Math.PI * 0.5" />
-            <gltf
-                src="/table/building_market.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(2, 0)"
-            />
-            <gltf
-                src="/table/building_house.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(1, 1)"
-            />
-            <gltf
-                src="/table/grass_forest.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(1, -1)"
-            />
-            <gltf
-                src="/table/grass_forest.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(0, -2)"
-            />
-            <gltf
-                src="/table/grass_forest.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(0, 2)"
-            />
-            <gltf
-                src="/table/building_market.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(-2, 0)"
-            />
-            <gltf
-                src="/table/building_market.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(-1, 1)"
-            />
-            <gltf
-                src="/table/grass_forest.glb"
-                :rotation-y="Math.PI * 0.5"
-                :position="getPosition(-1, -1)"
-            />
-        </group>
+        <TableComponent />
     </TroisCanvas>
 </template>
 
@@ -67,9 +21,10 @@
 import { defineComponent } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { sRGBEncoding } from 'three'
+import TableComponent from './TableComponent.vue'
 
 export default defineComponent({
-    components: { OrbitControlsWrapper },
+    components: { OrbitControlsWrapper, TableComponent },
     data() {
         return { sRGBEncoding }
     },
