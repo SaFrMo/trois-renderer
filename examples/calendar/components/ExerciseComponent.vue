@@ -12,13 +12,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import Boxfield from '../../boxfield/BoxfieldComponent.vue'
 import EventComponent from '../../events/Events/EventComponent.vue'
 import SumComponent from '../../instance-sum/SumComponent.vue'
 import Table from '../../table/TableComponent.vue'
 import WiresComponent from '../../instance-wires/WiresComponent.vue'
 
 export default defineComponent({
-    components: { EventComponent, SumComponent, Table, WiresComponent },
+    components: {
+        Boxfield,
+        EventComponent,
+        SumComponent,
+        Table,
+        WiresComponent,
+    },
     props: {
         year: String,
         month: String,
@@ -28,6 +35,16 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-07-29': {
+                    is: 'Boxfield',
+                    bind: {
+                        'position-z': 0.5,
+                        scale: 0.6,
+                        opacity: 0.8,
+                        count: 200,
+                        size: 0.1,
+                    },
+                },
                 '2021-07-28': {
                     is: 'EventComponent',
                     bind: { 'position-z': 0.5 },
