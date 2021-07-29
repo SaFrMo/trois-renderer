@@ -4,19 +4,21 @@
         v-if="dictionary[cmpDate]"
         v-bind="dictionary[cmpDate]?.bind ?? {}"
     />
-    <mesh :scale="0.5" v-else>
+    <!-- <mesh :scale="0.5" v-else>
         <icosahedronGeometry :args="[1, 4]" />
-    </mesh>
+    </mesh> -->
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+
+import EventComponent from '../../events/Events/EventComponent.vue'
+import SumComponent from '../../instance-sum/SumComponent.vue'
 import Table from '../../table/TableComponent.vue'
 import WiresComponent from '../../instance-wires/WiresComponent.vue'
-import SumComponent from '../../instance-sum/SumComponent.vue'
 
 export default defineComponent({
-    components: { Table, WiresComponent, SumComponent },
+    components: { EventComponent, SumComponent, Table, WiresComponent },
     props: {
         year: String,
         month: String,
@@ -26,6 +28,11 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-07-28': {
+                    is: 'EventComponent',
+                    bind: { 'position-z': 0.5 },
+                    spread: 50,
+                },
                 '2021-07-26': {
                     is: 'SumComponent',
                     bind: {
