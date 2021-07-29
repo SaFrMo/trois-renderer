@@ -11,6 +11,7 @@ export default defineConfig({
         main: './examples/index.html',
 
         boxfield: './examples/boxfield/index.html',
+        calendar: './examples/calendar/index.html',
         demo1: './examples/demo1/index.html',
         demo4: './examples/demo4/index.html',
         demo6: './examples/demo6/index.html',

@@ -2,7 +2,7 @@
     <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
         <OrbitControlsWrapper :autoRotate="false" />
 
-        <directionalLight />
+        <directionalLight :intensity="2" />
 
         <!-- calendar -->
         <group :position-x="-3.3" :position-y="2.2" v-if="loaded">
@@ -53,12 +53,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, reactive, ref, watch } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
 import { FontLoader } from 'three'
 import DayMesh from './components/DayMesh.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
+import { useTrois } from '../../src/renderer/useThree'
+const trois = useTrois()
 
 export default defineComponent({
     components: {
@@ -86,7 +88,13 @@ export default defineComponent({
             this.font = font
         })
 
-        console.log('refs', this.$refs)
+        watch(
+            () => trois.camera.value,
+            (cam) => {
+                cam?.lookAt(0, 0, 0)
+            },
+            { immediate: true }
+        )
     },
 })
 </script>

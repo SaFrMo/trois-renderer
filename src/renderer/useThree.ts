@@ -120,21 +120,23 @@ export const getOrCreateMainInteractionRaycaster = () => {
     if (!raycaster) {
         troisInternals.raycaster = raycaster = new THREE.Raycaster()
 
-        // start mouse listener
-        if (!troisInternals.renderer) {
-            // wait for renderer to be created
-            const stop = watch(() => troisInternals.renderer, (v) => {
-                if (v && v.domElement) {
+        // setup mouse listeners when we have a renderer
+        let added = false
+        let stop = null as any
+        stop = watch(() => troisInternals.renderer, (v) => {
+            if (v && v.domElement) {
+                if (!added) {
+                    added = true
                     v.domElement.addEventListener('mousemove', mouseListener)
                     v.domElement.addEventListener('mousedown', mouseDownListener)
                     v.domElement.addEventListener('mouseup', mouseUpListener)
+                }
+                if (stop && added) {
                     stop()
                 }
-            })
-        } else {
-            troisInternals.renderer.domElement.addEventListener('mousemove', mouseListener)
+            }
+        }, { immediate: true })
 
-        }
         // attach to render loop
         addBeforeRender(mainInteractionRaycasterCallback)
     }

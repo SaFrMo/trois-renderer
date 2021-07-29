@@ -1,9 +1,12 @@
 <template>
     <component
-        :is="dictionary[cmpDate].is"
+        :is="dictionary[cmpDate]?.is"
         v-if="dictionary[cmpDate]"
         v-bind="dictionary[cmpDate]"
     />
+    <mesh :scale="0.5" v-else>
+        <icosahedronGeometry :args="[1, 4]" />
+    </mesh>
 </template>
 
 <script lang="ts">
