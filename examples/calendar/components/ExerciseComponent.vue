@@ -13,9 +13,10 @@
 import { defineComponent } from 'vue'
 import Table from '../../table/TableComponent.vue'
 import WiresComponent from '../../instance-wires/WiresComponent.vue'
+import SumComponent from '../../instance-sum/SumComponent.vue'
 
 export default defineComponent({
-    components: { Table, WiresComponent },
+    components: { Table, WiresComponent, SumComponent },
     props: {
         year: String,
         month: String,
@@ -25,13 +26,26 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
-                '2021-07-24': {
-                    is: 'Table',
-                    bind: { position: [0, 0, 0.5] },
+                '2021-07-26': {
+                    is: 'SumComponent',
+                    bind: {
+                        position: [0, 0, 0.5],
+                        count: 40,
+                        columns: 1,
+                        floor: 0.4,
+                        'rotation-y': Math.PI * 0.25,
+                        'rotation-x': Math.PI * -0.1,
+                        y: -0.5,
+                        scale: 0.25,
+                    },
                 },
                 '2021-07-25': {
                     is: 'WiresComponent',
                     bind: { position: [0, 0, 0.5], count: 40, columns: 8 },
+                },
+                '2021-07-24': {
+                    is: 'Table',
+                    bind: { position: [0, 0, 0.5] },
                 },
             },
         }
