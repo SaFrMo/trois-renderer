@@ -9,6 +9,8 @@
             :position="cameraLookTarget"
         />
 
+        <EasterEgg />
+
         <!-- lighting -->
         <directionalLight :intensity="2" />
 
@@ -73,6 +75,7 @@ import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
 import { FontLoader, Mesh, MeshBasicMaterial, Vector3 } from 'three'
 import DayMesh from './components/DayMesh.vue'
+import EasterEgg from './components/EasterEgg.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
 import { useTrois } from '../../src/renderer/useThree'
 const trois = useTrois()
@@ -84,6 +87,7 @@ export default defineComponent({
     components: {
         OrbitControlsWrapper,
         DayMesh,
+        EasterEgg,
         ExerciseComponent,
     },
     setup() {

@@ -5,7 +5,7 @@
         @click="onClick"
         :scale="0"
     >
-        <group :scale="hovering ? 1.1 : 1">
+        <group :scale="hovering ? 1.3 : 1">
             <!-- background -->
             <mesh
                 :scale="[0.8, 0.8, 0.1]"
