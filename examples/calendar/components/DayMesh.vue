@@ -82,7 +82,6 @@ export default defineComponent({
     },
     methods: {
         onClick(evt: any) {
-            console.log('here')
             const cam = trois.camera.value
             if (!cam) return
             const camPosition = (
@@ -91,7 +90,6 @@ export default defineComponent({
 
             // cam.position.copy(camPosition)
             const lookPosition = camPosition.clone().add(new Vector3(0, 0, -1))
-            console.log({ camPosition, lookPosition })
             this.$emit('setTarget', { camPosition, lookPosition })
         },
     },
