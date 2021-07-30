@@ -12,7 +12,12 @@
                 <textGeometry
                     :args="[month, { font, size: 0.5, height: 0.02 }]"
                 />
-                <meshBasicMaterial :color="black" />
+                <meshBasicMaterial
+                    :transparent="true"
+                    :color="black"
+                    :opacity="0"
+                    ref="monthMaterial"
+                />
             </mesh>
 
             <!-- days -->
@@ -22,6 +27,7 @@
                 :key="i"
                 :position="position"
                 :black="black"
+                :delay="500 + i * 15"
             >
                 <!-- TODO: daily component in slot (<component :is="..."/> ?)-->
                 <template v-slot:default>
@@ -57,11 +63,12 @@
 import { defineComponent, reactive, ref, watch } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
-import { FontLoader } from 'three'
+import { FontLoader, MeshBasicMaterial } from 'three'
 import DayMesh from './components/DayMesh.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
 import { useTrois } from '../../src/renderer/useThree'
 const trois = useTrois()
+import { tween } from 'popmotion'
 
 export default defineComponent({
     components: {
@@ -96,6 +103,19 @@ export default defineComponent({
             },
             { immediate: true }
         )
+    },
+    watch: {
+        async loaded(newVal) {
+            if (newVal) {
+                await this.$nextTick()
+
+                const materialInstance = (this.$refs.monthMaterial as any).$el
+                    .instance as MeshBasicMaterial
+                tween({ duration: 300 }).start((v: number) => {
+                    materialInstance.opacity = v
+                })
+            }
+        },
     },
 })
 </script>
