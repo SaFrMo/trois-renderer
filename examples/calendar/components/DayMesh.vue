@@ -31,7 +31,7 @@ import { Vector2, Vector3 } from 'three'
 import { Trois } from '../../../src/renderer/types'
 // import { useTrois } from '../../../src/renderer'
 // const trois = useTrois()
-import { Action, tween } from 'popmotion'
+import { Action, spring } from 'popmotion'
 // import { TweenInterface } from 'popmotion/lib/animations/tween/types'
 
 // let inProgress: TweenInterface
@@ -56,13 +56,13 @@ export default defineComponent({
         const instance: THREE.Object3D = this.$el.instance
         const startY = instance.position.y
         // scale up
-        // TODO: convert to spring
-        tween({
+        spring({
             from: 0,
             to: 1,
-            duration: 400,
+            stiffness: 130,
+            damping: 9,
         }).start((v: number) => {
-            instance.scale.setScalar(v)
+            instance.scale.setScalar(Math.min(1.1, v))
             instance.position.y = startY - (1 - v)
         })
     },
