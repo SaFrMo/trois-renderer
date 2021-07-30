@@ -1,6 +1,13 @@
 <template>
     <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
-        <OrbitControlsWrapper :autoRotate="false" />
+        <!-- <OrbitControlsWrapper :autoRotate="false" /> -->
+
+        <!-- camera will always be looking at this -->
+        <mesh
+            :visible="false"
+            ref="cameraLookTarget"
+            :position="cameraLookTarget"
+        />
 
         <!-- lighting -->
         <directionalLight :intensity="2" />
@@ -28,6 +35,7 @@
                 :position="position"
                 :black="black"
                 :delay="500 + i * 15"
+                @set-target="setCameraTarget"
             >
                 <!-- TODO: daily component in slot (<component :is="..."/> ?)-->
                 <template v-slot:default>
@@ -63,12 +71,14 @@
 import { defineComponent, reactive, ref, watch } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
-import { FontLoader, MeshBasicMaterial } from 'three'
+import { FontLoader, Mesh, MeshBasicMaterial, Vector3 } from 'three'
 import DayMesh from './components/DayMesh.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
 import { useTrois } from '../../src/renderer/useThree'
 const trois = useTrois()
 import { tween } from 'popmotion'
+
+let action: any
 
 export default defineComponent({
     components: {
@@ -86,6 +96,7 @@ export default defineComponent({
     },
     data() {
         return {
+            cameraLookTarget: [0, 0, 0],
             month: months[new Date().getMonth()],
         }
     },
@@ -99,10 +110,62 @@ export default defineComponent({
         watch(
             () => trois.camera.value,
             (cam) => {
-                cam?.lookAt(0, 0, 0)
+                if (cam) {
+                    cam?.lookAt(
+                        (this.$refs.cameraLookTarget as any).instance.position
+                    )
+                }
             },
             { immediate: true }
         )
+    },
+    methods: {
+        setCameraTarget({
+            camPosition,
+            lookPosition,
+        }: {
+            camPosition: Vector3
+            lookPosition: Vector3
+        }) {
+            // get look target
+            const cameraLookTarget: Mesh = (this.$refs.cameraLookTarget as any)
+                .instance
+
+            const camera = trois.camera.value
+
+            // ignore if no camera
+            if (!camera) return
+
+            // stop current movement
+            if (action) action.stop()
+
+            // move camera and look target to target positions
+            tween({
+                from: [
+                    camera.position.x,
+                    camera.position.y,
+                    camera.position.z,
+                    cameraLookTarget.position.x,
+                    cameraLookTarget.position.y,
+                    cameraLookTarget.position.z,
+                ],
+                to: [
+                    camPosition.x,
+                    camPosition.y,
+                    camPosition.z,
+                    lookPosition.x,
+                    lookPosition.y,
+                    lookPosition.z,
+                ],
+                duration: 800,
+            }).start(
+                ([camX, camY, camZ, lookX, lookY, lookZ]: Array<number>) => {
+                    camera.position.set(camX, camY, camZ)
+                    cameraLookTarget.position.set(lookX, lookY, lookZ)
+                    camera.lookAt(cameraLookTarget.position)
+                }
+            )
+        },
     },
     watch: {
         async loaded(newVal) {
