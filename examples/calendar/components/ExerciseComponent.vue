@@ -13,6 +13,7 @@
 import { defineComponent } from 'vue'
 
 import Boxfield from '../../boxfield/BoxfieldComponent.vue'
+import CalendarExample from './CalendarExample.vue'
 import EventComponent from '../../events/Events/EventComponent.vue'
 import SumComponent from '../../instance-sum/SumComponent.vue'
 import Table from '../../table/TableComponent.vue'
@@ -21,6 +22,7 @@ import WiresComponent from '../../instance-wires/WiresComponent.vue'
 export default defineComponent({
     components: {
         Boxfield,
+        CalendarExample,
         EventComponent,
         SumComponent,
         Table,
@@ -35,6 +37,13 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-07-30': {
+                    is: 'CalendarExample',
+                    bind: {
+                        'position-y': 1,
+                        'position-z': 0.5,
+                    },
+                },
                 '2021-07-29': {
                     is: 'Boxfield',
                     bind: {
