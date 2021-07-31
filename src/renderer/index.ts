@@ -1,6 +1,6 @@
 import { createRenderer, Component, RendererOptions } from '@vue/runtime-core'
 import { updateObjectProp } from './objects'
-import { components } from './components'
+import { components, extend } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
@@ -11,6 +11,8 @@ import { createElement as createTroisElement } from './trois'
 export const created: { [key: number]: Trois.Element } = {}
 /* created elements, sorted under instance UUID */
 export const createdByUuid: { [key: string]: Trois.Element } = {}
+
+// console.log('v1318')
 
 /*
     Elements are `create`d from the outside in, then `insert`ed from the inside out.

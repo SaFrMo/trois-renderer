@@ -139,6 +139,8 @@ export const components = {
     Gltf,
 }
 
+// console.log(components, Gltf)
+
 
 export const catalogue: Trois.Catalogue = {}
 

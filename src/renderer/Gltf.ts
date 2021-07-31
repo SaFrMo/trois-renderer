@@ -23,7 +23,8 @@ export default defineComponent({
 
         this.$el.instance.add(model.scene)
     },
-    render() {
+    render(v: any) {
+        // console.log('gtlf render function', v)
         return h('group', this.$attrs, this.$slots?.default?.() || [])
     },
 })

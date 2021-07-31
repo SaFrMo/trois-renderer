@@ -27,6 +27,8 @@ export const insert = (
     // debug
     // console.log('insert', { name: element.name, element, parent, ref })
 
+    // console.log('element name status?', element)
+
     // cancel if no valid name
     if (!element.name) return
 
