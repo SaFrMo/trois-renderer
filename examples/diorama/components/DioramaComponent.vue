@@ -1,5 +1,5 @@
 <template>
-    <group>
+    <group ref="container">
         <!-- shoebox container -->
         <Shoebox />
 
@@ -32,6 +32,7 @@
                         :color="colors[i]"
                         :metalness="0"
                         :roughness="1"
+                        :clippingPlanes="cmpClippingPlanes"
                     />
                 </mesh>
             </group>
@@ -42,6 +43,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Shoebox from './Shoebox.vue'
+import { Plane, Vector3 } from 'three'
 
 export default defineComponent({
     components: { Shoebox },
@@ -75,6 +77,19 @@ export default defineComponent({
     },
     mounted() {
         this.update()
+    },
+    computed: {
+        cmpClippingPlanes() {
+            // TODO: offset constant by $refs.container position
+            return [
+                // top
+                new Plane(new Vector3(0, -1, 0), 0.75),
+                // bottom
+                new Plane(new Vector3(0, 1, 0), 0.75),
+                // left
+                new Plane(new Vector3(1, 0, 0), 1.5),
+            ]
+        },
     },
     methods: {
         update() {

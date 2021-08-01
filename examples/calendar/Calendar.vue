@@ -1,6 +1,15 @@
 <template>
-    <TroisCanvas background="beige" :cameraPosition="[-2, 5, 15]">
+    <TroisCanvas
+        background="beige"
+        renderer="$attached.renderer"
+        :cameraPosition="[-2, 5, 15]"
+    >
         <!-- <OrbitControlsWrapper :autoRotate="false" /> -->
+        <WebGLRenderer
+            :args="[{ antialias: true }]"
+            attach="renderer"
+            :localClippingEnabled="true"
+        />
 
         <!-- camera will always be looking at this -->
         <mesh
@@ -44,7 +53,8 @@
                     <ExerciseComponent
                         year="2021"
                         :month="
-                            (new Date().getMonth() + 1)
+                            new Date()
+                                .getMonth() /*+ 1*/
                                 .toString()
                                 .padStart(2, '0')
                         "
@@ -92,7 +102,7 @@ export default defineComponent({
     },
     setup() {
         return {
-            positions: reactive(getDayPositions()),
+            positions: reactive(getDayPositions({ month: 6 })),
             loaded: ref(false),
             font: reactive({}),
             black: '#1D1F20',

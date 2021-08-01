@@ -14,6 +14,7 @@ import { defineComponent } from 'vue'
 
 import Boxfield from '../../boxfield/BoxfieldComponent.vue'
 import CalendarExample from './CalendarExample.vue'
+import DioramaComponent from '../../diorama/components/DioramaComponent.vue'
 import EventComponent from '../../events/Events/EventComponent.vue'
 import SumComponent from '../../instance-sum/SumComponent.vue'
 import Table from '../../table/TableComponent.vue'
@@ -23,6 +24,7 @@ export default defineComponent({
     components: {
         Boxfield,
         CalendarExample,
+        DioramaComponent,
         EventComponent,
         SumComponent,
         Table,
@@ -37,6 +39,13 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-07-31': {
+                    is: 'DioramaComponent',
+                    bind: {
+                        'position-y': 0.5,
+                        'position-z': 0.5,
+                    },
+                },
                 '2021-07-30': {
                     is: 'CalendarExample',
                     bind: {
