@@ -1,7 +1,5 @@
 import { defineComponent, h } from '@vue/runtime-core'
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-// import { useTrois } from './useThree'
-// const trois = useTrois()
 
 export default defineComponent({
     props: {
@@ -24,7 +22,6 @@ export default defineComponent({
         this.$el.instance.add(model.scene)
     },
     render(v: any) {
-        // console.log('gtlf render function', v)
         return h('group', this.$attrs, this.$slots?.default?.() || [])
     },
 })

@@ -3,6 +3,7 @@ import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycas
 import { ToRefs, watch } from '@vue/runtime-core'
 let trois: ToRefs<Trois.Internals>
 
+/** Add an event listener to the given element. Also creates the event teardown function and any necessary raycaster/interaction dictionary updates. */
 export const addEventListener = (
     { element, key, value }:
         { element: Trois.Element, key: Trois.EventKey, value: Trois.InteractionCallback }

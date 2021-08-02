@@ -23,6 +23,8 @@ export const createApp = ((root: Component) => {
         const mounted = mount({ domElement } as any, ...args)
         return mounted
     }
+
+    // embed .extend function
     app.extend = (targets: Record<string, any>) => {
         extend({ app, ...targets })
     }

@@ -79,13 +79,13 @@ function processPropAsArray<T>({ element, prop }: { element: Trois.Element, prop
     return Array.isArray(output) && isAttachedArray ? output as Array<T> : [output]
 }
 
-export const propertyShortcuts: { [key: string]: string } = {
+const propertyShortcuts: { [key: string]: string } = {
     'x': 'position.x',
     'y': 'position.y',
     'z': 'position.z',
 }
 
-export const nestedPropertiesToCheck = [
+const nestedPropertiesToCheck = [
     '',
     'parameters'
 ]
@@ -121,7 +121,7 @@ export const updateObjectProp = (
         return addEventListener({ element, key, value })
     }
 
-    // handle and return early if prop is specific to Vue/Trois
+    // return early if prop is specific to Vue/Trois
     if (internalTroisVueKeys.includes(key)) return element
 
     // parse $attached values
@@ -183,6 +183,7 @@ export const updateObjectProp = (
     return element
 }
 
+/** props that Trois intercepts and prevents passing to created instances */
 const internalTroisVueKeys = [
     'args',
     'attach',
