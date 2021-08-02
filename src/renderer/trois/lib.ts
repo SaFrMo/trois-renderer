@@ -1,13 +1,14 @@
 import { Object3D, PMREMGenerator, UnsignedByteType } from "three"
 import { startCase } from 'lodash'
-import { Trois } from './types'
+import { Trois } from '../types'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
 import { watch } from "@vue/runtime-core"
-import { useTrois } from './'
+import { useTrois } from '..'
 
 let pmremGenerator: PMREMGenerator
 let rgbeLoader: RGBELoader
 
+/** Create an env map from a given source URL for a given Three scene. */
 export const setupEnvMap = ({ src, scene }: { src: string, scene: THREE.Scene }) => {
     const trois = useTrois()
 
@@ -42,6 +43,7 @@ export const setupEnvMap = ({ src, scene }: { src: string, scene: THREE.Scene })
 }
 
 // MAKE SURE THESE MATCH VALUES IN types.EventKey
+/** Type check on whether target is a Trois.EventKey */
 export const isEventKey = (target: any): target is Trois.EventKey => {
     return [
         'onClick',
@@ -60,6 +62,7 @@ export const isEventKey = (target: any): target is Trois.EventKey => {
     ].includes(target)
 }
 
+/** Type check on whether target is a Three Object3D */
 export const isObject3D = (target: any): target is Object3D => {
     return target?.isObject3D
 }

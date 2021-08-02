@@ -100,7 +100,7 @@ import DayMesh from './components/DayMesh.vue'
 import EasterEgg from './components/EasterEgg.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
 import MonthNav from './components/MonthNav.vue'
-import { useTrois } from '../../src/renderer/useThree'
+import { useTrois } from '../../src/renderer/trois/useThree'
 const trois = useTrois()
 import { tween } from 'popmotion'
 

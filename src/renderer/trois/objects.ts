@@ -1,9 +1,9 @@
 import * as THREE from 'three'
 import { get, isNumber, set } from 'lodash'
 import { isEventKey } from './lib'
-import { catalogue } from './components'
-import { Trois } from './types'
-import { addEventListener } from './eventListeners'
+import { catalogue } from '../components/components'
+import { Trois } from '../types'
+import { addEventListener } from '../events'
 import { scene, renderer, camera } from './useThree'
 
 /** Create a ThreeJS object from given vnode params. */

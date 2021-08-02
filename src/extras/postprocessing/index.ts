@@ -1,7 +1,7 @@
 import { App, ToRefs } from '@vue/runtime-core'
 import { Trois } from '../../renderer/types'
 import * as POST from 'postprocessing'
-import { addAfterRender } from '../../renderer/useThree'
+import { addAfterRender } from '../../renderer/trois/useThree'
 import EffectComposer from './EffectComposer.vue'
 
 // this is an example of how to create a trois plugin

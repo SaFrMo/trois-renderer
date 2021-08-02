@@ -1,5 +1,5 @@
-import { Trois } from './types'
-import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, removeInteractable, useTrois } from './useThree'
+import { Trois } from '../types'
+import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, removeInteractable, useTrois } from '../trois/useThree'
 import { ToRefs, watch } from '@vue/runtime-core'
 let trois: ToRefs<Trois.Internals>
 

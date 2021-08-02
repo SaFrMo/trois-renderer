@@ -2,7 +2,7 @@ import { RendererOptions } from '@vue/runtime-core'
 import { Trois } from '../types'
 import { createElement } from './createElement'
 import { createElement as createTroisElement } from '../trois'
-import { updateObjectProp } from '../objects'
+import { updateObjectProp } from '../trois/objects'
 import { insert } from './insert'
 import { remove } from './remove'
 

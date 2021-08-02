@@ -1,6 +1,6 @@
 import { Trois } from '../types'
 import { Constants } from './constants'
-import { pascalCase } from '../lib'
+import { pascalCase } from './lib'
 
 let nodeId = 0
 

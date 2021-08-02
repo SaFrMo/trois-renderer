@@ -1,7 +1,7 @@
 import { Trois } from '../types'
-import { isObject3D } from '../lib'
-import { createObject, updateAllObjectProps, } from '../objects'
-import { completeTrois, useTrois } from '../useThree'
+import { isObject3D } from '../trois/lib'
+import { createObject, updateAllObjectProps, } from '../trois/objects'
+import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 import { createdByUuid } from '..'
 const { scene } = trois

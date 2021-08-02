@@ -1,6 +1,6 @@
 import { Trois } from '../types'
 import { createElement as createTroisElement } from '../trois'
-import { initTrois, useTrois } from '../useThree'
+import { initTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 
 export const createElement = (

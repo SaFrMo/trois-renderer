@@ -26,7 +26,7 @@ import {
     Vector3,
 } from 'three'
 import SimplexNoise from 'simplex-noise'
-import { useTrois } from '../../../src/renderer/useThree'
+import { useTrois } from '../../../src/renderer/trois/useThree'
 const trois = useTrois()
 
 let _points: Array<Array<Vector3>> = []

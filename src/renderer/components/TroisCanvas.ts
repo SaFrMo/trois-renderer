@@ -6,7 +6,7 @@
 
 //<script lang="ts">
 import { h, defineComponent } from '@vue/runtime-core'
-import { useTrois } from './useThree'
+import { useTrois } from '../trois/useThree'
 const trois = useTrois()
 
 export default defineComponent({

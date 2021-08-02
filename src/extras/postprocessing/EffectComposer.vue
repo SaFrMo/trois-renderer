@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Trois } from '../../renderer/types'
-import { addAfterRender, useTrois } from '../../renderer/useThree'
+import { addAfterRender, useTrois } from '../../renderer/trois/useThree'
 const trois = useTrois()
 import { Clock } from 'three'
 const clock = new Clock()

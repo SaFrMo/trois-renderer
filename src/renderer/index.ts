@@ -1,8 +1,6 @@
 import { createRenderer, Component } from '@vue/runtime-core'
-import { components } from './components'
-import { useTrois } from './useThree'
+import { components, extend } from './components/components'
 import { Trois } from './types'
-const trois = useTrois()
 import { nodeOps } from './nodeOps'
 
 /* created elements, sorted under instance UUID */
@@ -11,7 +9,7 @@ export const createdByUuid: { [key: string]: Trois.Element } = {}
 // console.log('v1318')
 
 export const createApp = ((root: Component) => {
-    const app = createRenderer(nodeOps).createApp(root)
+    const app = createRenderer(nodeOps).createApp(root) as Trois.TroisApp
 
     // register all components
     Object.keys(components).forEach(key => {
@@ -25,12 +23,14 @@ export const createApp = ((root: Component) => {
         const mounted = mount({ domElement } as any, ...args)
         return mounted
     }
-    // TODO: add `extend` function here rather than separate export?
+    app.extend = (targets: Record<string, any>) => {
+        extend({ app, ...targets })
+    }
 
     // done
     return app
 })
 
-export { extend } from './components'
-export { useTrois }
-export { scene, renderer } from './useThree'
+export { extend } from './components/components'
+export { useTrois } from './trois/useThree'
+export { scene, renderer } from './trois/useThree'

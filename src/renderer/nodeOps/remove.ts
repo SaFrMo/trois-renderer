@@ -1,4 +1,4 @@
-import { isEventKey } from '../lib'
+import { isEventKey } from '../trois/lib'
 import { Trois } from '../types'
 
 export const remove = (element: Trois.Element) => {

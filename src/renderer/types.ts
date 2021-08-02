@@ -1,4 +1,5 @@
 import { VNodeProps as vueVNodeProps } from '@vue/runtime-core'
+import { App } from 'vue'
 
 export declare namespace Trois {
   type AutoAttach = string
@@ -147,15 +148,7 @@ disconnect, // Dis-connect handlers, () => void
 */
   }
 
-  type UpdateCallback = ({
-    camera,
-    renderer,
-    scene,
-  }: {
-    camera: THREE.Camera
-    renderer: THREE.Renderer
-    scene: THREE.Scene
-  }) => void
+
 
   type Node = Element
 
@@ -169,6 +162,20 @@ disconnect, // Dis-connect handlers, () => void
     rendererOptions: THREE.WebGLRendererParameters
     rendererProperties: { [key: string]: any }
   }
+
+  type TroisApp = App<Trois.Element> & {
+    extend?: (v: Record<string, any>) => void
+  }
+
+  type UpdateCallback = ({
+    camera,
+    renderer,
+    scene,
+  }: {
+    camera: THREE.Camera
+    renderer: THREE.Renderer
+    scene: THREE.Scene
+  }) => void
 
   type VNodeProps = vueVNodeProps & {
     [key: string]: any
