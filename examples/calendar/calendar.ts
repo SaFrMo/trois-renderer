@@ -1,13 +1,10 @@
-import { createApp, extend } from '../../src/renderer'
+import { createApp } from '../../src/renderer'
 import App from './Calendar.vue'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { WebGLRenderer } from 'three'
 
 const app = createApp(App)
 
-extend({
-    app,
-    OrbitControls,
+app.extend({
     WebGLRenderer,
 })
 
