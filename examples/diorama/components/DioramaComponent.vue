@@ -43,7 +43,9 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import Shoebox from './Shoebox.vue'
-import { Plane, Vector3 } from 'three'
+import { Plane, PlaneHelper, Vector3 } from 'three'
+import { useTrois } from '../../../src/renderer'
+const trois = useTrois()
 
 export default defineComponent({
     components: { Shoebox },
@@ -73,22 +75,53 @@ export default defineComponent({
     data() {
         return {
             currentRotations: [0, 0, 0, 0, 0, 0, 0, 0],
+            globalPosition: null as null | Vector3,
+            globalScale: null as null | Vector3,
         }
     },
     mounted() {
         this.update()
+
+        const obj = (this.$refs.container as any).$el.instance as THREE.Object3D
+        const posHolder = new Vector3()
+        obj.getWorldPosition(posHolder)
+        this.globalPosition = posHolder
+
+        const scaleHolder = new Vector3()
+        obj.getWorldScale(scaleHolder)
+        this.globalScale = scaleHolder
     },
     computed: {
         cmpClippingPlanes() {
-            // TODO: offset constant by $refs.container position
-            return [
-                // top
-                new Plane(new Vector3(0, -1, 0), 0.75),
-                // bottom
-                new Plane(new Vector3(0, 1, 0), 0.75),
-                // left
-                new Plane(new Vector3(1, 0, 0), 1.5),
-            ]
+            let offsetX = 0,
+                offsetY = 0
+            if (this.globalPosition) {
+                offsetX = this.globalPosition.x
+                offsetY = this.globalPosition.y
+
+                const obj = (this.$refs.container as any).$el
+                    .instance as THREE.Object3D
+
+                const scale = obj.parent?.scale ?? new Vector3(1, 1, 1)
+
+                const output = [
+                    // top
+                    new Plane(new Vector3(0, -1, 0), offsetY + 0.75 * scale.y),
+                    // bottom
+                    new Plane(new Vector3(0, 1, 0), -offsetY + 0.75 * scale.y),
+                    // left
+                    new Plane(new Vector3(1, 0, 0), -offsetX + 1.5 * scale.x),
+                ]
+
+                // plane visualizers
+                // output.forEach((plane) => {
+                //     trois.scene.value?.add(new PlaneHelper(plane, 10, 0x0000ff))
+                // })
+
+                return output
+            } else {
+                return []
+            }
         },
     },
     methods: {

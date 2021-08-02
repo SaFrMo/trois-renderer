@@ -42,14 +42,13 @@ export default defineComponent({
                 '2021-07-31': {
                     is: 'DioramaComponent',
                     bind: {
-                        'position-y': 0.5,
-                        'position-z': 0.5,
+                        'position-z': 0.2,
                     },
                 },
                 '2021-07-30': {
                     is: 'CalendarExample',
                     bind: {
-                        'position-y': 1,
+                        'position-y': 0.75,
                         'position-z': 0.5,
                     },
                 },
