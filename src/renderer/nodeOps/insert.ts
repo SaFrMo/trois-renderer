@@ -3,7 +3,6 @@ import { isObject3D } from '../trois/lib'
 import { createObject, updateAllObjectProps, } from '../trois/objects'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
-const { scene } = trois
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
     // insert host
@@ -59,23 +58,15 @@ export const insert = (
     parent.children.push(element)
     element.parentNode = parent
 
-    // save vue ID
-    // element.vueId = (element as any)?.__vueParentComponent?.uid
-    // if (element.vueId === null || element.vueId === undefined) {
-    //     // console.log('here!!')
-    // } else {
-    //     created[element.vueId] = element
-    // }
-
     // add any object3Ds to the scene
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
         if (parentElement.props?.hasOwnProperty('data-trois-container') || parentElement.props?.isContainer) {
             // ensure trois is running
-            if (!scene.value) throw 'Trois scene not set up'
+            if (!trois.scene.value) throw 'Trois scene not set up'
 
             // add any children that need to be created
-            createChildrenRecursively(element, scene.value)
+            createChildrenRecursively(element, trois.scene.value)
         } else if (parentElement?.instance) {
             // parent instance already exists, so let's add directly to it
             const parentInstance = parentElement?.instance
