@@ -48,13 +48,12 @@
                 :delay="500 + i * 15"
                 @set-target="setCameraTarget"
             >
-                <!-- TODO: daily component in slot (<component :is="..."/> ?)-->
+                <!-- daily component in slot (<component :is="..."/> ?)-->
                 <template v-slot:default>
                     <ExerciseComponent
-                        year="2021"
+                        :year="new Date().getFullYear()"
                         :month="
-                            new Date()
-                                .getMonth() /*+ 1*/
+                            (new Date().getMonth() + 1)
                                 .toString()
                                 .padStart(2, '0')
                         "
@@ -102,7 +101,7 @@ export default defineComponent({
     },
     setup() {
         return {
-            positions: reactive(getDayPositions({ month: 6 })),
+            positions: reactive(getDayPositions()),
             loaded: ref(false),
             font: reactive({}),
             black: '#1D1F20',

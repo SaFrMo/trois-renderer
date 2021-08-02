@@ -4,6 +4,7 @@
         v-if="dictionary[cmpDate]"
         v-bind="dictionary[cmpDate]?.bind ?? {}"
     />
+    <!-- empty day fallback -->
     <!-- <mesh :scale="0.5" v-else>
         <icosahedronGeometry :args="[1, 4]" />
     </mesh> -->
@@ -39,7 +40,7 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
-                '2021-07-31': {
+                '2021-08-01': {
                     is: 'DioramaComponent',
                     bind: {
                         'position-z': 0.2,
