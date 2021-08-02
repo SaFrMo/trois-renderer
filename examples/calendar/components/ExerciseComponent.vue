@@ -32,7 +32,7 @@ export default defineComponent({
         WiresComponent,
     },
     props: {
-        year: String,
+        year: Number,
         month: String,
         date: String,
         position: { type: Array, default: () => [0, 0, 0] },

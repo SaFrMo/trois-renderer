@@ -4,7 +4,6 @@
         renderer="$attached.renderer"
         :cameraPosition="[-2, 5, 15]"
     >
-        <!-- <OrbitControlsWrapper :autoRotate="false" /> -->
         <WebGLRenderer
             :args="[{ antialias: true }]"
             attach="renderer"
@@ -24,9 +23,10 @@
         <directionalLight :intensity="2" />
 
         <!-- calendar -->
-        <group :position-x="-3.3" :position-y="2.2" v-if="loaded">
+
+        <group :position-x="-3.3" :position-y="2.2" v-if="loaded" :key="month">
             <!-- month name -->
-            <mesh v-if="loaded" :position-x="-0.275" :position-y="1.2">
+            <mesh v-if="loaded" :position-x="-0.275" :position-y="calendarTop">
                 <textGeometry
                     :args="[month, { font, size: 0.5, height: 0.02 }]"
                 />
@@ -38,42 +38,50 @@
                 />
             </mesh>
 
-            <!-- days -->
-            <!-- TODO: zoom in on date, fade other dates on click -->
-            <DayMesh
-                v-for="(position, i) in positions"
-                :key="i"
-                :position="position"
-                :black="black"
-                :delay="500 + i * 15"
-                @set-target="setCameraTarget"
-            >
-                <!-- daily component in slot (<component :is="..."/> ?)-->
-                <template v-slot:default>
-                    <ExerciseComponent
-                        :year="new Date().getFullYear()"
-                        :month="
-                            (new Date().getMonth() + 1)
-                                .toString()
-                                .padStart(2, '0')
-                        "
-                        :date="(i + 1).toString().padStart(2, '0')"
-                    />
-                </template>
+            <!-- month nav buttons -->
+            <MonthNav
+                :y="calendarTop + 0.2"
+                :left="-spacer.x"
+                :right="spacer.x * 7"
+                @back="changeMonth(-1)"
+                @forward="changeMonth(1)"
+            />
 
-                <!-- date -->
-                <template v-slot:date>
-                    <mesh v-if="loaded" :position="[-0.35, -0.31, 0.05]">
-                        <textGeometry
-                            :args="[
-                                (i + 1).toString(),
-                                { font, size: 0.25, height: 0.02 },
-                            ]"
+            <!-- days -->
+            <group>
+                <DayMesh
+                    v-for="(position, i) in positions"
+                    :key="i"
+                    :position="position"
+                    :black="black"
+                    :delay="500 + i * 15"
+                    @set-target="setCameraTarget"
+                >
+                    <!-- daily component in slot (<component :is="..."/> ?)-->
+                    <template v-slot:default>
+                        <ExerciseComponent
+                            :year="year"
+                            :month="
+                                (monthIndex + 1).toString().padStart(2, '0')
+                            "
+                            :date="(i + 1).toString().padStart(2, '0')"
                         />
-                        <meshBasicMaterial color="beige" />
-                    </mesh>
-                </template>
-            </DayMesh>
+                    </template>
+
+                    <!-- date -->
+                    <template v-slot:date>
+                        <mesh v-if="loaded" :position="[-0.35, -0.31, 0.05]">
+                            <textGeometry
+                                :args="[
+                                    (i + 1).toString(),
+                                    { font, size: 0.25, height: 0.02 },
+                                ]"
+                            />
+                            <meshBasicMaterial color="beige" />
+                        </mesh>
+                    </template>
+                </DayMesh>
+            </group>
         </group>
     </TroisCanvas>
 </template>
@@ -82,10 +90,11 @@
 import { defineComponent, reactive, ref, watch } from 'vue'
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
 import { days, getDayPositions, months } from './utils'
-import { FontLoader, Mesh, MeshBasicMaterial, Vector3 } from 'three'
+import { FontLoader, Mesh, MeshBasicMaterial, Vector2, Vector3 } from 'three'
 import DayMesh from './components/DayMesh.vue'
 import EasterEgg from './components/EasterEgg.vue'
 import ExerciseComponent from './components/ExerciseComponent.vue'
+import MonthNav from './components/MonthNav.vue'
 import { useTrois } from '../../src/renderer/useThree'
 const trois = useTrois()
 import { tween } from 'popmotion'
@@ -98,19 +107,27 @@ export default defineComponent({
         DayMesh,
         EasterEgg,
         ExerciseComponent,
+        MonthNav,
     },
     setup() {
+        const spacer = new Vector2(1.1, -1.1)
+
         return {
-            positions: reactive(getDayPositions()),
+            // positions: reactive(),
             loaded: ref(false),
             font: reactive({}),
             black: '#1D1F20',
+            calendarTop: 1.2,
+            spacer,
+            months,
         }
     },
     data() {
         return {
             cameraLookTarget: [0, 0, 0],
-            month: months[new Date().getMonth()],
+            monthIndex: new Date().getMonth(),
+            year: new Date().getFullYear(),
+            // month: months[new Date().getMonth()],
         }
     },
     mounted() {
@@ -131,6 +148,21 @@ export default defineComponent({
             },
             { immediate: true }
         )
+    },
+    computed: {
+        month() {
+            return months[(this as any).monthIndex]
+        },
+        positions() {
+            const t = this as any
+            const output = getDayPositions({
+                month: t.monthIndex,
+                year: t.year,
+                spacer: t.spacer,
+            })
+            console.log({ month: t.month, year: t.year })
+            return output
+        },
     },
     methods: {
         setCameraTarget({
@@ -179,18 +211,34 @@ export default defineComponent({
                 }
             )
         },
+        changeMonth(delta: number) {
+            this.monthIndex += delta
+            if (this.monthIndex < 0) {
+                this.monthIndex = 12 + this.monthIndex
+            } else if (this.monthIndex >= 12) {
+                this.monthIndex = this.monthIndex % 12
+            }
+        },
+        refreshMonthName() {
+            const materialInstance = (this.$refs.monthMaterial as any).$el
+                .instance as MeshBasicMaterial
+            tween({ duration: 300 }).start((v: number) => {
+                materialInstance.opacity = v
+            })
+        },
     },
     watch: {
         async loaded(newVal) {
             if (newVal) {
                 await this.$nextTick()
 
-                const materialInstance = (this.$refs.monthMaterial as any).$el
-                    .instance as MeshBasicMaterial
-                tween({ duration: 300 }).start((v: number) => {
-                    materialInstance.opacity = v
-                })
+                this.refreshMonthName()
             }
+        },
+        async monthIndex() {
+            await this.$nextTick()
+
+            this.refreshMonthName()
         },
     },
 })
