@@ -1,102 +1,14 @@
-import { createRenderer, Component, RendererOptions } from '@vue/runtime-core'
-import { updateObjectProp } from './objects'
-import { components, extend } from './components'
+import { createRenderer, Component } from '@vue/runtime-core'
+import { components } from './components'
 import { useTrois } from './useThree'
 import { Trois } from './types'
 const trois = useTrois()
-import { createElement, insert } from './nodeOps'
-import { createElement as createTroisElement } from './trois'
-import { isEventKey } from './lib'
+import { nodeOps } from './nodeOps'
 
-/* created elements, sorted under vue ID */
-export const created: { [key: number]: Trois.Element } = {}
 /* created elements, sorted under instance UUID */
 export const createdByUuid: { [key: string]: Trois.Element } = {}
 
 // console.log('v1318')
-
-/*
-    Elements are `create`d from the outside in, then `insert`ed from the inside out.
-*/
-
-const recursivelyDisposeChildren = (element: Trois.Element) => {
-    // remove from parent if needed
-    element.instance?.parent?.remove(element.instance)
-    // dispose if needed
-    element.instance?.dispose?.()
-    // remove event listeners if needed
-    Object.keys(element.eventListenerRemoveFunctions).forEach((evtKey: string) => {
-        if (!isEventKey(evtKey)) {
-            throw 'incorrect event key: ' + evtKey
-        }
-        element.eventListenerRemoveFunctions[evtKey].forEach(f => f())
-    })
-
-    // run on children
-    element.children.forEach(child => {
-        recursivelyDisposeChildren(child)
-    })
-}
-
-const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
-    createElement,
-
-    insert,
-
-    remove: (el) => {
-        const instance = el?.instance
-        // handle instance reference
-        if (instance) {
-            const uid = el.vueId ?? -1
-            if (uid !== -1) {
-                delete created[uid]
-            }
-        }
-
-        // remove children
-        recursivelyDisposeChildren(el)
-    },
-
-    createText: (text) => {
-        // console.log('createText', { text })
-        return createTroisElement('', {})
-    },
-
-    createComment: (text) => {
-        // console.log('createComment', { text })
-        return createTroisElement('', {})
-    },
-
-    setText: (node, text) => {
-        // console.log('setText', { node, text })
-    },
-
-    setElementText: (node, text) => {
-        // console.log('setElementText', { node, text })
-    },
-
-    parentNode: (node) => {
-        // console.log('parentNode', { node })
-        return createTroisElement('', {})
-    },
-
-    nextSibling: (node) => {
-        // console.log('nextSibling', { node })
-        return null
-    },
-
-    patchProp: (element, key, prevValue, nextValue) => {
-        const { instance } = (element || {})
-
-        // ignore if el is DOM element OR no ready target OR if internal Trois property
-        if (element?.props?.isDom || !instance || key.startsWith('$')) return
-
-        // update props
-        updateObjectProp({ element, key, value: nextValue })
-
-        // console.log('patchProp', { el, key, prevValue, nextValue })
-    }
-}
 
 export const createApp = ((root: Component) => {
     const app = createRenderer(nodeOps).createApp(root)

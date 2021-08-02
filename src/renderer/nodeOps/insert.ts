@@ -3,7 +3,7 @@ import { isObject3D } from '../lib'
 import { createObject, updateAllObjectProps, } from '../objects'
 import { completeTrois, useTrois } from '../useThree'
 const trois = useTrois()
-import { created, createdByUuid } from '..'
+import { createdByUuid } from '..'
 const { scene } = trois
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
@@ -62,12 +62,12 @@ export const insert = (
     element.parentNode = parent
 
     // save vue ID
-    element.vueId = (element as any)?.__vueParentComponent?.uid
-    if (element.vueId === null || element.vueId === undefined) {
-        // console.log('here!!')
-    } else {
-        created[element.vueId] = element
-    }
+    // element.vueId = (element as any)?.__vueParentComponent?.uid
+    // if (element.vueId === null || element.vueId === undefined) {
+    //     // console.log('here!!')
+    // } else {
+    //     created[element.vueId] = element
+    // }
 
     // add any object3Ds to the scene
     if (isObject3D(element?.instance)) {

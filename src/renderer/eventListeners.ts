@@ -1,7 +1,7 @@
 import { Trois } from './types'
 import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, removeInteractable, useTrois } from './useThree'
-import { watch } from '@vue/runtime-core'
-const trois = useTrois()
+import { ToRefs, watch } from '@vue/runtime-core'
+let trois: ToRefs<Trois.Internals>
 
 export const addEventListener = (
     { element, key, value }:
@@ -30,6 +30,7 @@ export const addEventListener = (
 
     // register click, pointerdown, pointerup
     if (key === 'onClick' || key === 'onPointerDown' || key === 'onPointerUp') {
+        trois = trois ?? useTrois()
         const stop = watch(() => trois.mouseDown.value, isDown => {
             const idx = currentIntersections.map(v => v.element).findIndex(v => v.instance?.uuid === element.instance?.uuid)
             if (idx !== -1) {
