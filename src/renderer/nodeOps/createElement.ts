@@ -15,7 +15,7 @@ export const createElement = (
     // debug
     // console.log('createElement', { element, type, isSvg, isCustomizedBuiltin, vnodeProps })
 
-    // container node - this should be the first thing created
+    // container node - this should be the first thing created in the app
     if (element.props?.hasOwnProperty('data-trois-container') || element.type === 'TroisCanvas') {
         element.props.isDom = true
         element.props.isContainer = true

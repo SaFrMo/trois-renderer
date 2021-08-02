@@ -80,6 +80,7 @@ export default defineComponent({
     methods: {
         update() {
             requestAnimationFrame(this.update)
+            if (!this.$refs.mesh) return
 
             const target = (this.$refs.mesh as any).$el
                 .instance as InstancedMesh

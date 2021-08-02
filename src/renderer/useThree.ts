@@ -214,6 +214,7 @@ const mainInteractionRaycasterCallback: Trois.UpdateCallback = ({ camera }) => {
 
 // utility function for firing multiple callbacks and multiple events on a Trois.Element
 const fireEventsFromIntersections = ({ element, eventKeys, intersection }: { element: Trois.Element, eventKeys: Array<Trois.EventKey>, intersection: Intersection }) => {
+    if (!element) return
     eventKeys.forEach(eventKey => {
         if (element.eventListeners[eventKey]) {
             element.eventListeners[eventKey].forEach(cb => {

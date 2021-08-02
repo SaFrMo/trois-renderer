@@ -26,7 +26,12 @@
 
         <group :position-x="-3.3" :position-y="2.2" v-if="loaded" :key="month">
             <!-- month name -->
-            <mesh v-if="loaded" :position-x="-0.275" :position-y="calendarTop">
+            <mesh
+                name="month-name"
+                v-if="loaded"
+                :position-x="-0.275"
+                :position-y="calendarTop"
+            >
                 <textGeometry
                     :args="[month, { font, size: 0.5, height: 0.02 }]"
                 />

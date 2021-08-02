@@ -6,6 +6,7 @@ import { Trois } from './types'
 const trois = useTrois()
 import { createElement, insert } from './nodeOps'
 import { createElement as createTroisElement } from './trois'
+import { isEventKey } from './lib'
 
 /* created elements, sorted under vue ID */
 export const created: { [key: number]: Trois.Element } = {}
@@ -18,6 +19,25 @@ export const createdByUuid: { [key: string]: Trois.Element } = {}
     Elements are `create`d from the outside in, then `insert`ed from the inside out.
 */
 
+const recursivelyDisposeChildren = (element: Trois.Element) => {
+    // remove from parent if needed
+    element.instance?.parent?.remove(element.instance)
+    // dispose if needed
+    element.instance?.dispose?.()
+    // remove event listeners if needed
+    Object.keys(element.eventListenerRemoveFunctions).forEach((evtKey: string) => {
+        if (!isEventKey(evtKey)) {
+            throw 'incorrect event key: ' + evtKey
+        }
+        element.eventListenerRemoveFunctions[evtKey].forEach(f => f())
+    })
+
+    // run on children
+    element.children.forEach(child => {
+        recursivelyDisposeChildren(child)
+    })
+}
+
 const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
     createElement,
 
@@ -25,14 +45,16 @@ const nodeOps: RendererOptions<Trois.Node, Trois.Element> = {
 
     remove: (el) => {
         const instance = el?.instance
+        // handle instance reference
         if (instance) {
             const uid = el.vueId ?? -1
             if (uid !== -1) {
                 delete created[uid]
             }
-            const parent = el?.parentNode?.instance ?? trois.scene.value
-            parent?.remove(instance as any)
         }
+
+        // remove children
+        recursivelyDisposeChildren(el)
     },
 
     createText: (text) => {

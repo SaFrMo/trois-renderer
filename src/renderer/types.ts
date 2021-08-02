@@ -46,6 +46,7 @@ export declare namespace Trois {
     children: Array<Element>
     domElement: HTMLElement | null
     eventListeners: Record<EventKey, InteractionCallback[]>
+    eventListenerRemoveFunctions: Record<EventKey, Function[]>
     id: number
     instance: Instance | null
     instanceUuid: string

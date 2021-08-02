@@ -27,8 +27,6 @@ export const insert = (
     // debug
     // console.log('insert', { name: element.name, element, parent, ref })
 
-    // console.log('element name status?', element)
-
     // cancel if no valid name
     if (!element.name) return
 
@@ -37,7 +35,6 @@ export const insert = (
         handleDomElement({ element, parent })
         return
     }
-
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
@@ -52,13 +49,17 @@ export const insert = (
             ...(parent.attached || {})
         }
     }
-
+    // do the same for attached arrays
     if (element.props.attachArray) {
         if (!parent.attachedArray[element.props.attachArray]) {
             parent.attachedArray[element.props.attachArray] = []
         }
         parent.attachedArray[element.props.attachArray].push(element.instance)
     }
+
+    // save to parent
+    parent.children.push(element)
+    element.parentNode = parent
 
     // save vue ID
     element.vueId = (element as any)?.__vueParentComponent?.uid
@@ -69,10 +70,8 @@ export const insert = (
     }
 
     // add any object3Ds to the scene
-    // console.log('is object 3d', element.instance.type, element, isObject3D(element?.instance))
     if (isObject3D(element?.instance)) {
         let parentElement = parent ?? (element as any).__vueParentComponent?.parent?.vnode?.el
-        // console.log(parentElement, 'will add elements: ', parentElement.props?.hasOwnProperty('data-trois-container'))
         if (parentElement.props?.hasOwnProperty('data-trois-container') || parentElement.props?.isContainer) {
             // ensure trois is running
             if (!scene.value) throw 'Trois scene not set up'
@@ -94,7 +93,7 @@ export const insert = (
     // update props after attaching to parent so we can handle positioning, etc
     updateAllObjectProps({ element, props: element.props })
 
-    // ready callback
+    // fire ready callback
     if (element.props.onReady) {
         const arr = Array.isArray(element.props.onReady) ? element.props.onReady : [element.props.onReady]
         arr.forEach(func => func({

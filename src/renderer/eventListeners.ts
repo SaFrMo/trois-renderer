@@ -1,5 +1,5 @@
 import { Trois } from './types'
-import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, useTrois } from './useThree'
+import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, removeInteractable, useTrois } from './useThree'
 import { watch } from '@vue/runtime-core'
 const trois = useTrois()
 
@@ -7,9 +7,12 @@ export const addEventListener = (
     { element, key, value }:
         { element: Trois.Element, key: Trois.EventKey, value: Trois.InteractionCallback }
 ) => {
-    // create new record for this key if needed
+    // create new records for this key if needed
     if (!element.eventListeners[key]) {
         element.eventListeners[key] = []
+    }
+    if (!element.eventListenerRemoveFunctions[key]) {
+        element.eventListenerRemoveFunctions[key] = []
     }
 
     // add event listener
@@ -21,12 +24,13 @@ export const addEventListener = (
 
         if (element.instance && !interactables.includes(element)) {
             addInteractable(element)
+            element.eventListenerRemoveFunctions[key].push(() => removeInteractable(element))
         }
     }
 
     // register click, pointerdown, pointerup
     if (key === 'onClick' || key === 'onPointerDown' || key === 'onPointerUp') {
-        watch(() => trois.mouseDown.value, isDown => {
+        const stop = watch(() => trois.mouseDown.value, isDown => {
             const idx = currentIntersections.map(v => v.element).findIndex(v => v.instance?.uuid === element.instance?.uuid)
             if (idx !== -1) {
                 if (isDown && (key === 'onClick' || key === 'onPointerDown')) {
@@ -40,6 +44,8 @@ export const addEventListener = (
                 }
             }
         })
+
+        element.eventListenerRemoveFunctions[key].push(stop)
     }
 
     return element
