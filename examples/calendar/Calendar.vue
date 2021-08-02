@@ -105,6 +105,8 @@ const trois = useTrois()
 import { tween } from 'popmotion'
 
 let action: any
+let originalCameraPosition = new Vector3()
+const originalCameraLookTarget = [0, 0, 0]
 
 export default defineComponent({
     components: {
@@ -129,7 +131,7 @@ export default defineComponent({
     },
     data() {
         return {
-            cameraLookTarget: [0, 0, 0],
+            cameraLookTarget: originalCameraLookTarget,
             monthIndex: new Date().getMonth(),
             year: new Date().getFullYear(),
             // month: months[new Date().getMonth()],
@@ -146,13 +148,24 @@ export default defineComponent({
             () => trois.camera.value,
             (cam) => {
                 if (cam) {
-                    cam?.lookAt(
+                    originalCameraPosition = cam.position.clone()
+
+                    cam.lookAt(
                         (this.$refs.cameraLookTarget as any).instance.position
                     )
                 }
             },
             { immediate: true }
         )
+
+        window.addEventListener('keydown', (evt) => {
+            if (evt.key.toLowerCase() === 'escape') {
+                this.setCameraTarget({
+                    camPosition: originalCameraPosition,
+                    lookPosition: new Vector3(...originalCameraLookTarget),
+                })
+            }
+        })
     },
     computed: {
         month() {
