@@ -3,7 +3,6 @@ import { isObject3D } from '../trois/lib'
 import { createObject, updateAllObjectProps, } from '../trois/objects'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
-import { createdByUuid } from '..'
 const { scene } = trois
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
@@ -40,7 +39,6 @@ export const insert = (
     element.instance = createObject({ name: element.name, element })
     // save the instance's uuid to the element
     element.instanceUuid = element.instance.uuid
-    createdByUuid[element.instanceUuid] = element
 
     // attach to parent if needed
     if (element.props.attach) {

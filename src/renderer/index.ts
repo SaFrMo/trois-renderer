@@ -3,9 +3,6 @@ import { components, extend } from './components/components'
 import { Trois } from './types'
 import { nodeOps } from './nodeOps'
 
-/* created elements, sorted under instance UUID */
-export const createdByUuid: { [key: string]: Trois.Element } = {}
-
 // console.log('v1318')
 
 export const createApp = ((root: Component) => {
