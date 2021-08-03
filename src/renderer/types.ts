@@ -167,6 +167,10 @@ disconnect, // Dis-connect handlers, () => void
     extend?: (v: Record<string, any>) => void
   }
 
+  type TroisCanvasProps = {
+
+  }
+
   type UpdateCallback = ({
     camera,
     renderer,

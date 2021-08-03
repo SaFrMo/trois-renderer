@@ -2,10 +2,12 @@ import { createRenderer, Component } from '@vue/runtime-core'
 import { components, extend } from './components/components'
 import { Trois } from './types'
 import { nodeOps } from './nodeOps'
+import { version } from '../../package.json'
 
-// console.log('v1318')
+console.log(`v${version}`)
 
 export const createApp = ((root: Component) => {
+    console.log(root)
     const app = createRenderer(nodeOps).createApp(root) as Trois.TroisApp
 
     // register all components

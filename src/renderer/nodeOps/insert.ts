@@ -1,6 +1,7 @@
 import { Trois } from '../types'
 import { isObject3D } from '../trois/lib'
 import { createObject, updateAllObjectProps, } from '../trois/objects'
+import { setupObserver } from '../components/TroisCanvas'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 
@@ -119,7 +120,8 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
         element.props.isContainer &&
         trois.renderer.value) {
         // if this is the wrapper, let's attach the renderer DOM element
-        element.domElement.appendChild(trois.renderer.value.domElement as any)
+        element.domElement.appendChild(trois.renderer.value.domElement)
+        setupObserver(element.domElement)
     } else {
         throw 'Error setting up renderer'
     }

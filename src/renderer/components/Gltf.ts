@@ -2,6 +2,7 @@ import { defineComponent, h } from '@vue/runtime-core'
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default defineComponent({
+    name: 'Gtlf',
     props: {
         src: {
             type: String,

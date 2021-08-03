@@ -102,14 +102,18 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     // TODO: more robust
     const update = () => {
         requestAnimationFrame(update)
-
-        onBeforeRender.forEach(callback => callback({ camera, renderer, scene, }))
-        if (troisInternals.runDefaultRenderFunction) {
-            renderer.render(scene, camera)
-        }
-        onAfterRender.forEach(callback => callback({ camera, renderer, scene, }))
+        renderTrois()
     }
     update()
+}
+
+/** The main render function for Trois. */
+export const renderTrois = () => {
+    onBeforeRender.forEach(callback => callback({ camera, renderer, scene, }))
+    if (troisInternals.runDefaultRenderFunction) {
+        renderer.render(scene, camera)
+    }
+    onAfterRender.forEach(callback => callback({ camera, renderer, scene, }))
 }
 
 export const getOrCreateMainInteractionRaycaster = () => {

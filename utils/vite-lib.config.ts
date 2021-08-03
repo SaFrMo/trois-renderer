@@ -6,6 +6,7 @@ import dts from 'vite-dts'
 export default defineConfig({
     plugins: [vue(), dts()],
     build: {
+        minify: false,
         lib: {
             entry: './src/renderer/index.ts',
             name: 'trois-renderer-proof-of-concept',
