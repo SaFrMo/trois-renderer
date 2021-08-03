@@ -98,7 +98,7 @@ import { days, getDayPositions, months } from './utils'
 import { FontLoader, Mesh, MeshBasicMaterial, Vector2, Vector3 } from 'three'
 import DayMesh from './components/DayMesh.vue'
 import EasterEgg from './components/EasterEgg.vue'
-import ExerciseComponent from './components/ExerciseComponent.vue'
+import ExerciseComponent from './Days.vue'
 import MonthNav from './components/MonthNav.vue'
 import { useTrois } from '../../src/renderer/trois/useThree'
 const trois = useTrois()

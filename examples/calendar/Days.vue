@@ -13,13 +13,14 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-import Boxfield from '../../boxfield/BoxfieldComponent.vue'
-import CalendarExample from './CalendarExample.vue'
-import DioramaComponent from '../../diorama/components/DioramaComponent.vue'
-import EventComponent from '../../events/Events/EventComponent.vue'
-import SumComponent from '../../instance-sum/SumComponent.vue'
-import Table from '../../table/TableComponent.vue'
-import WiresComponent from '../../instance-wires/WiresComponent.vue'
+import Boxfield from '../boxfield/BoxfieldComponent.vue'
+import CalendarExample from './components/CalendarExample.vue'
+import DioramaComponent from '../diorama/components/DioramaComponent.vue'
+import EventComponent from '../events/Events/EventComponent.vue'
+import HierarchyComponent from '../hierarchy/HierarchyComponent.vue'
+import SumComponent from '../instance-sum/SumComponent.vue'
+import Table from '../table/TableComponent.vue'
+import WiresComponent from '../instance-wires/WiresComponent.vue'
 
 export default defineComponent({
     components: {
@@ -27,6 +28,7 @@ export default defineComponent({
         CalendarExample,
         DioramaComponent,
         EventComponent,
+        HierarchyComponent,
         SumComponent,
         Table,
         WiresComponent,
@@ -40,6 +42,12 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-02': {
+                    is: 'HierarchyComponent',
+                    bind: {
+                        'position-z': 0.2,
+                    },
+                },
                 '2021-08-01': {
                     is: 'DioramaComponent',
                     bind: {
