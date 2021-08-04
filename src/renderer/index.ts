@@ -33,4 +33,4 @@ export const createApp = ((root: Component) => {
 
 export { extend } from './components/components'
 export { useTrois } from './trois/useThree'
-export { scene, renderer } from './trois/useThree'
+export * from './trois/useThree'
