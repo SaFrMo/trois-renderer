@@ -18,6 +18,7 @@ import CalendarExample from './components/CalendarExample.vue'
 import DioramaComponent from '../diorama/components/DioramaComponent.vue'
 import EventComponent from '../events/Events/EventComponent.vue'
 import HierarchyComponent from '../hierarchy/HierarchyComponent.vue'
+import PhysicsComponent from '../physics/PhysicsComponent.vue'
 import SumComponent from '../instance-sum/SumComponent.vue'
 import Table from '../table/TableComponent.vue'
 import WiresComponent from '../instance-wires/WiresComponent.vue'
@@ -29,6 +30,7 @@ export default defineComponent({
         DioramaComponent,
         EventComponent,
         HierarchyComponent,
+        PhysicsComponent,
         SumComponent,
         Table,
         WiresComponent,
@@ -42,6 +44,13 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-04': {
+                    is: 'PhysicsComponent',
+                    bind: {
+                        'position-y': -1,
+                        'position-z': 0.2,
+                    },
+                },
                 '2021-08-02': {
                     is: 'HierarchyComponent',
                     bind: {

@@ -144,6 +144,7 @@ export default defineComponent({
             this.font = font
         })
 
+        // prep camera
         watch(
             () => trois.camera.value,
             (cam) => {
@@ -153,7 +154,28 @@ export default defineComponent({
                     cam.lookAt(
                         (this.$refs.cameraLookTarget as any).instance.position
                     )
+                    cam.layers.enableAll()
                 }
+            },
+            { immediate: true }
+        )
+
+        // prep renderer
+        watch(
+            () => trois.renderer.value,
+            (renderer) => {
+                if (!renderer) return
+                renderer.shadowMap.enabled = true
+            },
+            { immediate: true }
+        )
+
+        // prep raycaster
+        watch(
+            () => trois.raycaster.value,
+            (raycaster) => {
+                if (!raycaster) return
+                raycaster.layers.enableAll()
             },
             { immediate: true }
         )

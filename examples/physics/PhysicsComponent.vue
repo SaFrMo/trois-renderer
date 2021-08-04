@@ -3,6 +3,7 @@
         <!-- lighting -->
         <ambientLight color="#505050" :layers="layer" />
         <spotLight
+            color="green"
             :shadow-mapSize-width="2048"
             :shadow-mapSize-height="2048"
             :intensity="0.5"
@@ -11,7 +12,7 @@
             :layers="layer"
         />
 
-        <group :position-y="-1">
+        <group :layers="layer">
             <!-- ball -->
             <mesh
                 ref="sphere"
@@ -28,9 +29,9 @@
 
             <!-- ground -->
             <mesh
-                :layers="layer"
                 :rotation-x="Math.PI * -0.5"
                 :receiveShadow="true"
+                :layers="layer"
             >
                 <planeBufferGeometry :args="[2, 2]" />
                 <meshPhongMaterial />
@@ -52,7 +53,7 @@ export default defineComponent({
     props: {
         layer: {
             type: Number,
-            default: 1,
+            default: 2,
         },
     },
     mounted() {
@@ -61,7 +62,7 @@ export default defineComponent({
     },
     setup() {
         const radius = 0.3
-        const posY = 1
+        const posY = 0
         const restitution = 0.7
 
         return {
@@ -88,11 +89,6 @@ export default defineComponent({
                     restitution: this.restitution,
                 }),
             })
-            sphereBody.position.set(
-                localPos.x,
-                localPos.y + this.posY,
-                localPos.z
-            )
             world.addBody(sphereBody)
 
             // add ground
@@ -104,7 +100,6 @@ export default defineComponent({
                 }),
             })
             groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0) // make it face up
-            groundBody.position.set(localPos.x, localPos.y, localPos.z)
             world.addBody(groundBody)
         },
         update() {

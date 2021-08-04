@@ -30,6 +30,8 @@ export default defineComponent({
 
             const newX = Math.sin(Date.now() * 0.001)
 
+            if (!this.$refs.parent || !this.$refs.child) return
+
             const instance: THREE.Mesh = (this.$refs.parent as any).instance
             instance.position.x = newX
 

@@ -4,7 +4,7 @@
         :cameraPosition="[0, 0, 5]"
     >
         <OrbitControlsWrapper :autoRotate="false" />
-        <PhysicsComponent />
+        <PhysicsComponent :position-y="-1" />
     </TroisCanvas>
 </template>
 
