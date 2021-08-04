@@ -20,7 +20,7 @@
         <EasterEgg />
 
         <!-- lighting -->
-        <directionalLight :intensity="2" />
+        <!-- <directionalLight :intensity="2" :layers="2" /> -->
 
         <!-- calendar -->
 

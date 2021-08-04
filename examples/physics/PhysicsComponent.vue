@@ -1,18 +1,17 @@
 <template>
     <group>
         <!-- lighting -->
-        <ambientLight color="#505050" :layers="layer" />
+        <ambientLight color="#505050" />
         <spotLight
-            color="green"
+            color="peachpuff"
             :shadow-mapSize-width="2048"
             :shadow-mapSize-height="2048"
             :intensity="0.5"
             :castShadow="true"
             :position-y="5"
-            :layers="layer"
         />
 
-        <group :layers="layer">
+        <group>
             <!-- ball -->
             <mesh
                 ref="sphere"
@@ -21,18 +20,13 @@
                 @pointer-down="jump"
                 @pointer-enter="ballColor = 'tomato'"
                 @pointer-leave="ballColor = 'white'"
-                :layers="layer"
             >
                 <icosahedronGeometry :args="[radius, 6]" />
                 <meshPhongMaterial :color="ballColor" />
             </mesh>
 
             <!-- ground -->
-            <mesh
-                :rotation-x="Math.PI * -0.5"
-                :receiveShadow="true"
-                :layers="layer"
-            >
+            <mesh :rotation-x="Math.PI * -0.5" :receiveShadow="true">
                 <planeBufferGeometry :args="[2, 2]" />
                 <meshPhongMaterial />
             </mesh>
@@ -50,12 +44,6 @@ let world: CANNON.World
 let sphereBody: CANNON.Body
 
 export default defineComponent({
-    props: {
-        layer: {
-            type: Number,
-            default: 2,
-        },
-    },
     mounted() {
         this.setupPhysics()
         addBeforeRender(this.update)
@@ -78,9 +66,6 @@ export default defineComponent({
     },
     methods: {
         setupPhysics() {
-            const instance = this.$el.instance as THREE.Object3D
-            const localPos = instance.getWorldPosition(new Vector3())
-
             // create world
             world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) })
 

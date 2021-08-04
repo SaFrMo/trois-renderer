@@ -47,8 +47,9 @@ export default defineComponent({
                 '2021-08-04': {
                     is: 'PhysicsComponent',
                     bind: {
-                        'position-y': -1,
+                        'position-y': 0.25,
                         'position-z': 0.2,
+                        rotation: [Math.PI * 0.15, Math.PI * 0.25, 0],
                     },
                 },
                 '2021-08-02': {
@@ -104,7 +105,10 @@ export default defineComponent({
                 },
                 '2021-07-24': {
                     is: 'Table',
-                    bind: { position: [0, 0, 0.5] },
+                    bind: {
+                        position: [0, 0, 0.5],
+                        rotation: [Math.PI * 0.25, 0, 0],
+                    },
                 },
             },
         }

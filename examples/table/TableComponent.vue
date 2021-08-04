@@ -2,6 +2,7 @@
     <group :rotation-y="Math.PI * -0.15" :y="-0.5">
         <!-- table -->
         <!-- <gltf src="/table/table.glb" :scale="5" :position-y="-2.7" /> -->
+        <pointLight :intensity="2" :y="5" />
 
         <!-- scene -->
         <gltf src="/table/building_cabin.glb" :rotation-y="Math.PI * 0.5" />
