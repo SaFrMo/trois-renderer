@@ -1,13 +1,14 @@
 <template>
     <group>
         <!-- lighting -->
-        <ambientLight color="#505050" />
+        <ambientLight color="#505050" :layers="layer" />
         <spotLight
             :shadow-mapSize-width="2048"
             :shadow-mapSize-height="2048"
             :intensity="0.5"
             :castShadow="true"
             :position-y="5"
+            :layers="layer"
         />
 
         <group :position-y="-1">
@@ -19,13 +20,18 @@
                 @pointer-down="jump"
                 @pointer-enter="ballColor = 'tomato'"
                 @pointer-leave="ballColor = 'white'"
+                :layers="layer"
             >
                 <icosahedronGeometry :args="[radius, 6]" />
                 <meshPhongMaterial :color="ballColor" />
             </mesh>
 
             <!-- ground -->
-            <mesh :rotation-x="Math.PI * -0.5" :receiveShadow="true">
+            <mesh
+                :layers="layer"
+                :rotation-x="Math.PI * -0.5"
+                :receiveShadow="true"
+            >
                 <planeBufferGeometry :args="[2, 2]" />
                 <meshPhongMaterial />
             </mesh>
@@ -43,6 +49,12 @@ let world: CANNON.World
 let sphereBody: CANNON.Body
 
 export default defineComponent({
+    props: {
+        layer: {
+            type: Number,
+            default: 1,
+        },
+    },
     mounted() {
         this.setupPhysics()
         addBeforeRender(this.update)
