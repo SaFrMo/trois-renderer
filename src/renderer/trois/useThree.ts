@@ -4,6 +4,7 @@ import { Trois } from '../types'
 import { Camera, Color, Intersection, Object3D, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three'
 import { processProp } from './objects'
 import { setupEnvMap } from './lib'
+import { set } from 'lodash'
 
 let mouseListener: (event: MouseEvent) => void
 let mouseDownListener: (event: MouseEvent) => void
@@ -19,15 +20,16 @@ const transformPropsToSceneOptions = (props: Trois.VNodeProps) => {
         background: '',
         camera: null,
         cameraPosition: null,
+        cameraProperties: { ...(props.cameraProperties ?? {}) },
         environment: null,
         renderer: null,
         rendererOptions: {
             antialias: true,
-            ...props.rendererOptions ?? {}
+            ...(props.rendererOptions ?? {})
         },
         rendererProperties: {
             // toneMapping: THREE.ACESFilmicToneMapping,
-            ...props.rendererProperties ?? {}
+            ...(props.rendererProperties ?? {})
         },
         ...props
     } as Trois.SceneOptions
@@ -68,20 +70,23 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
         const cameraPos = (Array.isArray(pos) ? pos : [pos.x, pos.y, pos.z]) as [number, number, number]
         troisInternals.camera.position.set.apply(troisInternals.camera.position, cameraPos)
     }
+    // set camera properties
+    Object.keys(sceneOptions.cameraProperties).forEach(cameraProperty => {
+        set(camera, cameraProperty, sceneOptions.rendererProperties[cameraProperty])
+    })
 
     // use $attached renderer or build a new one
     renderer = troisInternals.renderer = (processProp<WebGLRenderer>({ element, prop: sceneOptions.renderer }))
         ?? new WebGLRenderer(sceneOptions.rendererOptions)
     // set renderer properties
     Object.keys(sceneOptions.rendererProperties).forEach(rendererProperty => {
-        if (renderer.hasOwnProperty(rendererProperty)) {
-            ; (renderer as any)[rendererProperty] = sceneOptions.rendererProperties[rendererProperty]
-        }
+        set(renderer, rendererProperty, sceneOptions.rendererProperties[rendererProperty])
     })
     // size renderer
     troisInternals.renderer.setSize(window.innerWidth, window.innerHeight)
 
     // prep effect composer if we have one
+    // TODO
 
     // build mouse listener for the renderer DOM element
     mouseListener = (event: MouseEvent) => {

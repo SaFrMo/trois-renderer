@@ -18,6 +18,19 @@ const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | TH
     }
 }
 
+const updateChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
+    // insert host
+    if (host.instance) {
+        updateAllObjectProps({ element: host, props: host.props })
+    }
+
+    // figure out who will be the child's parent, the host or the ancestor
+    const childParent = host.instance ?? parent
+    for (let child of host.childCreationQueue) {
+        updateChildrenRecursively(child, childParent as any)
+    }
+}
+
 export const insert = (
     element: Trois.Element,
     parent: Trois.Element,
@@ -68,6 +81,7 @@ export const insert = (
 
             // add any children that need to be created
             createChildrenRecursively(element, trois.scene.value)
+            updateChildrenRecursively(element, trois.scene.value)
         } else if (parentElement?.instance) {
             // parent instance already exists, so let's add directly to it
             const parentInstance = parentElement?.instance

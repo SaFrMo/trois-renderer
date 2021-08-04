@@ -19,6 +19,7 @@
     "@types/three": "0.129.2",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
+    "cannon-es": "0.18.0",
     "chroma-js": "2.1.2",
     "luxon": "2.0.1",
     "popmotion": "8.7.6",

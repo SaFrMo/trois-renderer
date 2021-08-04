@@ -157,6 +157,7 @@ disconnect, // Dis-connect handlers, () => void
     background: string | number | THREE.Color
     camera: THREE.Camera | null
     cameraPosition: [number, number, number] | THREE.Vector3 | null
+    cameraProperties: { [key: string]: any }
     environment: string | null
     renderer: THREE.Renderer | null
     rendererOptions: THREE.WebGLRendererParameters
