@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import { addBeforeRender } from '../../src/renderer'
+import { addBeforeRender, removeBeforeRender } from '../../src/renderer'
 import * as CANNON from 'cannon-es'
 import { Vector3 } from 'three'
 
@@ -59,6 +59,9 @@ export default defineComponent({
     mounted() {
         this.setupPhysics()
         addBeforeRender(this.update)
+    },
+    beforeUnmount() {
+        removeBeforeRender(this.update)
     },
     setup() {
         const radius = 0.3
@@ -119,7 +122,7 @@ export default defineComponent({
             if (sphereBody.velocity.y < 0) {
                 sphereBody.velocity.set(0, 0, 0)
             }
-            sphereBody.applyImpulse(new CANNON.Vec3(0, 1, 0))
+            sphereBody.applyImpulse(new CANNON.Vec3(0, 4, 0))
         },
     },
 })

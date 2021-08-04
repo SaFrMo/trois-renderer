@@ -200,7 +200,7 @@ export default defineComponent({
                 year: t.year,
                 spacer: t.spacer,
             })
-            console.log({ month: t.month, year: t.year })
+            // console.log({ month: t.month, year: t.year })
             return output
         },
     },
@@ -253,6 +253,7 @@ export default defineComponent({
         },
         changeMonth(delta: number) {
             this.monthIndex += delta
+            // console.log(this.monthIndex, delta)
             if (this.monthIndex < 0) {
                 this.monthIndex = 12 + this.monthIndex
             } else if (this.monthIndex >= 12) {

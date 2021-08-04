@@ -5,7 +5,7 @@
             :scale="0.75"
             @pointer-enter="hovering = true"
             @pointer-leave="hovering = false"
-            @pointer-down="$emit('back')"
+            @click="$emit('back')"
             :x="left"
             :y="y"
         />
@@ -15,7 +15,7 @@
             :scale="0.75"
             @pointer-enter="hovering = true"
             @pointer-leave="hovering = false"
-            @pointer-down="$emit('forward')"
+            @click="$emit('forward')"
             :x="right"
             :y="y"
         />

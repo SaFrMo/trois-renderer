@@ -253,6 +253,12 @@ export const onAfterRender: Array<Trois.UpdateCallback> = []
 export const addBeforeRender = (cb: Trois.UpdateCallback) => {
     onBeforeRender.push(cb)
 }
+export const removeBeforeRender = (cb: Trois.UpdateCallback) => {
+    const idx = onBeforeRender.indexOf(cb)
+    if (idx !== -1) {
+        onBeforeRender.splice(idx, 1)
+    }
+}
 export const addAfterRender = (cb: Trois.UpdateCallback) => {
     onAfterRender.push(cb)
 }
