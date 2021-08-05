@@ -3,6 +3,7 @@ import { Trois } from '../../renderer/types'
 import * as CANNON from 'cannon-es'
 import { addBeforeRender, removeBeforeRender } from '../../renderer/trois/useThree'
 import { vPhysics } from './directives/v-physics'
+import { Mesh } from 'three'
 
 interface PhysicsInterface {
     app: App<Trois.Element>
@@ -10,15 +11,24 @@ interface PhysicsInterface {
     worldOptions?: CANNON.WorldOptions
 }
 
+export interface PhysicsTroisMeta {
+    world: CANNON.World
+    dictionary: Array<{ body: CANNON.Body, mesh: Mesh, uuid: string }>
+}
+
 export interface PhysicsTrois extends Trois.Internals {
-    physicsWorld: CANNON.World
+    physics: PhysicsTroisMeta
 }
 
 export const usePhysics = ({ app, trois, worldOptions }: PhysicsInterface) => {
     const pt = trois as any as PhysicsTrois
-    pt.physicsWorld = new CANNON.World(worldOptions ?? {
-        gravity: new CANNON.Vec3(0, -9.82, 0)
-    })
+
+    pt.physics = {
+        world: new CANNON.World(worldOptions ?? {
+            gravity: new CANNON.Vec3(0, -9.82, 0)
+        }),
+        dictionary: []
+    }
 
     // prep update function
     let lastTime = Date.now() * 0.001
@@ -27,7 +37,12 @@ export const usePhysics = ({ app, trois, worldOptions }: PhysicsInterface) => {
         const now = Date.now() * 0.001
         const delta = now - lastTime
         lastTime = now
-        pt.physicsWorld.step(timeStep, delta)
+        pt.physics.world.step(timeStep, delta)
+
+        pt.physics.dictionary.forEach(({ body, mesh, uuid }) => {
+            mesh.position.copy(body.position as any)
+            mesh.quaternion.copy(body.quaternion as any)
+        })
     }
     addBeforeRender(update)
 
@@ -35,6 +50,6 @@ export const usePhysics = ({ app, trois, worldOptions }: PhysicsInterface) => {
     app.directive('physics', vPhysics({
         addBeforeRender,
         removeBeforeRender,
-        world: pt.physicsWorld
+        physics: pt.physics
     }))
 }

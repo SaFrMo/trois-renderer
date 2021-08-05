@@ -2,17 +2,17 @@ import { Directive } from "@vue/runtime-core"
 import { Trois } from "../../../renderer/types"
 import { Mesh, Quaternion, Vector3 } from 'three'
 import * as CANNON from 'cannon-es'
+import { PhysicsTroisMeta } from ".."
 
 interface VPhysicsOptions {
     addBeforeRender: (cb: Trois.UpdateCallback) => void
     removeBeforeRender: (cb: Trois.UpdateCallback) => void
-    world: CANNON.World
+    physics: PhysicsTroisMeta
 }
 
 
 
-export const vPhysics = ({ addBeforeRender, removeBeforeRender, world }: VPhysicsOptions) => {
-    let update: () => void
+export const vPhysics = ({ addBeforeRender, removeBeforeRender, physics }: VPhysicsOptions) => {
     let body: CANNON.Body
 
     return {
@@ -59,26 +59,23 @@ export const vPhysics = ({ addBeforeRender, removeBeforeRender, world }: VPhysic
                 quaternion: new CANNON.Quaternion(worldRotation.x, worldRotation.y, worldRotation.z, worldRotation.w),
                 shape,
                 mass: 1,
-                ...(binding ?? {})
+                ...(binding?.value ?? {})
             })
-            world.addBody(body)
-            console.log('added', body.position)
+            physics.world.addBody(body)
 
-            // register update
-            update = () => {
-                console.log('TODO: why is only 1 id running?', body.id)
-                instance.position.copy(body.position as any)
-                instance.quaternion.copy(body.quaternion as any)
-            }
-            addBeforeRender(update)
+            // save to dictionary so THREE object keeps track of CANNON counterpart
+            physics.dictionary.push({ uuid: instance.uuid, body, mesh: instance })
         },
-        beforeUnmount() {
+        beforeUnmount(el: Trois.Element) {
             // cleanup
-            if (update) {
-                removeBeforeRender(update)
+            if (el?.instance?.uuid) {
+                const idx = physics.dictionary.findIndex(v => v.uuid === el.instance?.uuid)
+                if (idx !== -1) {
+                    physics.dictionary.splice(idx, 1)
+                }
             }
-            if (world && body) {
-                world.removeBody(body)
+            if (physics.world && body) {
+                physics.world.removeBody(body)
             }
         }
     } as Directive

@@ -12,11 +12,16 @@
         />
 
         <group>
-            <mesh v-physics key="test">
+            <mesh
+                v-physics
+                :rotation-x="Math.PI * 0.2"
+                :rotation-z="Math.PI * 0.2"
+                key="test"
+            >
                 <meshBasicMaterial color="blue" />
             </mesh>
             <!-- board background -->
-            <mesh v-physics :position-x="-3" key="here"> </mesh>
+            <mesh v-physics="{ mass: 0 }" :position-y="-3" key="here"> </mesh>
             <!-- rods -->
             <!-- receptacles -->
         </group>
