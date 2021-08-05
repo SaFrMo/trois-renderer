@@ -1,6 +1,10 @@
 <template>
-    <group :scale="10">
-        <gltf @gltfAdded="onAdded" src="/asterisk/extrudedDodec.glb" />
+    <group>
+        <gltf
+            :scale="10"
+            @gltfAdded="onAdded"
+            src="/asterisk/extrudedDodec.glb"
+        />
     </group>
 </template>
 
@@ -9,22 +13,41 @@
 
 import { defineComponent } from 'vue'
 import { Trois } from '../../src/renderer/types'
-import { Color, MeshStandardMaterial, TextureLoader } from 'three'
-import { tween } from 'popmotion'
+import {
+    Bone,
+    Color,
+    MathUtils,
+    MeshStandardMaterial,
+    Quaternion,
+    SkinnedMesh,
+    TextureLoader,
+    Vector3,
+} from 'three'
+import { spring, ColdSubscription } from 'popmotion'
+const { randFloat } = MathUtils
 
-const textureLoader = new TextureLoader()
+let skin: SkinnedMesh
+let springAction: ColdSubscription
+
+// to save quaternions
+const currentRotation = new Quaternion()
+const startingRotation = new Quaternion()
+const targetRotation = new Quaternion()
+
+// to save original bone rotations
+const originalBones = [] as Array<Bone>
 
 export default defineComponent({
     methods: {
         async onAdded({ instance }: { instance: Trois.Instance }) {
-            const emissiveMap = await textureLoader.loadAsync(
+            const emissiveMap = await new TextureLoader().loadAsync(
                 '/asterisk/snoothGradient_wbw.png'
             )
 
-            const skin = instance.getObjectByProperty(
+            skin = instance.getObjectByProperty(
                 'type',
                 'SkinnedMesh'
-            ) as THREE.SkinnedMesh
+            ) as SkinnedMesh
 
             if (!skin) throw 'no skin detected (yuck)'
 
@@ -33,18 +56,59 @@ export default defineComponent({
 
             // update material
             skin.material = new MeshStandardMaterial({
-                // skinning: true, // not needed anymore?
                 emissive: new Color('#323238'),
                 emissiveMap,
+                color: 'darkseagreen',
             })
 
-            //
-            skin.skeleton.update()
-            ;(skin.skeleton as any).originalBones = []
-            skin.skeleton.bones.forEach(function (bone, idx) {
-                ;(skin.skeleton as any).originalBones[idx] = bone.clone()
+            // save original bone positions
+            // skin.skeleton.update()
+            skin.skeleton.bones.forEach((bone, idx) => {
+                originalBones[idx] = bone.clone()
+            })
+
+            this.nextSpring()
+        },
+        nextSpring() {
+            const newAxis = new Vector3(
+                randFloat(-1, 1),
+                randFloat(-1, 1),
+                randFloat(-1, 1)
+            ).normalize()
+
+            // save starting quaternion
+            startingRotation.copy(currentRotation)
+
+            // get new axis
+            currentRotation.setFromAxisAngle(newAxis, 0)
+            targetRotation.setFromAxisAngle(newAxis, randFloat(-0.5, 0.5))
+
+            // start animation
+            springAction = spring({
+                from: 0,
+                to: 1,
+                stiffness: 150,
+            }).start({
+                update: (t: number) => {
+                    currentRotation.copy(startingRotation)
+                    currentRotation.slerp(targetRotation, t)
+
+                    skin.skeleton.bones.forEach(function (bone, t) {
+                        bone.quaternion.copy(originalBones[t].quaternion)
+                        bone.applyQuaternion(currentRotation)
+                    })
+                },
+                complete: () => {
+                    if (!this) return
+                    this.nextSpring()
+                },
             })
         },
+    },
+    beforeUnmount() {
+        if (springAction) {
+            springAction.stop()
+        }
     },
 })
 </script>

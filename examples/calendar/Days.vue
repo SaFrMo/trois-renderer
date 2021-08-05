@@ -13,6 +13,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
+import AsteriskComponent from '../asterisk/AsteriskComponent.vue'
 import Boxfield from '../boxfield/BoxfieldComponent.vue'
 import CalendarExample from './components/CalendarExample.vue'
 import DioramaComponent from '../diorama/components/DioramaComponent.vue'
@@ -25,6 +26,7 @@ import WiresComponent from '../instance-wires/WiresComponent.vue'
 
 export default defineComponent({
     components: {
+        AsteriskComponent,
         Boxfield,
         CalendarExample,
         DioramaComponent,
@@ -44,6 +46,13 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-05': {
+                    is: 'AsteriskComponent',
+                    bind: {
+                        'position-z': 0.2,
+                        scale: 2,
+                    },
+                },
                 '2021-08-04': {
                     is: 'PhysicsComponent',
                     bind: {
