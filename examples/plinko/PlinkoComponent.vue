@@ -11,30 +11,55 @@
             :position-y="5"
         />
 
-        <group>
-            <mesh
-                v-physics
-                :rotation-x="Math.PI * 0.2"
-                :rotation-z="Math.PI * 0.2"
-                key="test"
-            >
-                <meshBasicMaterial color="blue" />
-            </mesh>
+        <group :position-y="rows * -0.5 * spacer.y">
             <!-- board background -->
-            <mesh v-physics="{ mass: 0 }" :position-y="-3" key="here"> </mesh>
+            <mesh
+                :position-y="spacer.y * rows * 0.5 + spacer.y * 0.5"
+                :position-z="-0.5"
+            >
+                <planeGeometry
+                    :args="[columnsMax * spacer.x, rows * -spacer.y]"
+                />
+                <meshBasicMaterial color="tomato" />
+            </mesh>
+
+            <!-- ball -->
+            <mesh v-physics :position-x="-0.5" :position-y="2">
+                <sphereGeometry :args="[1, 16, 16]"
+            /></mesh>
+
             <!-- rods -->
+            <group v-for="y in rows" :key="y">
+                <mesh
+                    v-for="x in y % 2 ? columnsMax : columnsMax - 1"
+                    :key="x"
+                    :position-y="y * spacer.y + rows * 0.5 * spacer.y"
+                    :position-x="
+                        (y % 2 ? x : x + 0.5) * spacer.x -
+                        spacer.x * (columnsMax + 1) * 0.5
+                    "
+                    :rotation-z="Math.PI * 0.25"
+                    v-physics="{ mass: 0 }"
+                >
+                    <boxBufferGeometry />
+                </mesh>
+            </group>
+
             <!-- receptacles -->
         </group>
     </group>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { addBeforeRender, removeBeforeRender } from '../../src/renderer'
-import * as CANNON from 'cannon-es'
+import { defineComponent } from 'vue'
 
-let world: CANNON.World
-let sphereBody: CANNON.Body
-
-export default defineComponent({})
+export default defineComponent({
+    setup() {
+        return {
+            spacer: { x: 4, y: -2.4 },
+            rows: 12,
+            columnsMax: 10,
+        }
+    },
+})
 </script>

@@ -1,7 +1,7 @@
 <template>
     <TroisCanvas
         :rendererProperties="{ 'shadowMap.enabled': true }"
-        :cameraPosition="[0, 0, 10]"
+        :cameraPosition="[0, 0, 50]"
     >
         <OrbitControlsWrapper :autoRotate="false" />
         <PlinkoComponent />

@@ -43,7 +43,7 @@ export const vPhysics = ({ addBeforeRender, removeBeforeRender, physics }: VPhys
                 shape = new CANNON.Box(new CANNON.Vec3(scale.x, scale.y, scale.z))
             } else if (geoType.includes('sphere') || geoType.includes('icosahedron')) {
                 // build a sphere
-                shape = new CANNON.Sphere(args[0] ?? 1)
+                shape = new CANNON.Sphere(args?.[0] ?? 1)
             } else if (geoType.includes('plane')) {
                 // build a plane
                 shape = new CANNON.Plane()

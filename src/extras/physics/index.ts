@@ -3,7 +3,7 @@ import { Trois } from '../../renderer/types'
 import * as CANNON from 'cannon-es'
 import { addBeforeRender, removeBeforeRender } from '../../renderer/trois/useThree'
 import { vPhysics } from './directives/v-physics'
-import { Mesh } from 'three'
+import { Mesh, Vector3 } from 'three'
 
 interface PhysicsInterface {
     app: App<Trois.Element>
@@ -33,6 +33,8 @@ export const usePhysics = ({ app, trois, worldOptions }: PhysicsInterface) => {
     // prep update function
     let lastTime = Date.now() * 0.001
     const timeStep = 1 / 60
+    const scratch = new Vector3()
+
     const update = () => {
         const now = Date.now() * 0.001
         const delta = now - lastTime
@@ -40,6 +42,10 @@ export const usePhysics = ({ app, trois, worldOptions }: PhysicsInterface) => {
         pt.physics.world.step(timeStep, delta)
 
         pt.physics.dictionary.forEach(({ body, mesh, uuid }) => {
+            // scratch.set(body.position.x, body.position.y, body.position.z)
+            // scratch = mesh.worldToLocal(scratch)
+            // mesh.position.copy(scratch.clone())
+            //  mesh.getWorldPosition(scratch)
             mesh.position.copy(body.position as any)
             mesh.quaternion.copy(body.quaternion as any)
         })
