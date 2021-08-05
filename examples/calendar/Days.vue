@@ -21,6 +21,7 @@ import EventComponent from '../events/Events/EventComponent.vue'
 import HierarchyComponent from '../hierarchy/HierarchyComponent.vue'
 import PhysicsComponent from '../physics/PhysicsComponent.vue'
 import SumComponent from '../instance-sum/SumComponent.vue'
+import SvgComponent from '../svg/SvgComponent.vue'
 import Table from '../table/TableComponent.vue'
 import WiresComponent from '../instance-wires/WiresComponent.vue'
 
@@ -34,6 +35,7 @@ export default defineComponent({
         HierarchyComponent,
         PhysicsComponent,
         SumComponent,
+        SvgComponent,
         Table,
         WiresComponent,
     },
@@ -46,6 +48,14 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-06': {
+                    is: 'SvgComponent',
+                    bind: {
+                        'position-y': 0.5,
+                        'position-z': 0.2,
+                        scale: 0.2,
+                    },
+                },
                 '2021-08-05': {
                     is: 'AsteriskComponent',
                     bind: {
