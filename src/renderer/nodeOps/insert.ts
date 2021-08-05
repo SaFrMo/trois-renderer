@@ -9,6 +9,19 @@ const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | TH
     // insert host
     if (host.instance) {
         parent.add(host.instance as unknown as THREE.Object3D)
+
+        // call onAdded now that we've been added to the scene
+        if (host.props.onAdded) {
+            const arr = Array.isArray(host.props.onAdded) ? host.props.onAdded : [host.props.onAdded]
+            arr.forEach(func => func({
+                element: host,
+                instance: host.instance,
+                trois,
+                scene: trois.scene,
+                camera: trois.camera,
+                renderer: trois.renderer
+            }))
+        }
     }
 
     // figure out who will be the child's parent, the host or the ancestor

@@ -3,6 +3,7 @@ import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default defineComponent({
     name: 'Gtlf',
+    emits: ['gltfAdded'],
     props: {
         src: {
             type: String,
@@ -21,6 +22,7 @@ export default defineComponent({
         )
 
         this.$el.instance.add(model.scene)
+        this.$emit('gltfAdded', { instance: this.$el.instance })
     },
     render(v: any) {
         return h('group', this.$attrs, this.$slots?.default?.() || [])

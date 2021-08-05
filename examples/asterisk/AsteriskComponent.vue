@@ -1,45 +1,49 @@
 <template>
-    <mesh ref="parent">
-        <meshBasicMaterial :wireframe="true" />
-
-        <mesh :scale="0.5" ref="child" :visible="childVisible">
-            <meshBasicMaterial color="red" :wireframe="true" />
-        </mesh>
-    </mesh>
+    <group :scale="10">
+        <gltf @gltfAdded="onAdded" src="/asterisk/extrudedDodec.glb" />
+    </group>
 </template>
 
 <script lang="ts">
+// ported from the fantastic https://larsberg.github.io/2018_nov_sketches/1002_gltf/index.html
+
 import { defineComponent } from 'vue'
+import { Trois } from '../../src/renderer/types'
+import { Color, MeshStandardMaterial, TextureLoader } from 'three'
+import { tween } from 'popmotion'
+
+const textureLoader = new TextureLoader()
 
 export default defineComponent({
-    data() {
-        return {
-            childVisible: false,
-        }
-    },
-    mounted() {
-        console.log((this.$refs.parent as any).instance)
-
-        this.update()
-
-        setInterval(() => (this.childVisible = !this.childVisible), 800)
-    },
     methods: {
-        update() {
-            requestAnimationFrame(this.update)
+        async onAdded({ instance }: { instance: Trois.Instance }) {
+            const emissiveMap = await textureLoader.loadAsync(
+                '/asterisk/snoothGradient_wbw.png'
+            )
 
-            const newX = Math.sin(Date.now() * 0.001)
+            const skin = instance.getObjectByProperty(
+                'type',
+                'SkinnedMesh'
+            ) as THREE.SkinnedMesh
 
-            if (!this.$refs.parent || !this.$refs.child) return
+            if (!skin) throw 'no skin detected (yuck)'
 
-            const instance: THREE.Mesh = (this.$refs.parent as any).instance
-            instance.position.x = newX
+            skin.castShadow = true
+            skin.receiveShadow = true
 
-            if (!this.$refs.child) return
+            // update material
+            skin.material = new MeshStandardMaterial({
+                // skinning: true, // not needed anymore?
+                emissive: new Color('#323238'),
+                emissiveMap,
+            })
 
-            const child: THREE.Mesh = (this.$refs.child as any).instance
-            child.position.x = newX
-            child.position.y = Math.cos(Date.now() * 0.001)
+            //
+            skin.skeleton.update()
+            ;(skin.skeleton as any).originalBones = []
+            skin.skeleton.bones.forEach(function (bone, idx) {
+                ;(skin.skeleton as any).originalBones[idx] = bone.clone()
+            })
         },
     },
 })

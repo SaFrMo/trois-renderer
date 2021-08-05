@@ -189,6 +189,7 @@ const internalTroisVueKeys = [
     'attach',
     'attachArray',
     'key',
+    'onAdded',
     'onReady',
     'ref',
 ]
