@@ -17,6 +17,7 @@ import AsteriskComponent from '../asterisk/AsteriskComponent.vue'
 import Boxfield from '../boxfield/BoxfieldComponent.vue'
 import CalendarExample from './components/CalendarExample.vue'
 import DioramaComponent from '../diorama/components/DioramaComponent.vue'
+import DreamscaperComponent from '../dreamscaper/DreamscaperComponent.vue'
 import EventComponent from '../events/Events/EventComponent.vue'
 import HierarchyComponent from '../hierarchy/HierarchyComponent.vue'
 import PhysicsComponent from '../physics/PhysicsComponent.vue'
@@ -31,6 +32,7 @@ export default defineComponent({
         Boxfield,
         CalendarExample,
         DioramaComponent,
+        DreamscaperComponent,
         EventComponent,
         HierarchyComponent,
         PhysicsComponent,
@@ -48,6 +50,13 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-08': {
+                    is: 'DreamscaperComponent',
+                    bind: {
+                        'rotation-x': Math.PI * 0.25,
+                        'position-z': 1,
+                    },
+                },
                 '2021-08-06': {
                     is: 'SvgComponent',
                     bind: {
