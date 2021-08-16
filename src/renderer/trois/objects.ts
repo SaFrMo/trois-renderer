@@ -1,5 +1,7 @@
 import * as THREE from 'three'
-import { get, isNumber, set } from 'lodash'
+import get from 'lodash/get'
+import isNumber from 'lodash/isNumber'
+import set from 'lodash/set'
 import { isEventKey } from './lib'
 import { catalogue } from '../components/components'
 import { Trois } from '../types'
@@ -130,6 +132,12 @@ export const updateObjectProp = (
         value = get(element.attached, attachedName, null)
     }
 
+    // set instance manually
+    if (key === 'trois-instance') {
+        element.instance = value
+        return element
+    }
+
     // save instance
     const target = element.instance
 
@@ -151,11 +159,19 @@ export const updateObjectProp = (
     if (liveProperty && isNumber(value) && liveProperty.setScalar) {
         // if value is a number and the property has a `setScalar` method, use that
         liveProperty.setScalar(value)
-    }
-    else if (liveProperty && liveProperty.set) {
-        // check if property type has `set` method (https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#shortcuts)
+    } else if (liveProperty && liveProperty.set) {
+        // if property has `set` method, use that (https://github.com/pmndrs/react-three-fiber/blob/master/markdown/api.md#shortcuts)
         const nextValueAsArray = Array.isArray(value) ? value : [value]
             ; (target as any)[finalKey].set(...nextValueAsArray)
+    } else if (typeof liveProperty === 'function') {
+        // if property is a function, let's try calling it
+        const result = liveProperty.bind(element.instance)(...value)
+
+        // pass the result to the parent
+        // TODO: more robust
+        if (element.parentNode) {
+            element.parentNode.attached[finalKey] = result
+        }
     } else if (get(target, finalKey, undefined) !== undefined) {
         set(target, finalKey, value)
     } else {
