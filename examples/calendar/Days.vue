@@ -23,6 +23,7 @@ import HierarchyComponent from '../hierarchy/HierarchyComponent.vue'
 import PhysicsComponent from '../physics/PhysicsComponent.vue'
 import SumComponent from '../instance-sum/SumComponent.vue'
 import SvgComponent from '../svg/SvgComponent.vue'
+import TextChaseComponent from '../text-chase/TextChaseComponent.vue'
 import Table from '../table/TableComponent.vue'
 import WiresComponent from '../instance-wires/WiresComponent.vue'
 
@@ -39,6 +40,7 @@ export default defineComponent({
         SumComponent,
         SvgComponent,
         Table,
+        TextChaseComponent,
         WiresComponent,
     },
     props: {
@@ -50,6 +52,9 @@ export default defineComponent({
     setup() {
         return {
             dictionary: {
+                '2021-08-16': {
+                    is: 'TextChaseComponent',
+                },
                 '2021-08-08': {
                     is: 'DreamscaperComponent',
                     bind: {
