@@ -43,7 +43,7 @@ export const insert = (
     if (!element.name) return
 
     // handle dom elements
-    if (element.domElement) {
+    if (element.domElement || element.props.isDom) {
         handleDomElement({ element, parent })
         return
     }

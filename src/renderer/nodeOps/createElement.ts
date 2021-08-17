@@ -36,9 +36,6 @@ export const createElement = (
         element.props.isDom = true
         element.props.isContainer = true
 
-        // this is the root container, so let's start trois
-        initTrois(element.props)
-
         // create container element
         const elType = isContainer(element) ? 'div' : type
         element.domElement = document.createElement(elType)
