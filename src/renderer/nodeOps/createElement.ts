@@ -2,7 +2,6 @@ import { Trois } from '../types'
 import { createElement as createTroisElement } from '../trois'
 import { initTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
-import { defaultContainerStyle, setupObserver } from '../components/TroisCanvas'
 
 const isContainer = (element: Trois.Element) => {
     return element.props?.hasOwnProperty('data-trois-container') || element.type === 'TroisCanvas'

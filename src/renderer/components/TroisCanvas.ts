@@ -1,10 +1,10 @@
-import { h, ComponentOptions, FunctionalComponent } from '@vue/runtime-core'
+import { h, ComponentOptions, Fragment, getCurrentInstance, onMounted, RootRenderFunction, nextTick } from '@vue/runtime-core'
 import { renderTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 
 /** fixed & fill styling for container */
-export const defaultContainerStyle = {
-    position: 'fixed' as any,
+const defaultContainerStyle = {
+    position: 'absolute' as any,
     top: 0,
     right: 0,
     bottom: 0,
@@ -66,7 +66,7 @@ const TroisContainer: ComponentOptions = {
                 ...props,
             },
             setupContext.slots.default?.() ?? [])
-    },
+    }
 }
 
 export default TroisContainer
