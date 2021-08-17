@@ -80,7 +80,8 @@ export const insert = (
             if (!trois.scene.value) throw 'Trois scene not set up'
 
             // add any children that need to be created
-            createChildrenRecursively(element, trois.scene.value)
+            // TODO: trois.scene.value should work without casting as `any` - why doesn't it work on build?
+            createChildrenRecursively(element, trois.scene.value as any)
         } else if (parentElement?.instance) {
             // parent instance already exists, so let's add directly to it
             const parentInstance = parentElement?.instance

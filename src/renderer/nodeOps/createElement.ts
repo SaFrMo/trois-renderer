@@ -36,7 +36,6 @@ export const createElement = (
     if (isContainer(element)) {
         element.props.isDom = true
         element.props.isContainer = true
-        element.props.containerStyle = element.props.containerStyle ?? defaultContainerStyle
 
         // this is the root container, so let's start trois
         initTrois(element.props)
@@ -44,13 +43,6 @@ export const createElement = (
         // create container element
         const elType = isContainer(element) ? 'div' : type
         element.domElement = document.createElement(elType)
-
-        // add styling
-        Object.keys(element.props?.containerStyle ?? {}).forEach((key: string) => {
-            if (element.domElement) {
-                element.domElement.style[key as any] = element.props.containerStyle[key]
-            }
-        })
     }
 
     // return created element
