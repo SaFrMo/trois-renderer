@@ -4,7 +4,7 @@ import { Trois } from './types'
 import { nodeOps } from './nodeOps'
 import { version } from '../../package.json'
 
-console.log(`v${version}`)
+console.log(`v${version}zzz`)
 
 export const troisRenderer = createRenderer(nodeOps)
 
