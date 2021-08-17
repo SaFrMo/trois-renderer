@@ -56,27 +56,17 @@ const updateSize = ({ width, height }: { width: number; height: number }) => {
     trois.size.value = { width, height }
 }
 
-const TroisCanvasImpl: ComponentOptions = {
+const TroisContainer: ComponentOptions = {
     name: 'TroisCanvas',
-    setup() {
-        return {
-            containerStyle: defaultContainerStyle
-        }
-    },
-    // mounted() {
-    //     setupObserver(this.$el.domElement)
-    // },
-    render() {
-        return h('div',
+    setup(props, setupContext) {
+        return () => h('div',
             {
                 'data-trois-container': true,
-                ...this.$attrs
+                style: defaultContainerStyle,
+                ...props,
             },
-            this.$slots?.default?.() || [])
+            setupContext.slots.default?.() ?? [])
     },
 }
 
-const output: FunctionalComponent = (props, { slots }) => {
-    return h(TroisCanvasImpl, props, slots)
-}
-export default output
+export default TroisContainer
