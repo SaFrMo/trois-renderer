@@ -1,5 +1,5 @@
 <template>
-    <TroisCanvas :cameraPosition="[2, 2, 5]">
+    <TroisCanvas :cameraPosition="[1, 1, 2]">
         <OrbitControlsWrapper :autoRotate="false" />
         <LiquidBoxComponent />
     </TroisCanvas>

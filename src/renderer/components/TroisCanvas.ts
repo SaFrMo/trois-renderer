@@ -1,7 +1,6 @@
 import { h, ComponentOptions, Fragment, getCurrentInstance, onMounted, RootRenderFunction, nextTick } from '@vue/runtime-core'
 import { renderTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
-import { initTrois } from '../trois/useThree'
 
 /** fixed & fill styling for container */
 const defaultContainerStyle = {
@@ -60,9 +59,6 @@ const updateSize = ({ width, height }: { width: number; height: number }) => {
 const TroisContainer: ComponentOptions = {
     name: 'TroisCanvas',
     setup(props, setupContext) {
-        // initialize trois
-        initTrois(props)
-
         return () => h('div',
             {
                 'data-trois-container': true,

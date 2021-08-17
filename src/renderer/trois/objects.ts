@@ -195,7 +195,6 @@ export const updateObjectProp = (
         }
     }
 
-
     return element
 }
 
