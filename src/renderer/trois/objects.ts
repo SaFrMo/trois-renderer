@@ -1,7 +1,5 @@
 import * as THREE from 'three'
-import get from 'lodash/get'
-import isNumber from 'lodash/isNumber'
-import set from 'lodash/set'
+import { get, isNumber, set } from 'lodash'
 import { isEventKey } from './lib'
 import { catalogue } from '../components/components'
 import { Trois } from '../types'
