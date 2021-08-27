@@ -1,10 +1,11 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1342-dev",
+  "version": "0.1.1343-dev",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
-    "build:lib": "vue-tsc --noEmit && vite build -c utils/vite-lib.config.ts",
+    "build:lib": "tsc --project ./utils/tsconfig.lib.json && npm run dts:create",
+    "dts:create": "cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.es.d.ts && cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.umd.d.ts",
     "prepare": "npm run build:lib"
   },
   "dependencies": {
@@ -37,12 +38,13 @@
     "src",
     "utils"
   ],
-  "main": "./dist/trois-renderer-proof-of-concept.umd.js",
-  "module": "./dist/trois-renderer-proof-of-concept.es.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/trois-renderer-proof-of-concept.es.js",
-      "require": "./dist/trois-renderer-proof-of-concept.umd.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
     }
-  }
+  },
+  "types": "dist/trois-renderer-proof-of-concept.es.d.ts"
 }
