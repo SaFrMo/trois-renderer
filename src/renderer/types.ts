@@ -70,7 +70,7 @@ export declare namespace Trois {
     | 'onPointerEnter'
     | 'onPointerLeave'
     | 'onPointerMove'
-    | 'onPointerMissed'
+    // | 'onPointerMissed'
     // 'onUpdate' |
     | 'onWheel'
 

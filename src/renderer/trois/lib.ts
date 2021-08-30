@@ -56,7 +56,7 @@ export const isEventKey = (target: any): target is Trois.EventKey => {
         'onPointerEnter',
         'onPointerLeave',
         'onPointerMove',
-        'onPointerMissed',
+        // 'onPointerMissed',
         // 'onUpdate',
         'onWheel',
     ].includes(target)

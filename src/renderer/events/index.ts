@@ -56,8 +56,6 @@ export const addEventListener = (
 
 const interactionsRequiringRaycaster = [
     'onClick',
-    'onContextMenu',
-    'onDoubleClick',
     'onPointerUp',
     'onPointerDown',
     'onPointerOver',
@@ -65,5 +63,5 @@ const interactionsRequiringRaycaster = [
     'onPointerEnter',
     'onPointerLeave',
     'onPointerMove',
-    'onPointerMissed',
+    // 'onPointerMissed',
 ]

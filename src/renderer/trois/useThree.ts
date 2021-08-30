@@ -72,7 +72,7 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     }
     // set camera properties
     Object.keys(sceneOptions.cameraProperties).forEach(cameraProperty => {
-        set(camera, cameraProperty, sceneOptions.rendererProperties[cameraProperty])
+        set(camera, cameraProperty, sceneOptions.cameraProperties[cameraProperty])
     })
 
     // use $attached renderer or build a new one
