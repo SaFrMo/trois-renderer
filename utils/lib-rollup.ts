@@ -7,11 +7,15 @@ export default {
         format: 'umd',
         name: 'TroisRenderer',
         globals: {
+            vue: 'Vue',
+            three: 'THREE',
             lodash: 'lodash',
         },
     },
     plugins: [nodeResolve()],
     external: [
         'lodash',
+        'three',
+        'vue',
     ],
 }
