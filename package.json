@@ -1,13 +1,12 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1350",
+  "version": "0.1.1349",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
-    "build:lib": "npm run build:rollup && npm run dts:create",
-    "build:lib-ts": "tsc --project ./utils/tsconfig.lib.json",
+    "build:lib": "tsc --project ./utils/tsconfig.lib.json && npm run build:rollup && npm run dts:create",
     "build:rollup": "rollup -c ./utils/lib-rollup.ts",
-    "dts:create": "cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.es.d.ts && cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.umd.d.ts && cp src/renderer/types.ts dist/types.ts",
+    "dts:create": "cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.es.d.ts && cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.umd.d.ts",
     "prepare": "npm run build:lib"
   },
   "dependencies": {
@@ -28,8 +27,6 @@
     "luxon": "2.0.1",
     "popmotion": "8.7.6",
     "rollup": "2.56.3",
-    "rollup-plugin-terser": "7.0.2",
-    "rollup-plugin-typescript2": "0.30.0",
     "simplex-noise": "2.4.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
@@ -44,7 +41,13 @@
     "src",
     "utils"
   ],
-  "main": "./dist/trois.js",
-  "module": "./dist/trois.module.js",
+  "main": "./dist/bundle.js",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "types": "dist/trois-renderer-proof-of-concept.es.d.ts"
 }
