@@ -1,5 +1,5 @@
-import { watch } from '@vue/runtime-core'
-import { reactive, toRefs } from "@vue/reactivity"
+import { watch } from 'vue'
+import { reactive, toRefs } from "vue"
 import { Trois } from '../types'
 import { Camera, Color, Intersection, Object3D, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three'
 import { processProp } from './objects'

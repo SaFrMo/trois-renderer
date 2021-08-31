@@ -1,4 +1,4 @@
-import { Directive } from "@vue/runtime-core"
+import { Directive } from "vue"
 import { Trois } from "../../../renderer/types"
 import { Mesh, Quaternion, Vector3 } from 'three'
 import * as CANNON from 'cannon-es'

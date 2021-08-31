@@ -1,4 +1,4 @@
-import { RendererOptions } from '@vue/runtime-core'
+import { RendererOptions } from 'vue'
 import { Trois } from '../types'
 import { createElement } from './createElement'
 import { createElement as createTroisElement } from '../trois'

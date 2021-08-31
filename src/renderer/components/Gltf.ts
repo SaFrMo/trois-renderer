@@ -1,4 +1,4 @@
-import { defineComponent, h } from '@vue/runtime-core'
+import { defineComponent, h } from 'vue'
 import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default defineComponent({

@@ -1,4 +1,4 @@
-import { createRenderer, Component } from '@vue/runtime-core'
+import { createRenderer, Component } from 'vue'
 import { components, extend } from './components/components'
 import { Trois } from './types'
 import { nodeOps } from './nodeOps'

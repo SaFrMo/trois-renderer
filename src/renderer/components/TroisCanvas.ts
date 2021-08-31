@@ -1,4 +1,4 @@
-import { h, ComponentOptions, Fragment, getCurrentInstance, onMounted, RootRenderFunction, nextTick } from '@vue/runtime-core'
+import { h, ComponentOptions, Fragment, getCurrentInstance, onMounted, RootRenderFunction, nextTick } from 'vue'
 import { renderTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 

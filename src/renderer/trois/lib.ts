@@ -2,7 +2,7 @@ import { Object3D, PMREMGenerator, UnsignedByteType } from "three"
 import { startCase } from 'lodash'
 import { Trois } from '../types'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
-import { watch } from "@vue/runtime-core"
+import { watch } from "vue"
 import { useTrois } from '..'
 
 let pmremGenerator: PMREMGenerator

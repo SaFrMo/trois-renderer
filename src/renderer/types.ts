@@ -1,4 +1,4 @@
-import { VNodeProps as vueVNodeProps } from '@vue/runtime-core'
+import { VNodeProps as vueVNodeProps } from 'vue'
 import { App } from 'vue'
 
 export declare namespace Trois {

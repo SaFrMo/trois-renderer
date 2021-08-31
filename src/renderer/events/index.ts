@@ -1,7 +1,7 @@
 import { Trois } from '../types'
 import { Constants } from '../trois/constants'
 import { addInteractable, currentIntersections, getOrCreateMainInteractionRaycaster, interactables, removeInteractable, useTrois } from '../trois/useThree'
-import { ToRefs, watch } from '@vue/runtime-core'
+import { ToRefs, watch } from 'vue'
 let trois: ToRefs<Trois.Internals>
 
 /** Add an event listener to the given element. Also creates the event teardown function and any necessary raycaster/interaction dictionary updates. */

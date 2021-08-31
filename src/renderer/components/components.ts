@@ -1,4 +1,4 @@
-import { h, defineComponent, App } from '@vue/runtime-core'
+import { h, defineComponent, App } from 'vue'
 import TroisCanvas from './TroisCanvas'
 import Gltf from './Gltf'
 import { Trois } from '../types'

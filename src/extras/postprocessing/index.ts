@@ -1,4 +1,4 @@
-import { App, ToRefs } from '@vue/runtime-core'
+import { App, ToRefs } from 'vue'
 import { Trois } from '../../renderer/types'
 import * as POST from 'postprocessing'
 import { addAfterRender } from '../../renderer/trois/useThree'

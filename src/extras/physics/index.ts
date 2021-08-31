@@ -1,4 +1,4 @@
-import { App, ToRefs } from '@vue/runtime-core'
+import { App, ToRefs } from 'vue'
 import { Trois } from '../../renderer/types'
 import * as CANNON from 'cannon-es'
 import { addBeforeRender, removeBeforeRender } from '../../renderer/trois/useThree'
