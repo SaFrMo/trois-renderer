@@ -7,12 +7,14 @@ const commonConfig = {
     output: {
         globals: {
             vue: 'vue',
-            three: 'THREE',
+            THREE: 'THREE',
+            three: 'three',
             lodash: 'lodash',
         },
     },
     external: [
         'lodash',
+        'THREE',
         'three',
         'vue',
     ],

@@ -1,6 +1,6 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1366",
+  "version": "0.1.1368",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
@@ -10,9 +10,7 @@
     "prepare": "npm run build:lib"
   },
   "dependencies": {
-    "lodash": "4.17.21",
-    "postprocessing": "6.22.2",
-    "three": "0.130.0"
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.0.4",
@@ -26,9 +24,11 @@
     "chroma-js": "2.1.2",
     "luxon": "2.0.1",
     "popmotion": "8.7.6",
+    "postprocessing": "6.22.2",
     "rollup": "2.56.3",
     "rollup-plugin-terser": "7.0.2",
     "simplex-noise": "2.4.0",
+    "three": "0.130.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
     "vite-dts": "1.0.3",
