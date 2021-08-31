@@ -1,6 +1,6 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1364",
+  "version": "0.1.1366",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
@@ -27,6 +27,7 @@
     "luxon": "2.0.1",
     "popmotion": "8.7.6",
     "rollup": "2.56.3",
+    "rollup-plugin-terser": "7.0.2",
     "simplex-noise": "2.4.0",
     "typescript": "^4.3.2",
     "vite": "^2.3.8",
@@ -38,8 +39,7 @@
     "dist",
     "package.json",
     "README.md",
-    "src",
-    "utils"
+    "src"
   ],
   "main": "./dist/trois-renderer.js",
   "module": "./dist/trois-renderer.module.js",

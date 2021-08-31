@@ -1,42 +1,56 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve'
+import { terser } from 'rollup-plugin-terser'
+
+const commonConfig = {
+    plugins: [nodeResolve()],
+    input: 'js/index.js',
+    output: {
+        globals: {
+            vue: 'vue',
+            three: 'THREE',
+            lodash: 'lodash',
+        },
+    },
+    external: [
+        'lodash',
+        'three',
+        'vue',
+    ],
+}
+
 
 export default [
+    // umd
     {
-        input: 'js/index.js',
+        ...commonConfig,
         output: {
+            ...commonConfig.output,
             file: 'dist/trois-renderer.js',
             format: 'umd',
             name: 'TroisRenderer',
-            globals: {
-                vue: 'vue',
-                three: 'THREE',
-                lodash: 'lodash',
-            },
         },
-        plugins: [nodeResolve()],
-        external: [
-            'lodash',
-            'three',
-            'vue',
-        ],
     },
+    // minified umd
     {
-        input: 'js/index.js',
+        ...commonConfig,
+        plugins: [
+            ...commonConfig.plugins,
+            terser(),
+        ],
         output: {
+            ...commonConfig.output,
+            file: 'dist/trois-renderer.min.js',
+            format: 'umd',
+            name: 'TroisRenderer',
+        },
+    },
+    // esm module
+    {
+        ...commonConfig,
+        output: {
+            ...commonConfig.output,
             file: 'dist/trois-renderer.module.js',
             format: 'esm',
-            globals: {
-                vue: 'vue',
-                three: 'THREE',
-                lodash: 'lodash',
-            },
         },
-        plugins: [nodeResolve()],
-        external: [
-            'lodash',
-            'three',
-            'vue',
-        ],
     }
-
 ]
