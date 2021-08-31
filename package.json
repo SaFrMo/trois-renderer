@@ -1,6 +1,6 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1351",
+  "version": "0.1.1360",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
@@ -41,7 +41,7 @@
     "src",
     "utils"
   ],
-  "main": "./dist/bundle.js",
+  "main": "./dist/trois-renderer.js",
   "module": "./dist/index.js",
   "exports": {
     ".": {
