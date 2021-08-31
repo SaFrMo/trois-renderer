@@ -12,7 +12,7 @@
       "esnext",
       "dom"
     ],
-    "outDir": "../js"
+    "outDir": "../dist"
   },
   "include": [
     "../src/renderer/*.ts",
