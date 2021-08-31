@@ -1,10 +1,10 @@
 {
   "name": "trois-renderer-proof-of-concept",
-  "version": "0.1.1350",
+  "version": "0.1.1352",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
-    "build:lib": "npm run build:rollup && npm run dts:create",
+    "build:lib": "npm run build:lib-ts && npm run build:rollup && npm run dts:create",
     "build:lib-ts": "tsc --project ./utils/tsconfig.lib.json",
     "build:rollup": "rollup -c ./utils/lib-rollup.ts",
     "dts:create": "cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.es.d.ts && cp ./utils/lib-dts.d.ts ./dist/trois-renderer-proof-of-concept.umd.d.ts && cp src/renderer/types.ts dist/types.ts",

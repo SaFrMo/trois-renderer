@@ -1,9 +1,8 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
-import typescript from 'rollup-plugin-typescript2'
 
 const universals = {
-    input: 'src/renderer/index.ts',
+    input: 'js/index.js',
     output: {
         globals: {
             vue: 'Vue',
@@ -11,9 +10,7 @@ const universals = {
             lodash: 'lodash',
         },
     },
-    plugins: [nodeResolve(), typescript({
-        tsconfig: 'utils/tsconfig.lib.json',
-    })],
+    plugins: [nodeResolve()],
     external: [
         'lodash',
         'three',
