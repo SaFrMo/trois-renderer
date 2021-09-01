@@ -1,6 +1,6 @@
 # Trois Renderer
 
-⚠️**This is a work in progress - expect significant changes to the codebase!**⚠️
+⚠️ **This is a work in progress - expect significant changes to the codebase!** ⚠️
 
 * [Full Documentation](https://trois-renderer-wip-docs.netlify.app/renderer/)
 * [Installation](https://trois-renderer-wip-docs.netlify.app/renderer/installation.html)
@@ -20,4 +20,4 @@ You can use it to create 3D scenes using code like this:
 
 *Trois* is a French word, it means *Three*.
 
-The Trois renderer uses several concepts introduced in [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - thank you to the authors of that repo!
+The Trois renderer uses several concepts introduced in [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - thank you to the creators and maintainers of that project!
