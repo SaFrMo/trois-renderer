@@ -9,7 +9,7 @@ export default defineConfig({
         minify: false,
         lib: {
             entry: './src/renderer/index.ts',
-            name: 'trois-renderer-proof-of-concept',
+            name: 'trois-renderer',
         },
         rollupOptions: {
             external: ['lodash', 'three', 'vue'],

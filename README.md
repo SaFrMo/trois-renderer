@@ -1,12 +1,23 @@
-* You can call any method on a target; the return value of that method will be stored in the parent's `$attached` object. For example:
+# Trois Renderer
+
+⚠️**This is a work in progress - expect significant changes to the codebase!**⚠️
+
+* [Full Documentation](https://trois-renderer-wip-docs.netlify.app/renderer/)
+* [Installation](https://trois-renderer-wip-docs.netlify.app/renderer/installation.html)
+
+A Vue 3 custom renderer for [Three.js](https://threejs.org/).
+
+You can use it to create 3D scenes using code like this:
 
 ```html
- <mesh>
-    <torusKnotGeometry />
-    <meshStandardMaterial map="$attached.load">
-        <textureLoader :load="['/text-chase/test-word.jpg']" />
-    </meshStandardMaterial>
-</mesh>
+<TroisCanvas background="white">
+  <mesh :position-z="-5">
+    <sphereGeometry />
+    <meshBasicMaterial :wireframe="true" color="black" />
+  </mesh>
+</TroisCanvas>
 ```
 
-`new TextureLoader().load('example-url.jpg')` is called, then the resulting value is passed to the parent's `$attached` object as the property `load`. The value of the method's attribute (`load` in this example) must be an array, just like `:args="[...]"`.
+*Trois* is a French word, it means *Three*.
+
+The Trois renderer uses several concepts introduced in [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - thank you to the authors of that repo!
