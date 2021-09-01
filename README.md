@@ -21,3 +21,5 @@ You can use it to create 3D scenes using code like this:
 *Trois* is a French word, it means *Three*.
 
 The Trois renderer uses several concepts introduced in [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - thank you to the creators and maintainers of that project!
+
+By members of the TroisJS team & [Breakfast Studio](https://breakfaststudio.co/).
