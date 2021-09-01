@@ -1,6 +1,6 @@
 {
   "name": "trois-renderer",
-  "version": "0.1.2001",
+  "version": "0.1.2002",
   "scripts": {
     "dev": "vite -c utils/vite.config.ts",
     "build": "vue-tsc --noEmit && vite build -c utils/vite.config.ts",
@@ -9,6 +9,7 @@
     "dts:create": "cp ./utils/lib-dts.d.ts ./dist/trois-renderer.es.d.ts && cp ./utils/lib-dts.d.ts ./dist/trois-renderer.umd.d.ts",
     "prepare": "npm run build:lib"
   },
+  "repository": "https://github.com/troisjs/trois-renderer",
   "dependencies": {
     "lodash": "4.17.21"
   },
