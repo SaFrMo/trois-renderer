@@ -10,6 +10,7 @@ export default defineConfig({
       input: {
         main: './examples/index.html',
 
+        asterisk: './examples/asterisk/index.html',
         boxfield: './examples/boxfield/index.html',
         calendar: './examples/calendar/index.html',
         demo1: './examples/demo1/index.html',
