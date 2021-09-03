@@ -148,7 +148,18 @@ disconnect, // Dis-connect handlers, () => void
 */
   }
 
-
+  /** Generic THREE loader: https://threejs.org/docs/index.html?q=loader#api/en/loaders/Loader
+   * Assumes a method `load` that accepts a source, onLoad callback,
+   * and onError callback
+   * (Note no onProgress callback - ImageLoader doesn't support onProgress. See https://threejs.org/docs/index.html?q=loader#api/en/loaders/ImageLoader)
+   */
+  interface GenericThreeLoader<T = any> {
+    load(src: string,
+      onLoad: (data: T) => void,
+      onProgress: null,
+      onError: (error: any) => void
+    ): void
+  }
 
   type Node = Element
 

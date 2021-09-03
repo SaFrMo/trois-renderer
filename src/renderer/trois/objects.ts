@@ -208,4 +208,5 @@ const internalTroisVueKeys = [
     'onAdded',
     'onReady',
     'ref',
+    'src',
 ]

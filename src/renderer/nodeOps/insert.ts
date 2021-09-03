@@ -31,7 +31,7 @@ const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | TH
     }
 }
 
-export const insert = (
+export const insert = async (
     element: Trois.Element,
     parent: Trois.Element,
     ref?: Trois.Element | null
@@ -50,18 +50,77 @@ export const insert = (
 
     // build object instance
     element.instance = createObject({ name: element.name, element })
+
+    // if this element is a loader and the `src` attribute is being used,
+    // let's assume we want to create the loader and run `load`
+    const isUsingLoaderSugar = element.name.toLowerCase().endsWith('loader')
+        && element.props.src
+        && (element.props.attach || element.props.attachArray)
+
+    // run special loader behavior
+    if (isUsingLoaderSugar) {
+        const loader = element.instance as any as Trois.GenericThreeLoader
+        // ensure parent has attached spaces ready
+        parent.attached = parent.attached || {}
+        parent.attachedArray = parent.attachedArray || {}
+
+
+        if (element.name.toLowerCase() === 'textureloader') {
+            // if this is a texture loader, immediately pass
+            // load function to parent attachment
+            const textureLoader = loader as any as THREE.TextureLoader
+            const loading = textureLoader.load(element.props.src)
+
+            // TODO: generalize this and following attachArray to function?
+            // lots of repeated code otherwise
+            if (element.props.attach) {
+                parent.attached = {
+                    [element.props.attach]: loading,
+                    ...parent.attached || {}
+                }
+            }
+
+            if (element.props.attachArray) {
+                if (!parent.attachedArray[element.props.attachArray]) {
+                    parent.attachedArray[element.props.attachArray] = []
+                }
+                parent.attachedArray[element.props.attachArray].push(loading)
+
+            }
+        } else {
+            // use a standard callback-based loader
+            loader.load(element.props.src, loadedData => {
+                if (element.props.attach) {
+                    parent.attached = {
+                        [element.props.attach]: loadedData,
+                        ...parent.attached || {}
+                    }
+                }
+
+                if (element.props.attachArray) {
+                    if (!parent.attachedArray[element.props.attachArray]) {
+                        parent.attachedArray[element.props.attachArray] = []
+                    }
+                    parent.attachedArray[element.props.attachArray].push(loadedData)
+
+                }
+            }, null, err => { throw new Error(err) })
+        }
+    }
+
     // save the instance's uuid to the element
     element.instanceUuid = element.instance.uuid
 
     // attach to parent if needed
-    if (element.props.attach) {
+    // (avoid if using loader sugar, since that will happen in the callback)
+    if (element.props.attach && !isUsingLoaderSugar) {
         parent.attached = {
             [element.props.attach]: element.instance,
             ...(parent.attached || {})
         }
     }
     // do the same for attached arrays
-    if (element.props.attachArray) {
+    if (element.props.attachArray && !isUsingLoaderSugar) {
         if (!parent.attachedArray[element.props.attachArray]) {
             parent.attachedArray[element.props.attachArray] = []
         }
@@ -84,7 +143,7 @@ export const insert = (
             createChildrenRecursively(element, trois.scene.value as any)
         } else if (parentElement?.instance) {
             // parent instance already exists, so let's add directly to it
-            const parentInstance = parentElement?.instance
+            const parentInstance = parentElement.instance
             if (isObject3D(parentInstance)) {
                 parentInstance.add(element.instance)
             }
