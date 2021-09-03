@@ -2,13 +2,13 @@
     <section class="container">
         <h1>Test</h1>
 
-        <div class="wrapper" />
+        <div id="trois" />
     </section>
 </template>
 
  <style lang="scss">
 .container {
-    .wrapper {
+    #trois {
         width: 80vw;
         height: 500px;
         margin: auto;

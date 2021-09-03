@@ -9,4 +9,4 @@ app.mount('#app')
 
 // trois app
 const troisApp = troisCreateApp(TroisApp)
-troisApp.mount('.wrapper')
+troisApp.mount('#trois')
