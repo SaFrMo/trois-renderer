@@ -171,7 +171,10 @@ export const updateObjectProp = (
             element.parentNode.attached[finalKey] = result
         }
     } else if (get(target, finalKey, undefined) !== undefined) {
-        set(target, finalKey, value)
+        // blank strings evaluate to `true`
+        // <mesh castShadow receiveShadow /> will work the same as
+        // <mesh :castShadow="true" :receiveShadow="true" />
+        set(target, finalKey, value === '' ? true : value)
     } else {
         // if you see this error in production, you might need to add `finalKey`
         // to `internalTroisVueKeys` below

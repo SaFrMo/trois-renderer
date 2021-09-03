@@ -3,7 +3,7 @@
         <meshBasicMaterial :wireframe="true" />
 
         <mesh :scale="0.5" ref="child" :visible="childVisible">
-            <meshBasicMaterial color="red" :wireframe="true" />
+            <meshBasicMaterial transparent color="red" wireframe />
         </mesh>
     </mesh>
 </template>
