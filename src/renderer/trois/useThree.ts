@@ -92,8 +92,8 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
     mouseListener = (event: MouseEvent) => {
         // calculate mouse position in normalized device coordinates
         // (-1 to +1) for both components
-        troisInternals.mousePos.x = (event.clientX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
-        troisInternals.mousePos.y = - (event.clientY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
+        troisInternals.mousePos.x = (event.offsetX / (troisInternals.renderer?.domElement.width ?? 1)) * 2 - 1;
+        troisInternals.mousePos.y = - (event.offsetY / (troisInternals.renderer?.domElement.height ?? 1)) * 2 + 1;
     }
     mouseDownListener = (event: MouseEvent) => {
         troisInternals.mouseDown = true
