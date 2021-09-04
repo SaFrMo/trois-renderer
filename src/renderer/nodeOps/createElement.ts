@@ -42,6 +42,12 @@ export const createElement = (
         // create container element
         const elType = isContainer(element) ? 'div' : type
         element.domElement = document.createElement(elType)
+
+        element.domElement.style.position = 'absolute'
+        element.domElement.style.top = '0'
+        element.domElement.style.left = '0'
+        element.domElement.style.width = '100%'
+        element.domElement.style.height = '100%'
     }
 
     // return created element
