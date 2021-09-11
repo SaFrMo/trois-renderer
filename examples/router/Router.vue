@@ -7,4 +7,9 @@
 
 <script lang="ts" setup>
 import OrbitControlsWrapper from '../../src/examples/OrbitControlsWrapper.vue'
+import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
+
+const route = useRouter()
+onMounted(() => console.log(route))
 </script>

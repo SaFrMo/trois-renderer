@@ -48,6 +48,15 @@ export const insert = async (
         return
     }
 
+    // if parent is a RouterView, treat grandparent as parent
+    // so that we add this object to a functional childCreationQueue
+    // TODO: doesn't work in prod
+    // TODO: less brittle solution to get vue-router to work
+    const parentName = ((element as any).__vueParentComponent?.parent?.ctx?.$options?.name)
+    if (parentName === 'RouterView') {
+        parent = (element as any).__vueParentComponent?.parent?.parent?.ctx?.$el
+    }
+
     // build object instance
     element.instance = createObject({ name: element.name, element })
 

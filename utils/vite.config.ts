@@ -22,6 +22,7 @@ export default defineConfig({
         'instance-wires': './examples/instance-wires/index.html',
         physics: './examples/physics/index.html',
         points: './examples/points/index.html',
+        router: './examples/router/index.html',
         table: './examples/table/index.html',
         'torus-walk': './examples/torus-walk/index.html',
         tv: './examples/tv/index.html',
