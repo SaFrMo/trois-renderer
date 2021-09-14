@@ -1,7 +1,10 @@
 <template>
     <TroisCanvas :cameraPosition="[0, 0, 10]">
         <OrbitControlsWrapper />
-        <mesh />
+        <group>
+            <mesh>
+                <meshBasicMaterial color="blue" /> </mesh
+        ></group>
     </TroisCanvas>
 </template>
 

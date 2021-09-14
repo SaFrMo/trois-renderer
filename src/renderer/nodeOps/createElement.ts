@@ -2,6 +2,8 @@ import { Trois } from '../types'
 import { createElement as createTroisElement } from '../trois'
 import { initTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
+import { createRoot, root, tree } from '../trois/tree'
+export const createdUuids: Array<string> = []
 
 const isContainer = (element: Trois.Element) => {
     return element.props?.hasOwnProperty('data-trois-container') || element.name === 'TroisCanvas'
@@ -48,7 +50,15 @@ export const createElement = (
         element.domElement.style.left = '0'
         element.domElement.style.width = '100%'
         element.domElement.style.height = '100%'
+
+        createRoot(element.uuid)
     }
+
+    // add element to tree
+    // else {
+    //     root.addChild(tree.parse(element.uuid))
+    // }
+    // createdUuids.push(element.uuid)
 
     // return created element
     return element

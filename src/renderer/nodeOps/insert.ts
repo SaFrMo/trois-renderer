@@ -4,9 +4,7 @@ import { createObject, updateAllObjectProps, } from '../trois/objects'
 import { setupObserver } from '../components/TroisCanvas'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
-// import { tree } from '../trois/tree'
-// import { v4 as uuidv4 } from 'uuid'
-
+import { pool, findElement, root, tree } from '../trois/tree'
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
     // insert host
@@ -37,7 +35,7 @@ const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | TH
 export const insert = async (
     element: Trois.Element,
     parent: Trois.Element,
-    ref?: Trois.Element | null
+    // ref?: Trois.Element | null
 ) => {
     // debug
     // console.log('insert', { name: element.name, element, parent, ref })
@@ -48,6 +46,21 @@ export const insert = async (
 
     // cancel if no valid name
     if (!element.name) return
+
+    // attach to tree
+    // console.log(element, element.uuid, parent.uuid)
+    // find element
+    console.log(element, parent)
+    // find existing node in pool
+
+    // const elementNode = findElement(element.uuid)
+    // const parentNode = findElement(parent.uuid)
+    // console.log('add', element.name, 'to', parent.name)
+    // if (parentNode && elementNode) {
+    //     parentNode.addChild(tree.parse(element))
+    //     // elementNode.node.drop()
+    // }
+    // console.log(root)
 
     // handle dom elements
     if (element.domElement || element.props.isDom) {

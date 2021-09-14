@@ -1,8 +1,7 @@
 import { Trois } from '../types'
 import { Constants } from './constants'
 import { pascalCase } from './lib'
-
-let nodeId = 0
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * Creates a new Trois.Element with the given options.
@@ -19,6 +18,7 @@ export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
         eventListenerRemoveFunctions: {} as Record<Trois.EventKey, Function[]>,
         instance: null,
         name: pascalCase(type),
+        uuid: uuidv4(),
         parentNode: null,
         props,
     }

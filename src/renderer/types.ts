@@ -55,6 +55,7 @@ export declare namespace Trois {
     name: string
     parentNode: Element | null
     props: VNodeProps
+    uuid: string
   }
 
   // MAKE SURE THESE MATCH VALUES IN lib.isEventKey
