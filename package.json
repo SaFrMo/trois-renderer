@@ -11,7 +11,9 @@
   },
   "repository": "https://github.com/troisjs/trois-renderer",
   "dependencies": {
-    "lodash": "4.17.21"
+    "lodash": "4.17.21",
+    "tree-model": "1.0.7",
+    "uuid": "8.3.2"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.0.4",
@@ -19,6 +21,7 @@
     "@types/lodash": "4.14.170",
     "@types/luxon": "1.27.1",
     "@types/three": "0.129.2",
+    "@types/uuid": "8.3.1",
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
     "cannon-es": "0.18.0",

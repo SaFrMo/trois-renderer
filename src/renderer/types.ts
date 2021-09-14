@@ -41,21 +41,20 @@ export declare namespace Trois {
    * Also contains the actual created THREE object in `instance`.
    */
   type Element = {
-    attached: { [key: string]: any }
-    attachedArray: { [key: string]: Array<any> }
+    /** Record of items attached to this Trois element */
+    attached: Record<string, any>
+    /** Record of array items  attached to this Trois element */
+    attachedArray: Record<string, Array<any>>
+    /** Children to be created when this element's `instance` is inserted */
     childCreationQueue: Array<Element>
     children: Array<Element>
     domElement: HTMLElement | null
     eventListeners: Record<EventKey, InteractionCallback[]>
     eventListenerRemoveFunctions: Record<EventKey, Function[]>
-    id: number
     instance: Instance | null
-    instanceUuid: string
     name: string
     parentNode: Element | null
     props: VNodeProps
-    type: string
-    vueId: number
   }
 
   // MAKE SURE THESE MATCH VALUES IN lib.isEventKey

@@ -9,7 +9,7 @@ let nodeId = 0
  * @returns New Trois.Element.
  */
 export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
-    return {
+    const t: Trois.Element = {
         attached: {},
         attachedArray: {},
         childCreationQueue: [],
@@ -17,13 +17,11 @@ export const createElement = (type: string, props: Trois.VNodeProps = {}) => {
         domElement: null,
         eventListeners: {} as Record<Trois.EventKey, Trois.InteractionCallback[]>,
         eventListenerRemoveFunctions: {} as Record<Trois.EventKey, Function[]>,
-        id: nodeId++,
         instance: null,
-        instanceUuid: Constants.UNKNOWN.toString(),
         name: pascalCase(type),
         parentNode: null,
         props,
-        type,
-        vueId: Constants.UNKNOWN,
-    } as Trois.Element
+    }
+
+    return t
 }

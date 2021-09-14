@@ -4,6 +4,9 @@ import { createObject, updateAllObjectProps, } from '../trois/objects'
 import { setupObserver } from '../components/TroisCanvas'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
+// import { tree } from '../trois/tree'
+// import { v4 as uuidv4 } from 'uuid'
+
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
     // insert host
@@ -38,6 +41,10 @@ export const insert = async (
 ) => {
     // debug
     // console.log('insert', { name: element.name, element, parent, ref })
+
+    // create tree entry
+    // const uuid = uuidv4()
+
 
     // cancel if no valid name
     if (!element.name) return
@@ -107,9 +114,6 @@ export const insert = async (
             }, null, err => { throw new Error(err) })
         }
     }
-
-    // save the instance's uuid to the element
-    element.instanceUuid = element.instance.uuid
 
     // attach to parent if needed
     // (avoid if using loader sugar, since that will happen in the callback)

@@ -4,7 +4,7 @@ import { initTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
 
 const isContainer = (element: Trois.Element) => {
-    return element.props?.hasOwnProperty('data-trois-container') || element.type === 'TroisCanvas'
+    return element.props?.hasOwnProperty('data-trois-container') || element.name === 'TroisCanvas'
 }
 
 export const createElement = (
