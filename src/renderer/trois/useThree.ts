@@ -60,7 +60,7 @@ export const initTrois = (props: Trois.VNodeProps) => {
     }
 }
 
-export const completeTrois = ({ element }: { element: Trois.Element }) => {
+export const completeTrois = ({ element }: { element: Trois.Element }): Trois.UpdateLoop => {
     const sceneOptions = transformPropsToSceneOptions(element.props)
 
     // use $attached camera or build a new one
@@ -105,11 +105,23 @@ export const completeTrois = ({ element }: { element: Trois.Element }) => {
 
     // build update loop
     // TODO: more robust
-    const update = () => {
-        requestAnimationFrame(update)
-        renderTrois()
+    // const update = () => {
+    //     requestAnimationFrame(update)
+    //     renderTrois()
+    // }
+    // update()
+    return {
+        alive: true,
+        stop() {
+            this.alive = false
+        },
+        update() {
+            if (this.alive) {
+                requestAnimationFrame(() => this.update())
+            }
+            renderTrois()
+        }
     }
-    update()
 }
 
 /** The main render function for Trois. */

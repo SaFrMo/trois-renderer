@@ -4,6 +4,7 @@ import { createObject, updateAllObjectProps, } from '../trois/objects'
 import { setupObserver } from '../components/TroisCanvas'
 import { completeTrois, useTrois } from '../trois/useThree'
 const trois = useTrois()
+export let updateLoop: Trois.UpdateLoop | null = null
 
 const createChildrenRecursively = (host: Trois.Element, parent: THREE.Scene | THREE.Object3D) => {
     // insert host
@@ -178,7 +179,15 @@ const handleDomElement = ({ element, parent }: { element: Trois.Element, parent:
 
     // if this is the wrapper, let's finish setup
     if (element?.props?.isContainer) {
-        completeTrois({ element })
+
+        if (updateLoop) {
+            // stop old update loop
+            updateLoop.stop()
+        }
+
+        // start new update loop
+        updateLoop = completeTrois({ element })
+        updateLoop.update()
     }
 
     // attach container to parent

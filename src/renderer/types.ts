@@ -193,6 +193,12 @@ disconnect, // Dis-connect handlers, () => void
     scene: THREE.Scene
   }) => void
 
+  interface UpdateLoop {
+    alive: boolean
+    stop: () => void
+    update: () => void
+  }
+
   type VNodeProps = vueVNodeProps & {
     [key: string]: any
   }

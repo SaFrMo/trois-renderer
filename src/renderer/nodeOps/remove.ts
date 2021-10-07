@@ -1,7 +1,12 @@
 import { isEventKey } from '../trois/lib'
 import { Trois } from '../types'
+import { updateLoop } from './insert'
 
 export const remove = (element: Trois.Element) => {
+    if (element.domElement && element?.props?.isContainer) {
+        updateLoop?.stop()
+    }
+
     // remove from parent if needed
     element.instance?.parent?.remove(element.instance)
     // dispose if needed
