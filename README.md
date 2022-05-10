@@ -1,4 +1,4 @@
-⚠️ **This repo is no longer maintained** - please see [LunchboxJS]() for further work on a Vue 3/ThreeJS renderer. ⚠️
+⚠️ **This repo is no longer maintained** - please see [LunchboxJS](https://github.com/breakfast-studio/lunchboxjs) for further work on a Vue 3/ThreeJS renderer. ⚠️
 
 # Trois Renderer
 
